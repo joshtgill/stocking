@@ -1,0 +1,6 @@
+Features:
+    - Configable rules
+
+Config/input:
+    - Interested stocks
+    
