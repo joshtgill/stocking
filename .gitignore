@@ -2,4 +2,7 @@
 .vscode/
 
 # Python pycache
-__pychache__/
+__pycache__/
+
+# Queried data files
+data/
