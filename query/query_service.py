@@ -15,23 +15,24 @@ class QueryService:
         self.queryRequest.deserialize(configData)
 
         # Format output file's filename
-        self.outFileName = 'data/{}_{}_to_{}_{}'.format(self.queryRequest.symbol, self.queryRequest.start, self.queryRequest.end, self.queryRequest.interval)
+        self.outFileName = 'data/{}_{}_to_{}_{}.txt'.format(self.queryRequest.symbol, self.queryRequest.start, self.queryRequest.end, self.queryRequest.interval)
 
 
     def start(self):
-        resultStr = self.performQuery()
+        results = self.performQuery()
         with open(self.outFileName, 'w+') as outFile:
-            outFile.write(resultStr)
+            for row in results:
+                outFile.write(str(row) + '\n')
 
 
     def performQuery(self):
         tsla = yf.Ticker(self.queryRequest.symbol)
         data = tsla.history(start=self.queryRequest.start, end=self.queryRequest.end, interval=self.queryRequest.interval)
 
-        resultStr = ''
+        results = []
         dateTimes = data.index.values
         for rowIndex in range(len(data)):
             t = pandas.to_datetime(str(dateTimes[rowIndex]))
-            resultStr += '{} {} {}\n'.format(t.strftime('%Y/%m/%d %H:%M:%S'), data.iloc[rowIndex, 0], data.iloc[rowIndex, 3])
+            results.append((t.strftime('%Y/%m/%d %H:%M:%S'), data.iloc[rowIndex, 0], data.iloc[rowIndex, 3]))
 
-        return resultStr
+        return results
