@@ -12,5 +12,5 @@ class Stocking:
 
 
     def start(self):
-        # QueryService(self.configInterface, self.queryInterface).start()
-        StockDataInterface(self.configInterface, 'TSLA')
+        QueryService(self.configInterface, self.queryInterface).start()
+        # StockDataInterface(self.configInterface, 'TSLA')

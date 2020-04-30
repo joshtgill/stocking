@@ -6,7 +6,7 @@ from datetime import datetime
 
 class StockDataInterface:
 
-    def __init__(self, configService):
+    def __init__(self, configService, symbol):
         self.configService = configService
         self.symbol = symbol
 
@@ -16,7 +16,7 @@ class StockDataInterface:
 
 
     def load(self):
-        for dataFileName in os.listdir('stock_data/'):
+        for dataFileName in os.listdir('{}/'.format(self.configService.get('stockDataDirectory'))):
             splitDataFileName = dataFileName.split('_')
             if splitDataFileName[0] == self.symbol:
                 self.stockDataForm = StockDataForm(splitDataFileName[0],

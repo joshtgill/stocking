@@ -19,8 +19,9 @@ class QueryService:
             for row in results:
                 resultsStr += '{}\n'.format(row)
 
-            fileService = FileService('data/{}_{}_to_{}_{}.txt'.format(queryForm.symbol,
-                                                                       queryForm.start.strftime(self.configInterface.get('dateFormat')),
-                                                                       queryForm.end.strftime(self.configInterface.get('dateFormat')),
-                                                                       queryForm.interval))
+            fileService = FileService('{}/{}_{}_to_{}_{}.txt'.format(self.configInterface.get('stockDataDirectory'),
+                                                                     queryForm.symbol,
+                                                                     queryForm.start.strftime(self.configInterface.get('dateFormat')),
+                                                                     queryForm.end.strftime(self.configInterface.get('dateFormat')),
+                                                                     queryForm.interval))
             fileService.write(resultsStr)
