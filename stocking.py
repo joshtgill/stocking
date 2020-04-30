@@ -1,12 +1,14 @@
-from services.config_service import ConfigService
+from interfaces.config_interface import ConfigInterface
+from interfaces.query_interface import QueryInterface
 from services.query_service import QueryService
 
 
 class Stocking:
 
     def __init__(self, configFileName):
-        self.config = ConfigService(configFileName)
+        self.configInterface = ConfigInterface(configFileName)
+        self.queryInterface = QueryInterface(self.configInterface)
 
 
     def start(self):
-        QueryService(self.config).start()
+        QueryService(self.configInterface, self.queryInterface).start()

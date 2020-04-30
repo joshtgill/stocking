@@ -2,7 +2,7 @@ from services.file_service import FileService
 import json
 
 
-class ConfigService:
+class ConfigInterface:
 
     def __init__(self, configFileName):
         # Load config from file
