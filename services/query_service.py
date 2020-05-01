@@ -1,4 +1,5 @@
 from forms.query_form import QueryForm
+from interfaces.stock_data_interface import StockDataInterface
 from services.file_service import FileService
 
 
@@ -9,6 +10,7 @@ class QueryService:
         self.queryInterface = queryInterface
 
         self.queryForms = self.buildForms()
+        self.checkForms()
 
 
     def buildForms(self):
@@ -24,6 +26,22 @@ class QueryService:
                 queryForms.append(queryForm)
 
         return queryForms
+
+
+    def checkForms(self):
+        deleteIndicies = []
+        i = 0
+        for queryForm in self.queryForms:
+            stockDataInterface = StockDataInterface(self.configInterface, queryForm.symbol)
+            if (stockDataInterface.stockDataForm is not None and stockDataInterface.stockDataForm.interval == queryForm.interval):
+                queryForm.start = stockDataInterface.stockDataForm.end
+                if queryForm.start == queryForm.end:
+                    deleteIndicies.append(i)
+            i += 1
+
+        deleteIndicies.reverse()
+        for i in deleteIndicies:
+            del self.queryForms[i]
 
 
     def makeQuery(self):

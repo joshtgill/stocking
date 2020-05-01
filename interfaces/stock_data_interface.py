@@ -24,7 +24,7 @@ class StockDataInterface:
                                                    datetime.strptime(splitDataFileName[3], '%Y-%m-%d'),
                                                    splitDataFileName[4][: splitDataFileName[4].index('.')])
 
-                with open('stock_data/{}'.format(dataFileName)) as dataFile:
+                with open('{}/{}'.format(self.configService.get('stockDataDirectory'), dataFileName)) as dataFile:
                     for dataLine in dataFile.readlines():
                         dataItem = eval(dataLine.strip())
                         for stockDataCol, dataValue in zip(self.stockDataForm.data, dataItem):

@@ -1,7 +1,6 @@
 from interfaces.config_interface import ConfigInterface
 from interfaces.query_interface import QueryInterface
 from services.query_service import QueryService
-from interfaces.stock_data_interface import StockDataInterface
 
 
 class Stocking:
@@ -13,4 +12,3 @@ class Stocking:
 
     def start(self):
         QueryService(self.configInterface, self.queryInterface).makeQuery()
-        # StockDataInterface(self.configInterface, 'TSLA')
