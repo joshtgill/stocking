@@ -8,10 +8,25 @@ class QueryService:
         self.configInterface = configInterface
         self.queryInterface = queryInterface
 
-        self.queryForms = self.configInterface.get('queries', QueryForm)
+        self.queryForms = self.buildForms()
 
 
-    def start(self):
+    def buildForms(self):
+        queryForms = []
+        for queryData in self.configInterface.get('queries'):
+            if len(queryData.get('symbols')) > 1:
+                for symbol in queryData.get('symbols'):
+                    queryForm = QueryForm(queryData)
+                    queryForm.symbol = symbol
+                    queryForms.append(queryForm)
+            else:
+                queryForm = QueryForm(queryData)
+                queryForms.append(queryForm)
+
+        return queryForms
+
+
+    def makeQuery(self):
         for queryForm in self.queryForms:
             results = self.queryInterface.query(queryForm)
 
