@@ -6,3 +6,6 @@ __pycache__/
 
 # JSON files (i.e config)
 *.json
+
+# Data directory
+data/
