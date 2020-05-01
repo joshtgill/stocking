@@ -11,4 +11,4 @@ class Stocking:
 
 
     def start(self):
-        QueryService(self.configInterface, self.queryInterface).makeQuery()
+        QueryService(self.configInterface, self.queryInterface).makeQueries()

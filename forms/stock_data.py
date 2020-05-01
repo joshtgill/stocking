@@ -1,4 +1,4 @@
-class StockDataForm:
+class StockData:
 
     def __init__(self, symbol, start, end, interval):
         self.symbol = symbol

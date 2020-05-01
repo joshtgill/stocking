@@ -1,5 +1,5 @@
 import os
-from forms.stock_data_form import StockDataForm
+from forms.stock_data import StockData
 from services.file_service import FileService
 from datetime import datetime
 
@@ -10,7 +10,7 @@ class StockDataInterface:
         self.configService = configService
         self.symbol = symbol
 
-        self.stockDataForm = None
+        self.stockData = None
 
         self.load()
 
@@ -19,7 +19,7 @@ class StockDataInterface:
         for dataFileName in os.listdir('{}/'.format(self.configService.get('stockDataDirectory'))):
             splitDataFileName = dataFileName.split('_')
             if splitDataFileName[0] == self.symbol:
-                self.stockDataForm = StockDataForm(splitDataFileName[0],
+                self.stockData = StockData(splitDataFileName[0],
                                                    datetime.strptime(splitDataFileName[1], '%Y-%m-%d'),
                                                    datetime.strptime(splitDataFileName[3], '%Y-%m-%d'),
                                                    splitDataFileName[4][: splitDataFileName[4].index('.')])
@@ -27,5 +27,5 @@ class StockDataInterface:
                 with open('{}/{}'.format(self.configService.get('stockDataDirectory'), dataFileName)) as dataFile:
                     for dataLine in dataFile.readlines():
                         dataItem = eval(dataLine.strip())
-                        for stockDataCol, dataValue in zip(self.stockDataForm.data, dataItem):
+                        for stockDataCol, dataValue in zip(self.stockData.data, dataItem):
                             stockDataCol.append(dataValue)

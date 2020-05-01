@@ -1,14 +1,14 @@
 from datetime import datetime
 
 
-class QueryForm:
+class QueryRequest:
 
-    def __init__(self, config):
-        self.deserialize(config)
+    def __init__(self, config, symbolIndex = 0):
+        self.deserialize(config, symbolIndex)
 
 
-    def deserialize(self, config):
-        self.symbol = config.get('symbols')[0]
+    def deserialize(self, config, symbolIndex):
+        self.symbol = config.get('symbols')[symbolIndex]
         self.start = datetime.strptime(config.get('start'), '%Y-%m-%d')
         self.end = datetime.strptime(config.get('end'), '%Y-%m-%d')
         self.interval = config.get('interval')
