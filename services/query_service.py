@@ -1,5 +1,4 @@
 from forms.query import Query
-from interfaces.stock_data_interface import StockDataInterface
 
 
 class QueryService:
@@ -26,9 +25,9 @@ class QueryService:
         i = 0
         while i < len(self.queries):
             query = self.queries[i]
-            stockDataInterface = StockDataInterface(self.dataService, query.symbol)
-            if stockDataInterface.data is not None and stockDataInterface.data.interval == query.interval:
-                query.start = stockDataInterface.data.end
+            stockData = self.dataService.loadStockData(query.symbol)
+            if stockData is not None and stockData.interval == query.interval:
+                query.start = stockData.end
                 if query.start >= query.end:
                     del self.queries[i]
                     i -= 1

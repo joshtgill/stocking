@@ -1,5 +1,7 @@
 import json
-from os import path
+import os
+from forms.stock_data import StockData
+from datetime import datetime
 
 
 class DataService:
@@ -48,6 +50,27 @@ class DataService:
                 return configRunner
 
 
+    def loadStockData(self, symbol):
+        stockData = None
+        for dataFileName in os.listdir('{}/'.format(self.configGet('stockDataDirectory'))):
+            splitDataFileName = dataFileName.split('_')
+            if splitDataFileName[0] == symbol:
+                stockData = StockData(splitDataFileName[0],
+                                      datetime.strptime(splitDataFileName[1], '%Y-%m-%d'),
+                                      datetime.strptime(splitDataFileName[3], '%Y-%m-%d'),
+                                      splitDataFileName[4][: splitDataFileName[4].index('.')])
+
+                fileData = self.read('{}/{}'.format(self.configGet('stockDataDirectory'), dataFileName))
+                for dataLine in fileData.split('\n'):
+                    dataLine = eval(dataLine.strip())
+                    for stockDataCol, dataValue in zip(stockData.history, dataLine):
+                        stockDataCol.append(dataValue)
+
+                break
+
+        return stockData
+
+
     def write(self, filePath, data):
         with open(filePath, 'w+') as file:
             file.write(data)
@@ -56,7 +79,7 @@ class DataService:
     def read(self, filePath, defaultData = ''):
         dataStr = ''
 
-        if not path.exists(filePath):
+        if not os.path.exists(filePath):
             return dataStr
 
         with open(filePath, 'r') as file:
