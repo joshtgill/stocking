@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class QueryRequest:
+class Query:
 
     def __init__(self, config, symbolIndex = 0):
         self.deserialize(config, symbolIndex)

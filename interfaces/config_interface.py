@@ -4,10 +4,10 @@ import json
 
 class ConfigInterface:
 
-    def __init__(self, configFileName):
-        # Load config from file
-        fileService = FileService(configFileName)
-        self.config = json.loads(fileService.read('{}'))
+    def __init__(self, fileService, configFileName):
+        self.fileService = fileService
+
+        self.config = json.loads(self.fileService.read(configFileName, '{}'))
 
 
     def get(self, path, Obj = None):

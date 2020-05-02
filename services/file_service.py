@@ -3,23 +3,18 @@ from os import path
 
 class FileService:
 
-    def __init__(self, filePath):
-        self.filePath = filePath
-
-
-    def write(self, data):
-        with open(self.filePath, 'w+') as file:
+    def write(self, filePath, data):
+        with open(filePath, 'w+') as file:
             file.write(data)
 
 
-    def read(self, defaultData = ''):
+    def read(self, filePath, defaultData = ''):
         dataStr = ''
 
-        # Verify path exists
-        if not path.exists(self.filePath):
+        if not path.exists(filePath):
             return dataStr
 
-        with open(self.filePath, 'r') as file:
+        with open(filePath, 'r') as file:
             dataStr = file.read()
 
         return dataStr

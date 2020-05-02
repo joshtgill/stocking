@@ -1,57 +1,55 @@
-from forms.query_request import QueryRequest
+from interfaces.query_interface import QueryInterface
+from forms.query import Query
 from interfaces.stock_data_interface import StockDataInterface
 from services.file_service import FileService
 
 
 class QueryService:
 
-    def __init__(self, configInterface, queryInterface):
+    def __init__(self, configInterface, fileService):
         self.configInterface = configInterface
-        self.queryInterface = queryInterface
+        self.fileService = fileService
+        self.queryInterface = QueryInterface(self.configInterface)
 
-        self.queryRequests = self.buildRequests()
-        self.verifyRequests()
+        self.queries = self.buildQueries()
+        self.verifyQueries()
 
 
-    def buildRequests(self):
-        queryRequests = []
+    def buildQueries(self):
+        queries = []
         for queryData in self.configInterface.get('queries'):
             for i in range(len(queryData.get('symbols'))):
-                queryRequest = QueryRequest(queryData, i)
-                queryRequests.append(queryRequest)
+                query = Query(queryData, i)
+                queries.append(query)
 
-        return queryRequests
-
-
-    def verifyRequests(self):
-        deleteIndicies = []
-        for i in range(len(self.queryRequests)):
-            queryRequest = self.queryRequests[i]
-            stockDataInterface = StockDataInterface(self.configInterface, queryRequest.symbol)
-            if stockDataInterface.stockData is not None and stockDataInterface.stockData.interval == queryRequest.interval:
-                queryRequest.start = stockDataInterface.stockData.end
-                if queryRequest.start == queryRequest.end or queryRequest.start > queryRequest.end:
-                    deleteIndicies.append(i)
-
-        deleteIndicies.reverse()
-        for i in deleteIndicies:
-            del self.queryRequests[i]
+        return queries
 
 
-    def makeQueries(self):
-        for queryRequest in self.queryRequests:
-            stockData = self.queryInterface.query(queryRequest)
+    def verifyQueries(self):
+        i = 0
+        while i < len(self.queries):
+            query = self.queries[i]
+            stockDataInterface = StockDataInterface(self.configInterface, self.fileService, query.symbol)
+            if stockDataInterface.data is not None and stockDataInterface.data.interval == query.interval:
+                query.start = stockDataInterface.data.end
+                if query.start >= query.end:
+                    del self.queries[i]
+                    i -= 1
+            i += 1
+
+
+    def initiateQueries(self):
+        for query in self.queries:
+            stockData = self.queryInterface.performQuery(query)
 
             queryDataStr = ''
-            for i in range(len(stockData.data[0])):
-                queryRow = []
-                for queryCol in stockData.data:
-                    queryRow.append(queryCol[i])
-                queryDataStr += str(queryRow) + '\n'
+            for history in stockData.history:
+                queryDataStr += str(history) + '\n'
+            queryDataStr = queryDataStr[:-1]
 
-            fileService = FileService('{}/{}_{}_to_{}_{}.txt'.format(self.configInterface.get('stockDataDirectory'),
-                                                                     stockData.symbol,
-                                                                     stockData.start.strftime(self.configInterface.get('dateFormat')),
-                                                                     stockData.end.strftime(self.configInterface.get('dateFormat')),
-                                                                     stockData.interval))
-            fileService.write(queryDataStr)
+            filePath = '{}/{}_{}_to_{}_{}.txt'.format(self.configInterface.get('stockDataDirectory'),
+                                                      stockData.symbol,
+                                                      stockData.start.strftime(self.configInterface.get('dateFormat')),
+                                                      stockData.end.strftime(self.configInterface.get('dateFormat')),
+                                                      stockData.interval)
+            self.fileService.write(filePath, queryDataStr)

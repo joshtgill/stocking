@@ -5,4 +5,4 @@ class StockData:
         self.start = start
         self.end = end
         self.interval = interval
-        self.data = [[], [], [], [], []]
+        self.history = []  # [timestamp, open, high, low, close]
