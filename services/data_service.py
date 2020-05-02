@@ -1,16 +1,14 @@
-from services.file_service import FileService
 import json
+from os import path
 
 
-class ConfigInterface:
+class DataService:
 
-    def __init__(self, fileService, configFileName):
-        self.fileService = fileService
-
-        self.config = json.loads(self.fileService.read(configFileName, '{}'))
+    def loadConfig(self, configFileName):
+        self.config = json.loads(self.read(configFileName, '{}'))
 
 
-    def get(self, path, Obj = None):
+    def configGet(self, path, Obj = None):
         # Make list from path string
         pathList = path.strip().strip('/').split('/')
 
@@ -48,3 +46,20 @@ class ConfigInterface:
                 return obj
             else:
                 return configRunner
+
+
+    def write(self, filePath, data):
+        with open(filePath, 'w+') as file:
+            file.write(data)
+
+
+    def read(self, filePath, defaultData = ''):
+        dataStr = ''
+
+        if not path.exists(filePath):
+            return dataStr
+
+        with open(filePath, 'r') as file:
+            dataStr = file.read()
+
+        return dataStr

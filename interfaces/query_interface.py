@@ -1,13 +1,13 @@
-import yfinance as yf
-import datetime
 from forms.stock_data import StockData
+import datetime
+import yfinance
 import pandas
 
 
 class QueryInterface:
 
-    def __init__(self, configInterface):
-        self.configInterface = configInterface
+    def __init__(self, dataService):
+        self.dataService = dataService
 
 
     def performQuery(self, query):
@@ -21,11 +21,11 @@ class QueryInterface:
                 end = start + datetime.timedelta(days=7)
 
             # Get history
-            stockHistory = yf.Ticker(query.symbol).history(start=start, end=end, interval=query.interval)
+            stockHistory = yfinance.Ticker(query.symbol).history(start=start, end=end, interval=query.interval)
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
                 timeStamp = pandas.to_datetime(str(dateTimes[rowIndex]))
-                formattedTimeStamp = timeStamp.strftime('{} {}'.format(self.configInterface.get('dateFormat'), self.configInterface.get('timeFormat')))
+                formattedTimeStamp = timeStamp.strftime('{} {}'.format(self.dataService.configGet('dateFormat'), self.dataService.configGet('timeFormat')))
                 stockData.history.append([formattedTimeStamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
             # Stop if at end
