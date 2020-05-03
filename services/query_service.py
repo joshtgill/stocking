@@ -25,7 +25,7 @@ class QueryService:
         i = 0
         while i < len(self.queries):
             query = self.queries[i]
-            stockData = self.dataService.loadStockData(query.symbol)
+            stockData = self.dataService.loadStockData(query.symbol, query.interval)
             if stockData is not None and stockData.interval == query.interval:
                 query.start = stockData.end
                 if query.start >= query.end:

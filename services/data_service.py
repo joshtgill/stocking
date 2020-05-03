@@ -50,15 +50,17 @@ class DataService:
                 return configRunner
 
 
-    def loadStockData(self, symbol):
+    def loadStockData(self, symbol, interval):
         stockData = None
         for dataFileName in os.listdir('{}/'.format(self.configGet('stockDataDirectory'))):
             splitDataFileName = dataFileName.split('_')
-            if splitDataFileName[0] == symbol:
-                stockData = StockData(splitDataFileName[0],
+            fileSymbol = splitDataFileName[0]
+            fileInterval = splitDataFileName[4][: splitDataFileName[4].index('.')]
+            if fileSymbol == symbol and fileInterval == interval:
+                stockData = StockData(fileSymbol,
                                       datetime.strptime(splitDataFileName[1], '%Y-%m-%d'),
                                       datetime.strptime(splitDataFileName[3], '%Y-%m-%d'),
-                                      splitDataFileName[4][: splitDataFileName[4].index('.')])
+                                      fileInterval)
 
                 fileData = self.read('{}/{}'.format(self.configGet('stockDataDirectory'), dataFileName))
                 for dataLine in fileData.split('\n'):
