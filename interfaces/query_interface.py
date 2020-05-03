@@ -11,14 +11,14 @@ class QueryInterface:
 
 
     def performQuery(self, query):
-        stockData = StockData(query.symbol, query.start, query.end, query.interval)
+        stockData = StockData(query.symbol, query.interval, query.start, query.end)
 
         start = query.start
         end = query.end
         while True:
             # Due to yfinance request granularity, cannot request more than 7 days of data at 1m intervals.
-            if (end - start).days > 7:
-                end = start + datetime.timedelta(days=7)
+            if query.interval == '1m' and (end - start).days > 6:
+                end = start + datetime.timedelta(days=6, hours=6.5)
 
             # Get history
             stockHistory = yfinance.Ticker(query.symbol).history(start=start, end=end, interval=query.interval)
@@ -32,8 +32,8 @@ class QueryInterface:
             if end == query.end:
                 break
 
-            # Iterate for next query
-            start = end
+            # Only here for 1m, iterate for next query
+            start = end + datetime.timedelta(hours=17.5)
             end = query.end
 
         return stockData

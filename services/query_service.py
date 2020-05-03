@@ -15,7 +15,7 @@ class QueryService:
         queries = []
         for queryData in self.dataService.configGet('queries'):
             for i in range(len(queryData.get('symbols'))):
-                query = Query(queryData, i)
+                query = Query(self.dataService, queryData, i)
                 queries.append(query)
 
         return queries
@@ -26,11 +26,12 @@ class QueryService:
         while i < len(self.queries):
             query = self.queries[i]
             stockData = self.dataService.loadStockData(query.symbol, query.interval)
-            if stockData is not None and stockData.interval == query.interval:
-                query.start = stockData.end
-                if query.start >= query.end:
+            if stockData is not None:
+                if stockData.end >= query.end:
                     del self.queries[i]
-                    i -= 1
+                    continue
+                if stockData.end >= query.start:
+                    query.start = stockData.end
             i += 1
 
 
@@ -41,11 +42,9 @@ class QueryService:
             queryDataStr = ''
             for history in stockData.history:
                 queryDataStr += str(history) + '\n'
-            queryDataStr = queryDataStr[:-1]
+            queryDataStr = queryDataStr[:-1] + '\n'
 
-            filePath = '{}/{}_{}_to_{}_{}.txt'.format(self.dataService.configGet('stockDataDirectory'),
+            filePath = '{}/{}_{}.txt'.format(self.dataService.configGet('stockDataDirectory'),
                                                       stockData.symbol,
-                                                      stockData.start.strftime(self.dataService.configGet('dateFormat')),
-                                                      stockData.end.strftime(self.dataService.configGet('dateFormat')),
                                                       stockData.interval)
             self.dataService.write(filePath, queryDataStr)

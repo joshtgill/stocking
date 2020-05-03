@@ -55,18 +55,17 @@ class DataService:
         for dataFileName in os.listdir('{}/'.format(self.configGet('stockDataDirectory'))):
             splitDataFileName = dataFileName.split('_')
             fileSymbol = splitDataFileName[0]
-            fileInterval = splitDataFileName[4][: splitDataFileName[4].index('.')]
+            fileInterval = splitDataFileName[1][: splitDataFileName[1].index('.')]
             if fileSymbol == symbol and fileInterval == interval:
-                stockData = StockData(fileSymbol,
-                                      datetime.strptime(splitDataFileName[1], '%Y-%m-%d'),
-                                      datetime.strptime(splitDataFileName[3], '%Y-%m-%d'),
-                                      fileInterval)
+                stockData = StockData(fileSymbol, fileInterval)
 
-                fileData = self.read('{}/{}'.format(self.configGet('stockDataDirectory'), dataFileName))
-                for dataLine in fileData.split('\n'):
+                fileLines = self.read('{}/{}'.format(self.configGet('stockDataDirectory'), dataFileName)).split('\n')[: -1]
+                for dataLine in fileLines:
                     dataLine = eval(dataLine.strip())
-                    for stockDataCol, dataValue in zip(stockData.history, dataLine):
-                        stockDataCol.append(dataValue)
+                    stockData.history.append(dataLine)
+
+                stockData.start = datetime.strptime(stockData.history[0][0], '{} {}'.format(self.configGet('dateFormat'), self.configGet('timeFormat')))
+                stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '{} {}'.format(self.configGet('dateFormat'), self.configGet('timeFormat')))
 
                 break
 
@@ -74,7 +73,7 @@ class DataService:
 
 
     def write(self, filePath, data):
-        with open(filePath, 'w+') as file:
+        with open(filePath, 'a+') as file:
             file.write(data)
 
 
