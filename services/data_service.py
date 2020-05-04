@@ -58,7 +58,6 @@ class DataService:
         queryDataStr = ''
         for history in stockData.history:
             queryDataStr += str(history) + '\n'
-        queryDataStr = queryDataStr.strip()
 
         fileName = '{}_{}.txt'.format(stockData.symbol, stockData.interval)
 

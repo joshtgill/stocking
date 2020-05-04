@@ -31,6 +31,7 @@ class QueryService:
                     continue
                 elif stockData.end >= query.start:
                     query.start = stockData.end
+                    query.start = query.start.replace(minute=query.start.minute + 1, second=0)
 
 
     def initiateQueries(self):

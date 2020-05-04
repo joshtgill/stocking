@@ -2,6 +2,7 @@ from forms.stock_data import StockData
 import datetime
 import yfinance
 import pandas
+import pytz
 
 
 class QueryInterface:
@@ -24,8 +25,8 @@ class QueryInterface:
             stockHistory = yfinance.Ticker(query.symbol).history(start=start, end=end, interval=query.interval)
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
-                timeStamp = pandas.to_datetime(str(dateTimes[rowIndex]))
-                formattedTimeStamp = timeStamp.strftime('{} {}'.format(self.dataService.configGet('dateFormat'), self.dataService.configGet('timeFormat')))
+                utcTimeStamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc)
+                formattedTimeStamp = utcTimeStamp.astimezone(pytz.timezone('US/Eastern')).strftime('{} {}'.format(self.dataService.configGet('dateFormat'), self.dataService.configGet('timeFormat')))
                 stockData.history.append([formattedTimeStamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
             # Stop if at end
