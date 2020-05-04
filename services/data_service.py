@@ -6,8 +6,12 @@ from datetime import datetime
 
 class DataService:
 
-    def loadConfig(self, configFileName):
-        self.config = json.loads(self.read(configFileName, '{}'))
+    def __init__(self, configFileName):
+        self.fileLocMap = {'DATA': 'data/'}
+        self.config = json.loads(self.read('DATA', configFileName, '{}'))
+
+        self.fileLocMap = {'STOCK_DATA': self.config.get('stockDataLoc')}
+
 
 
     def configGet(self, path, Obj = None):
@@ -50,16 +54,27 @@ class DataService:
                 return configRunner
 
 
-    def loadStockData(self, symbol, interval):
+    def writeStockData(self, stockData):
+        queryDataStr = ''
+        for history in stockData.history:
+            queryDataStr += str(history) + '\n'
+        queryDataStr = queryDataStr.strip()
+
+        fileName = '{}_{}.txt'.format(stockData.symbol, stockData.interval)
+
+        self.write('STOCK_DATA', fileName, queryDataStr)
+
+
+    def readStockData(self, symbol, interval):
         stockData = None
-        for dataFileName in os.listdir('{}/'.format(self.configGet('stockDataDirectory'))):
+        for dataFileName in os.listdir('{}/'.format(self.configGet('stockDataLoc'))):
             splitDataFileName = dataFileName.split('_')
             fileSymbol = splitDataFileName[0]
             fileInterval = splitDataFileName[1][: splitDataFileName[1].index('.')]
             if fileSymbol == symbol and fileInterval == interval:
                 stockData = StockData(fileSymbol, fileInterval)
 
-                fileLines = self.read('{}/{}'.format(self.configGet('stockDataDirectory'), dataFileName)).split('\n')[: -1]
+                fileLines = self.read('STOCK_DATA', dataFileName).split('\n')[: -1]
                 for dataLine in fileLines:
                     dataLine = eval(dataLine.strip())
                     stockData.history.append(dataLine)
@@ -72,18 +87,18 @@ class DataService:
         return stockData
 
 
-    def write(self, filePath, data):
+    def write(self, fileLocValue, fileName, data):
+        filePath = self.fileLocMap.get(fileLocValue) + fileName
         with open(filePath, 'a+') as file:
             file.write(data)
 
 
-    def read(self, filePath, defaultData = ''):
+    def read(self, fileLocValue, fileName, defaultData = ''):
         dataStr = ''
 
-        if not os.path.exists(filePath):
-            return dataStr
-
-        with open(filePath, 'r') as file:
-            dataStr = file.read()
+        filePath = self.fileLocMap.get(fileLocValue) + fileName
+        if os.path.exists(filePath):
+            with open(filePath, 'r') as file:
+                dataStr = file.read()
 
         return dataStr

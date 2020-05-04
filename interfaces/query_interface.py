@@ -32,7 +32,7 @@ class QueryInterface:
             if end == query.end:
                 break
 
-            # Only here for 1m, iterate for next query
+            # Only here for 1m interval, iterate for next query
             start = end + datetime.timedelta(hours=17.5)
             end = query.end
 

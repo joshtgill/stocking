@@ -6,10 +6,8 @@ from interfaces.query_interface import QueryInterface
 class Stocking:
 
     def __init__(self, configFileName):
-        self.dataService = DataService()
+        self.dataService = DataService(configFileName)
         self.queryInterface = QueryInterface(self.dataService)
-
-        self.dataService.loadConfig(configFileName)
 
 
     def start(self):

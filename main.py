@@ -6,4 +6,4 @@ from stocking import Stocking
 
 
 if __name__ == "__main__":
-    Stocking('data/config.json').start()
+    Stocking('config.json').start()
