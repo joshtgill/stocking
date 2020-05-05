@@ -13,10 +13,12 @@ class QueryService:
 
 
     def buildQueries(self):
+        queryEnd = datetime.datetime.now()
+        queryStart = (datetime.datetime.now() - datetime.timedelta(days=29)).replace(hour=0, minute=0)
         queries = []
-        for queryData in self.dataService.config.get('queries'):
-            for i in range(len(queryData.get('symbols'))):
-                query = Query(queryData, i)
+        for interval in self.dataService.config.get('queries'):
+            for symbol in self.dataService.config.get('queries').get(interval):
+                query = Query(symbol, interval, queryStart, queryEnd)
                 queries.append(query)
 
         return queries
