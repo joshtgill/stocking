@@ -2,7 +2,6 @@ from forms.stock_data import StockData
 import datetime
 import yfinance
 import pandas
-import pytz
 
 
 class QueryInterface:
@@ -14,27 +13,26 @@ class QueryInterface:
     def performQuery(self, query):
         stockData = StockData(query.symbol, query.interval, query.start, query.end)
 
-        start = query.start
-        end = query.end
+        dataStart = query.start
+        dataEnd = query.end
         while True:
             # Due to yfinance request granularity, cannot request more than 7 days of data at 1m intervals.
-            if query.interval == '1m' and (end - start).days > 6:
-                end = start + datetime.timedelta(days=6, hours=6.5)
+            if query.interval == '1m' and (dataEnd - dataStart).days > 6:
+                dataEnd = dataStart + datetime.timedelta(days=6, hours=6.5)
 
             # Get history
-            stockHistory = yfinance.Ticker(query.symbol).history(start=start, end=end, interval=query.interval)
+            stockHistory = yfinance.Ticker(query.symbol).history(start=dataStart, end=dataEnd, interval=query.interval)
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
-                utcTimeStamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc)
-                formattedTimeStamp = utcTimeStamp.astimezone(pytz.timezone('US/Eastern')).strftime('{} {}'.format(self.dataService.configGet('dateFormat'), self.dataService.configGet('timeFormat')))
-                stockData.history.append([formattedTimeStamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
+                dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).strftime('%Y-%m-%d %H:%M:%S')
+                stockData.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
             # Stop if at end
-            if end == query.end:
+            if dataEnd == query.end:
                 break
 
             # Only here for 1m interval, iterate for next query
-            start = end + datetime.timedelta(hours=17.5)
-            end = query.end
+            dataStart = dataEnd + datetime.timedelta(hours=17.5)
+            dataEnd = query.end
 
         return stockData

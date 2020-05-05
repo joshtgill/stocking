@@ -1,4 +1,5 @@
 from forms.query import Query
+import datetime
 
 
 class QueryService:
@@ -13,9 +14,9 @@ class QueryService:
 
     def buildQueries(self):
         queries = []
-        for queryData in self.dataService.configGet('queries'):
+        for queryData in self.dataService.config.get('queries'):
             for i in range(len(queryData.get('symbols'))):
-                query = Query(self.dataService, queryData, i)
+                query = Query(queryData, i)
                 queries.append(query)
 
         return queries
@@ -24,18 +25,15 @@ class QueryService:
     def verifyQueries(self):
         for i in range(len(self.queries)):
             query = self.queries[i]
-            stockData = self.dataService.readStockData(query.symbol, query.interval)
-            if stockData is not None:
-                if stockData.end >= query.end:
+            stockData = self.dataService.loadStockData(query.symbol, query.interval)
+            if stockData:
+                query.start = (stockData.end + datetime.timedelta(minutes=1)).replace(second=0)
+                if query.start >= query.end:  # Stored stock data is just as or more recent than query
                     del self.queries[i]
-                    continue
-                elif stockData.end >= query.start:
-                    query.start = stockData.end
-                    query.start = query.start.replace(minute=query.start.minute + 1, second=0)
 
 
     def initiateQueries(self):
         for query in self.queries:
             stockData = self.queryInterface.performQuery(query)
 
-            self.dataService.writeStockData(stockData)
+            self.dataService.saveStockData(stockData)
