@@ -1,4 +1,4 @@
-class Query:
+class QueryForm:
 
     def __init__(self, symbol, interval, start, end):
         self.symbol = symbol
