@@ -23,13 +23,16 @@ class QueryService:
 
 
     def verifyQueries(self):
-        for i in range(len(self.queries)):
+        i = 0
+        while i < len(self.queries):
             query = self.queries[i]
             stockData = self.dataService.loadStockData(query.symbol, query.interval)
             if stockData:
                 query.start = (stockData.end + datetime.timedelta(minutes=1)).replace(second=0)
                 if query.start >= query.end:  # Stored stock data is just as or more recent than query
                     del self.queries[i]
+                    i -= 1
+            i += 1
 
 
     def initiateQueries(self):
