@@ -18,10 +18,12 @@ class QueryInterface:
         dataEnd = query.end
         while True:
             # Due to yfinance request granularity, cannot request more than 7 days of data at 1m intervals.
-            if query.interval == '1m' and (dataEnd - dataStart).days > 6:
-                dataEnd = dataStart + datetime.timedelta(days=6, hours=6.5)
+            if query.interval == '1m' and (dataEnd - dataStart).days > 7:
+                dataEnd = dataStart + datetime.timedelta(days=7)
 
             # Get history
+            print(dataStart, dataEnd)
+            # TODO: requests.exceptions.ConnectionError
             stockHistory = yfinance.Ticker(query.symbol).history(start=dataStart, end=dataEnd, interval=query.interval)
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
@@ -33,7 +35,7 @@ class QueryInterface:
                 break
 
             # Only here for 1m interval, iterate for next query
-            dataStart = dataEnd + datetime.timedelta(hours=17.5)
+            dataStart = dataEnd
             dataEnd = query.end
 
         return stockData

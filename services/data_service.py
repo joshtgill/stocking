@@ -22,6 +22,7 @@ class DataService:
 
     def loadStockData(self, symbol, interval):
         stockData = None
+
         for dataFileName in os.listdir('{}/'.format(self.config.get('stockDataLoc'))):
             splitDataFileName = dataFileName.split('_')
             fileSymbol = splitDataFileName[0]
@@ -40,8 +41,8 @@ class DataService:
 
 
     def write(self, fileLocation, fileName, data):
-        with open(fileLocation + fileName, 'a+') as fi:
-            fi.write(data)
+        with open(fileLocation + fileName, 'a+') as filee:
+            filee.write(data)
 
 
     def read(self, fileLocation, fileName, defaultData = ''):
@@ -49,7 +50,7 @@ class DataService:
 
         filePath = fileLocation + fileName
         if os.path.exists(filePath):
-            with open(filePath, 'r') as fi:
-                dataStr = fi.read()
+            with open(filePath, 'r') as filee:
+                dataStr = filee.read()
 
         return dataStr

@@ -8,7 +8,7 @@ class Stocking:
     def __init__(self, configFileName):
         self.dataService = DataService(configFileName)
         self.queryInterface = QueryInterface(self.dataService)
-
+        self.queryService = QueryService(self.dataService, self.queryInterface)
 
     def start(self):
-        QueryService(self.dataService, self.queryInterface).initiateQueries()
+        self.queryService.initiateQueries()

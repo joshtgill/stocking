@@ -13,8 +13,8 @@ class QueryService:
 
 
     def buildQueries(self):
-        queryEnd = datetime.datetime.now()
-        queryStart = (datetime.datetime.now() - datetime.timedelta(days=29)).replace(hour=0, minute=0)
+        queryEnd = datetime.datetime.now().replace(second=0, microsecond=0)
+        queryStart = (queryEnd - datetime.timedelta(days=29)).replace(hour=0, minute=0)
         queries = []
         for interval in self.dataService.config.get('queries'):
             for symbol in self.dataService.config.get('queries').get(interval):
@@ -30,7 +30,7 @@ class QueryService:
             query = self.queries[i]
             stockData = self.dataService.loadStockData(query.symbol, query.interval)
             if stockData:
-                query.start = (stockData.end + datetime.timedelta(minutes=1)).replace(second=0)
+                query.start = stockData.end.replace(second=0) + datetime.timedelta(minutes=1)  # Query start/end is inclusive
                 if query.start >= query.end:  # Stored stock data is just as or more recent than query
                     del self.queries[i]
                     i -= 1
