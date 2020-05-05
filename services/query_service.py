@@ -1,4 +1,4 @@
-from forms.query import Query
+from objects.query_form import QueryForm
 import datetime
 
 
@@ -17,7 +17,7 @@ class QueryService:
         queries = []
         for interval in self.dataService.config.get('queries'):
             for symbol in self.dataService.config.get('queries').get(interval):
-                query = self.optimizeQuery(Query(symbol, interval, queryStart, queryEnd))
+                query = self.optimizeQuery(QueryForm(symbol, interval, queryStart, queryEnd))
                 if query:
                     queries.append(query)
 

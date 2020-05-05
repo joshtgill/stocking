@@ -1,7 +1,7 @@
 import sys
 sys.path.append('interfaces/')
 sys.path.append('services/')
-sys.path.append('forms/')
+sys.path.append('objects/')
 from stocking import Stocking
 
 

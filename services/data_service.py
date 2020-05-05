@@ -1,6 +1,6 @@
 import json
 import os
-from forms.stock_data import StockData
+from objects.stock_data import StockData
 from datetime import datetime
 
 

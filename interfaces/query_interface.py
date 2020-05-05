@@ -1,4 +1,4 @@
-from forms.stock_data import StockData
+from objects.stock_data import StockData
 import datetime
 import yfinance
 import pandas
