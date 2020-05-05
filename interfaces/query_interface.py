@@ -22,15 +22,19 @@ class QueryInterface:
                 dataEnd = dataStart + datetime.timedelta(days=7)
 
             # Get history
-            print(dataStart, dataEnd)
-            # TODO: requests.exceptions.ConnectionError
-            stockHistory = yfinance.Ticker(query.symbol).history(start=dataStart, end=dataEnd, interval=query.interval)
+            stockHistory = None
+            try:
+                stockHistory = yfinance.Ticker(query.symbol).history(start=dataStart, end=dataEnd, interval=query.interval)
+            except requests.exceptions.ConnectionError:
+                continue  # Try again
+
+            # Store history
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
                 dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern').strftime('%Y-%m-%d %H:%M:%S')
                 stockData.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
-            # Stop if at end
+            # Stop if at end of query
             if dataEnd == query.end:
                 break
 

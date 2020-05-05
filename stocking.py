@@ -11,4 +11,4 @@ class Stocking:
         self.queryService = QueryService(self.dataService, self.queryInterface)
 
     def start(self):
-        self.queryService.initiateQueries()
+        self.queryService.performQueries()
