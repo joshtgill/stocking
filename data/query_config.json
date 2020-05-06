@@ -1,5 +1,6 @@
 {
     "stockDataLoc": "data/stock_data/",
+    "debug": true,
     "queries": {
         "1m": [
             "AAL",
