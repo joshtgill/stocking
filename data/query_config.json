@@ -3,6 +3,6 @@
     "logFilePath": "data/query.log",
     "debug": false,
     "queries": {
-        "1m": ["TSLA"]
+        "1m": "ALL_SYMBOLS"
     }
 }
