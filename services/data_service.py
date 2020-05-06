@@ -36,8 +36,9 @@ class DataService:
                     except NameError:
                         continue
                     stockData.history.append(dataLine)
-                stockData.start = datetime.strptime(stockData.history[0][0], '%Y-%m-%d %H:%M:%S')
-                stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '%Y-%m-%d %H:%M:%S')
+                if len(stockData.history) > 0:
+                    stockData.start = datetime.strptime(stockData.history[0][0], '%Y-%m-%d %H:%M:%S')
+                    stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '%Y-%m-%d %H:%M:%S')
                 break
 
         return stockData
