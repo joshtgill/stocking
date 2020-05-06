@@ -1,5 +1,6 @@
 {
     "stockDataLoc": "data/stock_data/",
+    "logFilePath": "data/stocking.log",
     "debug": true,
     "queries": {
         "1m": [

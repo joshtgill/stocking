@@ -28,6 +28,11 @@ class QueryInterface:
             except requests.exceptions.ConnectionError:
                 continue  # Try again
 
+            # Check history
+            if len(stockHistory) == 0:
+                self.dataService.addLogMessage('WARNING: {} has no history'.format(query.symbol))
+                return None
+
             # Store history
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):

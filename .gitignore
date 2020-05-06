@@ -6,3 +6,6 @@ __pycache__/
 
 # Stock data
 data/stock_data/
+
+# Log file
+stocking.log

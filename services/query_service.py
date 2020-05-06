@@ -39,9 +39,10 @@ class QueryService:
         numQueries = len(self.queries)
         for i in range(numQueries):
             stockData = self.queryInterface.performQuery(self.queries[i])
+            if stockData:
+                self.dataService.saveStockData(stockData)
 
             if debug:
                 print('{}/{}'.format(i + 1, numQueries), end='\r')
 
-            self.dataService.saveStockData(stockData)
 
