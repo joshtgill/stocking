@@ -41,6 +41,7 @@ class DataService:
                     stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '%Y-%m-%d %H:%M:%S')
                 else:
                     print(symbol)
+                    return None
 
                 break
 
