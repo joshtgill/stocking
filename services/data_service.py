@@ -7,9 +7,20 @@ from datetime import datetime
 class DataService:
 
     def __init__(self, configFileName):
-        self.config = json.loads(self.read('data/', configFileName, '{}'))
+        self.loadConfig(configFileName)
 
         open(self.config.get('logFilePath'), 'w').close()  # Clear log file contents
+
+
+    def loadConfig(self, configFileName):
+        self.config = json.loads(self.read('data/', configFileName, '{}'))
+
+        # Load in any vars
+        configVarMap = {'MASTER_LIST': 'data/symbols/master_list.json'}
+        for interval in self.config.get('queries'):
+            if self.config.get('queries').get(interval) in configVarMap.keys():
+                configVar = self.config.get('queries').get(interval)
+                self.config.get('queries').update({interval: json.loads(self.read(configVarMap.get(configVar), ''))})
 
 
     def saveStockData(self, stockData):
