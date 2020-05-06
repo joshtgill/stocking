@@ -14,7 +14,7 @@ class DataService:
 
     def loadConfig(self, configFilePath):
         self.config = {}
-        with open(onfigFilePath, 'r') as filee:
+        with open(configFilePath, 'r') as filee:
             self.config = json.loads(filee.read())
 
         # Load in any vars
