@@ -39,6 +39,9 @@ class DataService:
                 if len(stockData.history) > 0:
                     stockData.start = datetime.strptime(stockData.history[0][0], '%Y-%m-%d %H:%M:%S')
                     stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '%Y-%m-%d %H:%M:%S')
+                else:
+                    print(symbol)
+
                 break
 
         return stockData
