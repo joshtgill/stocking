@@ -13,7 +13,9 @@ class DataService:
 
 
     def loadConfig(self, configFileName):
-        self.config = json.loads(self.read('data/', configFileName, '{}'))
+        self.config = {}
+        with open('data/' + configFileName, 'r') as filee:
+            self.config = json.loads(filee.read())
 
         # Load in any vars
         configVarMap = {'MASTER_LIST': 'data/symbols/master_list.json'}
@@ -21,7 +23,10 @@ class DataService:
             configVar = self.config.get('queries').get(interval)
             if not isinstance(configVar, list) and configVar in configVarMap.keys():
                 configVar = self.config.get('queries').get(interval)
-                self.config.get('queries').update({interval: json.loads(self.read(configVarMap.get(configVar), ''))})
+                symbolsData = []
+                with open(configVarMap.get(configVar), 'r') as filee:
+                    symbolsData = json.loads(filee.read())
+                self.config.get('queries').update({interval: symbolsData})
 
 
     def saveStockData(self, stockData):
@@ -31,7 +36,8 @@ class DataService:
 
         fileName = '{}_{}.txt'.format(stockData.symbol, stockData.interval)
 
-        self.write('data/stock_data/', fileName, queryDataStr)
+        with open('data/stock_data/' + fileName, 'a+') as filee:
+            filee.write(queryDataStr)
 
 
     def getStockDataEnd(self, symbol, interval):
@@ -42,32 +48,22 @@ class DataService:
             fileSymbol = splitDataFileName[0]
             fileInterval = splitDataFileName[1][: splitDataFileName[1].index('.')]
             if fileSymbol == symbol and fileInterval == interval:
-                fileLines = self.read('data/stock_data/', dataFileName).split('\n')[: -1]
-                for dataLine in fileLines:
-                    pass  # Only want last line of data file
-                lastData = eval(dataLine)  # Convert to list
-                dataEnd = datetime.strptime(lastData[0], '%Y-%m-%d %H:%M:%S')
+                lastLine = ''
+                with open('data/stock_data/' + dataFileName, 'rb') as filee:
+                    filee.seek(-100, 2)
+                    lastLine = filee.readlines()[-1].decode()
+                dataEnd = datetime.strptime(eval(lastLine)[0], '%Y-%m-%d %H:%M:%S')
 
                 break
 
         return dataEnd
 
 
-    def addLogMessage(self, logMessage):
-        self.write(self.config.get('logFilePath'), '', logMessage + '\n')
+    def log(self, logMessage, logType='INFO'):
+        with open(self.config.get('logFilePath'), 'a+') as filee:
+            filee.write('[{}] ({}): {}\n'.format(datetime.now(), logType, logMessage))
 
 
     def write(self, fileLocation, fileName, data):
         with open(fileLocation + fileName, 'a+') as filee:
             filee.write(data)
-
-
-    def read(self, fileLocation, fileName, defaultData = ''):
-        dataStr = ''
-
-        filePath = fileLocation + fileName
-        if os.path.exists(filePath):
-            with open(filePath, 'r') as filee:
-                dataStr = filee.read()
-
-        return dataStr

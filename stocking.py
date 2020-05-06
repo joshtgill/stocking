@@ -17,4 +17,4 @@ class Stocking:
         self.queryService.performQueries()
 
         end = datetime.now()
-        self.dataService.addLogMessage('STAT: Completed in {}'.format(end - start))
+        self.dataService.log('Completed in {}'.format(end - start), 'STAT')

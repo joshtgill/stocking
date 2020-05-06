@@ -44,5 +44,3 @@ class QueryService:
 
             if debug:
                 print('{}/{}'.format(i + 1, numQueries), end='\r')
-
-

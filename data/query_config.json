@@ -1,7 +1,7 @@
 {
     "stockDataLoc": "data/stock_data/",
-    "logFilePath": "data/stocking.log",
-    "debug": true,
+    "logFilePath": "data/query.log",
+    "debug": false,
     "queries": {
         "1m": ["TSLA"]
     }

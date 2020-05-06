@@ -30,7 +30,7 @@ class QueryInterface:
 
             # Check history
             if len(stockHistory) == 0:
-                self.dataService.addLogMessage('WARNING: No history for {} from {} to {}'.format(query.symbol, query.start, query.end))
+                self.dataService.log('No history for {} from {} to {}'.format(query.symbol, query.start, query.end), 'WARNING')
                 return None
 
             # Store history
