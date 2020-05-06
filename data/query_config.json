@@ -3,6 +3,6 @@
     "logFilePath": "data/stocking.log",
     "debug": true,
     "queries": {
-        "1m": "MASTER_LIST"
+        "1m": ["TSLA"]
     }
 }
