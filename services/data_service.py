@@ -31,7 +31,6 @@ class DataService:
                 stockData = StockData(fileSymbol, fileInterval)
                 fileLines = self.read('data/stock_data/', dataFileName).split('\n')[: -1]
                 for dataLine in fileLines:
-                    dataLine = []
                     try:
                         dataLine = eval(dataLine.strip())
                     except NameError:
