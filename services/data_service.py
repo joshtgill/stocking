@@ -31,7 +31,11 @@ class DataService:
                 stockData = StockData(fileSymbol, fileInterval)
                 fileLines = self.read('data/stock_data/', dataFileName).split('\n')[: -1]
                 for dataLine in fileLines:
-                    dataLine = eval(dataLine.strip())
+                    dataLine = []
+                    try:
+                        dataLine = eval(dataLine.strip())
+                    except NameError:
+                        continue
                     stockData.history.append(dataLine)
                 stockData.start = datetime.strptime(stockData.history[0][0], '%Y-%m-%d %H:%M:%S')
                 stockData.end = datetime.strptime(stockData.history[len(stockData.history) - 1][0], '%Y-%m-%d %H:%M:%S')
