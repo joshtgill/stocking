@@ -9,8 +9,7 @@ class DataService:
     def __init__(self, configFileName):
         self.config = json.loads(self.read('data/', configFileName, '{}'))
 
-        self.logStr = ''
-        open(self.config.get('logFilePath'), 'w').close()  # Clear log
+        open(self.config.get('logFilePath'), 'w').close()  # Clear log file contents
 
 
     def saveStockData(self, stockData):
@@ -52,8 +51,7 @@ class DataService:
 
 
     def addLogMessage(self, logMessage):
-        self.logStr += '{}\n'.format(logMessage)
-        self.write(self.config.get('logFilePath'), '', self.logStr)
+        self.write(self.config.get('logFilePath'), '', logMessage + '\n')
 
 
     def write(self, fileLocation, fileName, data):
