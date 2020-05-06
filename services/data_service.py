@@ -6,15 +6,15 @@ from datetime import datetime
 
 class DataService:
 
-    def __init__(self, configFileName):
-        self.loadConfig(configFileName)
+    def __init__(self, configFilePath):
+        self.loadConfig(configFilePath)
 
         open(self.config.get('logFilePath'), 'w').close()  # Clear log file contents
 
 
-    def loadConfig(self, configFileName):
+    def loadConfig(self, configFilePath):
         self.config = {}
-        with open('data/' + configFileName, 'r') as filee:
+        with open(onfigFilePath, 'r') as filee:
             self.config = json.loads(filee.read())
 
         # Load in any vars
