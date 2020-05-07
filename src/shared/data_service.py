@@ -44,7 +44,7 @@ class DataService:
         self.basicWrite('data/stock_data/' + fileName, dataStr)
 
 
-    def loadStockDataEnd(self, symbol, interval):
+    def getStockDataEnd(self, symbol, interval):
         title = '{}_{}'.format(symbol, interval)
         if title in self.stockDataTitles:
             lastLine = ''
