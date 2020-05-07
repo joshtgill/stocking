@@ -8,8 +8,9 @@ class DataService:
 
     def __init__(self, configFilePath):
         self.loadConfig(configFilePath)
+        self.stockDataTitles = self.loadStockDataTitles()  # A stock title is of the format SYMBOL_INTERVAL
 
-        self.basicWrite(self.config.get('logFilePath'), ('-' * 30) + '\n')  # Divider
+        self.basicWrite(self.config.get('logFilePath'), ('-' * 30) + '\n')  # Write divider
 
 
     def loadConfig(self, configFilePath):
@@ -25,33 +26,35 @@ class DataService:
                 self.config.get('queries').update({interval: symbolsData})
 
 
+    def loadStockDataTitles(self):
+        titles = []
+        for fileName in os.listdir('{}/'.format(self.config.get('stockDataLoc'))):
+            titles.append(fileName[: fileName.index('.txt')])
+
+        return titles
+
+
     def saveStock(self, stock):
-        stockDataStr = ''
+        dataStr = ''
         for history in stock.history:
-            stockDataStr += str(history) + '\n'
+            dataStr += str(history) + '\n'
 
         fileName = '{}_{}.txt'.format(stock.symbol, stock.interval)
 
-        self.basicWrite('data/stock_data/' + fileName, stockDataStr)
+        self.basicWrite('data/stock_data/' + fileName, dataStr)
 
 
-    def getStockDataEnd(self, symbol, interval):
-        dataEnd = None
+    def loadStockDataEnd(self, symbol, interval):
+        title = '{}_{}'.format(symbol, interval)
+        if title in self.stockDataTitles:
+            lastLine = ''
+            with open('data/stock_data/{}.txt'.format(title), 'rb') as filee:
+                filee.seek(-100, 2)
+                lastLine = filee.readlines()[-1].decode()
 
-        for dataFileName in os.listdir('{}/'.format(self.config.get('stockDataLoc'))):
-            splitDataFileName = dataFileName.split('_')
-            fileSymbol = splitDataFileName[0]
-            fileInterval = splitDataFileName[1][: splitDataFileName[1].index('.')]
-            if fileSymbol == symbol and fileInterval == interval:
-                lastLine = ''
-                with open('data/stock_data/' + dataFileName, 'rb') as filee:
-                    filee.seek(-100, 2)
-                    lastLine = filee.readlines()[-1].decode()
-                dataEnd = datetime.strptime(eval(lastLine)[0], '%Y-%m-%d %H:%M:%S')
+            return datetime.strptime(eval(lastLine)[0], '%Y-%m-%d %H:%M:%S')
 
-                break
-
-        return dataEnd
+        return None
 
 
     def log(self, logMessage, logType='INFO'):

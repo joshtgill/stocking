@@ -25,7 +25,7 @@ class QueryService:
 
 
     def optimizeQuery(self, query):
-        stockDataEnd = self.dataService.getStockDataEnd(query.symbol, query.interval)
+        stockDataEnd = self.dataService.loadStockDataEnd(query.symbol, query.interval)
         if stockDataEnd:
             query.start = stockDataEnd.replace(second=0) + datetime.timedelta(minutes=1)  # Query start/end is inclusive
             if query.start >= query.end:  # Stored stock data is just as or more recent than query
