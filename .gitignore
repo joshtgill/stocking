@@ -7,5 +7,5 @@ __pycache__/
 # Stock data
 data/stock_data/
 
-# Query log file
-query.log
+# Log directory
+logs/
