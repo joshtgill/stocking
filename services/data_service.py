@@ -9,7 +9,7 @@ class DataService:
     def __init__(self, configFilePath):
         self.loadConfig(configFilePath)
 
-        open(self.config.get('logFilePath'), 'w').close()  # Clear log file contents
+        self.basicWrite(self.config.get('logFilePath'), ('-' * 30) + '\n')  # Divider
 
 
     def loadConfig(self, configFilePath):
