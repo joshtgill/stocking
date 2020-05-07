@@ -1,6 +1,6 @@
 {
     "stockDataLoc": "data/stock_data/",
-    "logFilePath": "logs/query.log",
+    "logFilePath": "log/query.log",
     "queries": {
         "1m": "GOOD_SYMBOLS"
     }
