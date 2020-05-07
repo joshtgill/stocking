@@ -13,19 +13,14 @@ class DataService:
 
 
     def loadConfig(self, configFilePath):
-        self.config = {}
-        with open(configFilePath, 'r') as filee:
-            self.config = json.loads(filee.read())
+        self.config = json.loads(self.basicRead(configFilePath, {}))
 
-        # Load in any vars
+        # Load any config vars
         configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json'}
         for interval in self.config.get('queries'):
             configVar = self.config.get('queries').get(interval)
             if not isinstance(configVar, list) and configVar in configVarMap.keys():
-                configVar = self.config.get('queries').get(interval)
-                symbolsData = []
-                with open(configVarMap.get(configVar), 'r') as filee:
-                    symbolsData = json.loads(filee.read())
+                symbolsData = json.loads(self.basicRead(configVarMap.get(configVar), []))
                 self.config.get('queries').update({interval: symbolsData})
 
 
@@ -36,8 +31,7 @@ class DataService:
 
         fileName = '{}_{}.txt'.format(stockData.symbol, stockData.interval)
 
-        with open('data/stock_data/' + fileName, 'a+') as filee:
-            filee.write(queryDataStr)
+        self.basicWrite('data/stock_data/' + fileName, queryDataStr)
 
 
     def getStockDataEnd(self, symbol, interval):
@@ -60,10 +54,17 @@ class DataService:
 
 
     def log(self, logMessage, logType='INFO'):
-        with open(self.config.get('logFilePath'), 'a+') as filee:
-            filee.write('[{}] ({}): {}\n'.format(datetime.now(), logType, logMessage))
+        logStr = '[{}] ({}): {}\n'.format(datetime.now(), logType, logMessage)
+        self.basicWrite(self.config.get('logFilePath'), logStr)
 
 
-    def write(self, fileLocation, fileName, data):
-        with open(fileLocation + fileName, 'a+') as filee:
+    def basicWrite(self, path, data):
+        with open(path, 'a+') as filee:
             filee.write(data)
+
+
+    def basicRead(self, path, defaultData = ''):
+        with open(path, 'r') as filee:
+            return filee.read()
+
+        return defaultData
