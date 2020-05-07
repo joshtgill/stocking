@@ -4,7 +4,7 @@ from shared.stock import Stock
 from datetime import datetime
 
 
-class DataService:
+class DataInterface:
 
     def __init__(self, configFilePath):
         self.loadConfig(configFilePath)

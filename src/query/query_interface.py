@@ -7,8 +7,8 @@ import pytz
 
 class QueryInterface:
 
-    def __init__(self, dataService):
-        self.dataService = dataService
+    def __init__(self, dataInterface):
+        self.dataInterface = dataInterface
 
 
     def performQuery(self, query):
@@ -30,7 +30,7 @@ class QueryInterface:
 
             # Check history
             if len(stockHistory) == 0:
-                self.dataService.log('No history for {} from {} to {}'.format(query.symbol, query.start, query.end), 'WARNING')
+                self.dataInterface.log('No history for {} from {} to {}'.format(query.symbol, query.start, query.end), 'WARNING')
                 return None
 
             # Store history
