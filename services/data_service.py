@@ -16,7 +16,8 @@ class DataService:
         self.config = json.loads(self.basicRead(configFilePath, {}))
 
         # Load any config vars
-        configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json'}
+        configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json', 'GOOD_SYMBOLS': 'data/symbols/good_symbols.json',
+                        'QUIET_SYMBOLS': 'data/symbols/quiet_symbols.json'}
         for interval in self.config.get('queries'):
             configVar = self.config.get('queries').get(interval)
             if not isinstance(configVar, list) and configVar in configVarMap.keys():
