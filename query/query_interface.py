@@ -1,4 +1,4 @@
-from objects.stock_data import StockData
+from shared.stock_data import StockData
 import datetime
 import yfinance
 import pandas

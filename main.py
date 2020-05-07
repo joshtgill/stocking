@@ -1,7 +1,6 @@
 import sys
-sys.path.append('interfaces/')
-sys.path.append('services/')
-sys.path.append('objects/')
+sys.path.append('shared/')
+sys.path.append('query/')
 import os
 from stocking import Stocking
 

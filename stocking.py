@@ -1,6 +1,6 @@
-from services.data_service import DataService
-from services.query_service import QueryService
-from interfaces.query_interface import QueryInterface
+from shared.data_service import DataService
+from query.query_service import QueryService
+from query.query_interface import QueryInterface
 from datetime import datetime
 
 

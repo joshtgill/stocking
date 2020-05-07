@@ -1,4 +1,4 @@
-from objects.query_form import QueryForm
+from query.query_form import QueryForm
 import datetime
 
 

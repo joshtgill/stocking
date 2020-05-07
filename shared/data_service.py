@@ -1,6 +1,6 @@
 import json
 import os
-from objects.stock_data import StockData
+from shared.stock_data import StockData
 from datetime import datetime
 
 
