@@ -1,4 +1,4 @@
-from shared.stock_data import StockData
+from shared.stock import Stock
 import datetime
 import yfinance
 import pandas
@@ -12,7 +12,7 @@ class QueryInterface:
 
 
     def performQuery(self, query):
-        stockData = StockData(query.symbol, query.interval, query.start, query.end)
+        queryStock = Stock(query.symbol, query.interval, query.start, query.end)
 
         dataStart = query.start
         dataEnd = query.end
@@ -37,7 +37,7 @@ class QueryInterface:
             dateTimes = stockHistory.index.values
             for rowIndex in range(len(stockHistory)):
                 dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern').strftime('%Y-%m-%d %H:%M:%S')
-                stockData.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
+                queryStock.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
             # Stop if at end of query
             if dataEnd == query.end:
@@ -47,4 +47,4 @@ class QueryInterface:
             dataStart = dataEnd
             dataEnd = query.end
 
-        return stockData
+        return queryStock

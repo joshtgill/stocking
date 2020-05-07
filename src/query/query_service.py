@@ -1,4 +1,4 @@
-from query.query_form import QueryForm
+from query.query import Query
 import datetime
 
 
@@ -17,9 +17,9 @@ class QueryService:
         queries = []
         for interval in self.dataService.config.get('queries'):
             for symbol in self.dataService.config.get('queries').get(interval):
-                query = self.optimizeQuery(QueryForm(symbol, interval, queryStart, queryEnd))
-                if query:
-                    queries.append(query)
+                optimizedQuery = self.optimizeQuery(Query(symbol, interval, queryStart, queryEnd))
+                if optimizedQuery:
+                    queries.append(optimizedQuery)
 
         return queries
 
@@ -37,6 +37,6 @@ class QueryService:
     def performQueries(self):
         numQueries = len(self.queries)
         for i in range(numQueries):
-            stockData = self.queryInterface.performQuery(self.queries[i])
-            if stockData:
-                self.dataService.saveStockData(stockData)
+            queryStock = self.queryInterface.performQuery(self.queries[i])
+            if queryStock:
+                self.dataService.saveStock(queryStock)

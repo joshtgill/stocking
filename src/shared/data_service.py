@@ -1,6 +1,6 @@
 import json
 import os
-from shared.stock_data import StockData
+from shared.stock import Stock
 from datetime import datetime
 
 
@@ -25,14 +25,14 @@ class DataService:
                 self.config.get('queries').update({interval: symbolsData})
 
 
-    def saveStockData(self, stockData):
-        queryDataStr = ''
-        for history in stockData.history:
-            queryDataStr += str(history) + '\n'
+    def saveStock(self, stock):
+        stockDataStr = ''
+        for history in stock.history:
+            stockDataStr += str(history) + '\n'
 
-        fileName = '{}_{}.txt'.format(stockData.symbol, stockData.interval)
+        fileName = '{}_{}.txt'.format(stock.symbol, stock.interval)
 
-        self.basicWrite('data/stock_data/' + fileName, queryDataStr)
+        self.basicWrite('data/stock_data/' + fileName, stockDataStr)
 
 
     def getStockDataEnd(self, symbol, interval):
