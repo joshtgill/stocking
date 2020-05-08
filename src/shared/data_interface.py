@@ -64,12 +64,21 @@ class DataInterface:
     def getStockDataEnd(self, symbol, interval):
         title = '{}_{}'.format(symbol, interval)
         if title in self.stockDataTitles:
-            lastLine = ''
+            lastLines = []
             with open('data/stock_data/{}.txt'.format(title), 'rb') as filee:
-                filee.seek(-100, 2)
-                lastLine = filee.readlines()[-1].decode()
+                filee.seek(-500, 2)
+                lastLines = filee.readlines()
 
-            return datetime.strptime(eval(lastLine)[0], '%Y-%m-%d %H:%M:%S')
+            del lastLines[0]  # First item is likely cut off
+            lastGoodLine = []
+            for line in lastLines:
+                try:
+                    lastGoodLine = eval(line.decode())
+                    break
+                except NameError:
+                    self.log('NAN value for ' + symbol, 'WARNING')
+                    continue
+            return datetime.strptime(lastGoodLine[0], '%Y-%m-%d %H:%M:%S')
 
         return None
 
