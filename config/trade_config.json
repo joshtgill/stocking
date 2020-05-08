@@ -1,0 +1,16 @@
+{
+    "buys": [
+        {
+            "symbol": "TSLA",
+            "shares": 1,
+            "datetime": "2020-04-15 12:58:00"
+        }
+    ],
+    "sells": [
+        {
+            "symbol": "TSLA",
+            "shares": 1,
+            "datetime": "2020-04-30 11:46:00"
+        }
+    ]
+}

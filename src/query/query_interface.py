@@ -48,3 +48,15 @@ class QueryInterface:
             dataEnd = query.end
 
         return queryStock
+
+'''
+TODO
+stockHistory = None
+stockHistory = yfinance.download(tickers='TSLA', period='max', interval='1h')
+
+# Store history
+dateTimes = stockHistory.index.values
+for rowIndex in range(len(stockHistory)):
+    dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern').strftime('%Y-%m-%d %H:%M:%S')
+    print(dataTimestamp)
+'''

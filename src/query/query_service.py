@@ -15,8 +15,8 @@ class QueryService:
         queryEnd = datetime.datetime.now().replace(second=0, microsecond=0)
         queryStart = (queryEnd - datetime.timedelta(days=29)).replace(hour=0, minute=0)
         queries = []
-        for interval in self.dataInterface.config.get('queries'):
-            for symbol in self.dataInterface.config.get('queries').get(interval):
+        for interval in self.dataInterface.queryConfig.get('queries'):
+            for symbol in self.dataInterface.queryConfig.get('queries').get(interval):
                 optimizedQuery = self.optimizeQuery(Query(symbol, interval, queryStart, queryEnd))
                 if optimizedQuery:
                     queries.append(optimizedQuery)
