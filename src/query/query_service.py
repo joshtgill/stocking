@@ -12,12 +12,10 @@ class QueryService:
 
 
     def buildQueries(self):
-        queryEnd = datetime.datetime.now().replace(second=0, microsecond=0)
-        queryStart = (queryEnd - datetime.timedelta(days=29)).replace(hour=0, minute=0)
         queries = []
-        for interval in self.dataInterface.queryConfig.get('queries'):
-            for symbol in self.dataInterface.queryConfig.get('queries').get(interval):
-                optimizedQuery = self.optimizeQuery(Query(symbol, interval, queryStart, queryEnd))
+        for interval, intervalData in self.dataInterface.queryConfig.get('queries').items():
+            for symbol in intervalData.get('symbols'):
+                optimizedQuery = self.optimizeQuery(Query(symbol, interval, intervalData.get('period')))
                 if optimizedQuery:
                     queries.append(optimizedQuery)
 
@@ -25,12 +23,6 @@ class QueryService:
 
 
     def optimizeQuery(self, query):
-        stockDataEnd = self.dataInterface.getStockDataEnd(query.symbol, query.interval)
-        if stockDataEnd:
-            query.start = stockDataEnd.replace(second=0) + datetime.timedelta(minutes=1)  # Query start/end is inclusive
-            if query.start >= query.end:  # Stored stock data is just as or more recent than query
-                return None
-
         return query
 
 

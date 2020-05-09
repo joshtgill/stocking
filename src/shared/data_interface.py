@@ -19,13 +19,16 @@ class DataInterface:
         config = json.loads(self.basicRead(configFilePath, {}))
 
         # Load any config vars
-        configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json', 'GOOD_SYMBOLS': 'data/symbols/good_symbols.json',
-                        'QUIET_SYMBOLS': 'data/symbols/quiet_symbols.json'}
-        for interval in config.get('queries'):
-            configVar = config.get('queries').get(interval)
-            if not isinstance(configVar, list) and configVar in configVarMap.keys():
-                symbolsData = json.loads(self.basicRead(configVarMap.get(configVar), []))
-                config.get('queries').update({interval: symbolsData})
+        configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json'}
+
+        for interval, intervalData in config.get('queries').items():
+            symbols = intervalData.get('symbols')
+            if not isinstance(symbols, list):
+                if symbols in configVarMap.keys():  # Symbols value is config var
+                    symbolsData = json.loads(self.basicRead(configVarMap.get(intervalSymbols), []))
+                else:  # Symbols value is a single symbol
+                    symbolsData = [symbols]
+                intervalData.update({'symbols': symbolsData})
 
         return config
 

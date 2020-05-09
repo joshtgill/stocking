@@ -20,5 +20,5 @@ class Stocking:
         end = datetime.now()
         self.dataInterface.log('Completed in {}'.format(end - start), 'STAT')
 
-        self.tradeService = TradeService(self.dataInterface)
-        self.tradeService.simulateTrading()
+        # self.tradeService = TradeService(self.dataInterface)
+        # self.tradeService.simulateTrading()

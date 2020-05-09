@@ -1,5 +1,16 @@
 {
     "queries": {
-        "1m": ["TSLA"]
+        "1d": {
+            "symbols": ["TSLA"],
+            "period": "max"
+        },
+        "1h": {
+            "symbols": ["TSLA"],
+            "period": "5d"
+        },
+        "1m": {
+            "symbols": "TSLA",
+            "period": "5d"
+        }
     }
 }

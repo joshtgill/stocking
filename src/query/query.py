@@ -1,7 +1,6 @@
 class Query:
 
-    def __init__(self, symbol, interval, start, end):
+    def __init__(self, symbol, interval, period):
         self.symbol = symbol
         self.interval = interval
-        self.start = start
-        self.end = end
+        self.period = period
