@@ -7,8 +7,8 @@ from datetime import datetime
 
 class Stocking:
 
-    def __init__(self, queryConfigFileName, tradeConfigFileName):
-        self.dataInterface = DataInterface(queryConfigFileName, tradeConfigFileName)
+    def __init__(self, mainConfigFileName):
+        self.dataInterface = DataInterface(mainConfigFileName)
         self.queryInterface = QueryInterface(self.dataInterface)
         self.queryService = QueryService(self.dataInterface, self.queryInterface)
         self.tradeService = None

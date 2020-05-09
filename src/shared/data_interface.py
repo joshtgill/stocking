@@ -6,12 +6,13 @@ from datetime import datetime
 
 class DataInterface:
 
-    def __init__(self, queryConfigFilePath, tradeConfigFilePath):
-        self.queryConfig = self.loadQueryConfig(queryConfigFilePath)
-        self.tradeConfig = json.loads(self.basicRead(tradeConfigFilePath, {}))
+    def __init__(self, mainConfigFilePath):
+        self.config = json.loads(self.basicRead(mainConfigFilePath))
+        self.queryConfig = self.loadQueryConfig(self.config.get('queryConfigPath'))
+        self.tradeConfig = json.loads(self.basicRead(self.config.get('tradeConfigPath'), {}))
 
+        self.logFilePath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
         self.stockDataTitles = self.loadStockDataTitles()  # A stock title is of the format SYMBOL_INTERVAL
-        self.basicWrite(self.queryConfig.get('logFilePath'), ('-' * 30) + '\n')  # Write divider
 
 
     def loadQueryConfig(self, configFilePath):
@@ -31,7 +32,7 @@ class DataInterface:
 
     def loadStockDataTitles(self):
         titles = []
-        for fileName in os.listdir('{}/'.format(self.queryConfig.get('stockDataLoc'))):
+        for fileName in os.listdir('{}/'.format('data/stock_data')):
             titles.append(fileName[: fileName.index('.txt')])
 
         return titles
@@ -97,7 +98,7 @@ class DataInterface:
 
     def log(self, logMessage, logType='INFO'):
         logStr = '[{}] ({}): {}\n'.format(datetime.now(), logType, logMessage)
-        self.basicWrite(self.queryConfig.get('logFilePath'), logStr)
+        self.basicWrite(self.logFilePath, logStr)
 
 
     def basicWrite(self, path, data):

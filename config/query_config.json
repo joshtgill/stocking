@@ -1,6 +1,4 @@
 {
-    "stockDataLoc": "data/stock_data/",
-    "logFilePath": "log/query.log",
     "queries": {
         "1m": ["TSLA"]
     }

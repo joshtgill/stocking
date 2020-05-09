@@ -1,0 +1,4 @@
+{
+    "queryConfigPath": "config/query_config.json",
+    "tradeConfigPath": "config/trade_config.json"
+}
