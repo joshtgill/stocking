@@ -2,6 +2,6 @@
     "stockDataLoc": "data/stock_data/",
     "logFilePath": "log/query.log",
     "queries": {
-        "1m": "GOOD_SYMBOLS"
+        "1m": ["TSLA"]
     }
 }
