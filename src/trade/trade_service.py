@@ -8,15 +8,27 @@ class TradeService():
     def __init__(self, stockDataInterface):
         self.stockDataInterface = stockDataInterface
 
-        self.buyTrades, self.sellTrades = self.stockDataInterface.loadTradeData()
+        self.buyTrades, self.sellTrades = self.buildTradeData()
         self.stocksTrading = self.loadStocksTrading()
         self.timeFrame = self.loadTimeFrame()
+
+
+    def buildTradeData(self):
+        buys = {}
+        for buy in self.tradeConfig.get('buys'):
+            buys.update({datetime.strptime(buy.get('datetime'), '%Y-%m-%d %H:%M:%S'): (buy.get('symbol'), buy.get('shares'))})
+
+        sells = {}
+        for sell in self.tradeConfig.get('sells'):
+            sells.update({datetime.strptime(sell.get('datetime'), '%Y-%m-%d %H:%M:%S'): (sell.get('symbol'), sell.get('shares'))})
+
+        return buys, sells
 
 
     def loadStocksTrading(self):
         stocks = {}
         for dateTimeKey in self.buyTrades:
-            stock = self.stockDataInterface.loadStockData(self.buyTrades.get(dateTimeKey)[0], '1m')
+            stock = self.stockDataInterface.load(self.buyTrades.get(dateTimeKey)[0], '1m')
             stocks.update({stock.symbol: stock.history})
 
         return stocks

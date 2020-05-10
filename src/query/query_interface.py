@@ -1,15 +1,10 @@
 from common.stock import Stock
-import datetime
 import yfinance
-import pandas
 import pytz
+import pandas
 
 
 class QueryInterface:
-
-    def __init__(self, stockDataInterface):
-        self.stockDataInterface = stockDataInterface
-
 
     def performQuery(self, query):
         stock = Stock(query.symbol, query.interval)
