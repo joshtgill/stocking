@@ -1,5 +1,5 @@
 import sys
-sys.path.append('shared/')
+sys.path.append('common/')
 sys.path.append('query/')
 sys.path.append('trade/')
 import os

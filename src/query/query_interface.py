@@ -1,4 +1,4 @@
-from shared.stock import Stock
+from common.stock import Stock
 import datetime
 import yfinance
 import pandas

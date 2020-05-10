@@ -1,6 +1,6 @@
 import json
 import os
-from shared.stock import Stock
+from common.stock import Stock
 from datetime import datetime
 
 

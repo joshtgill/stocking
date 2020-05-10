@@ -1,4 +1,4 @@
-from shared.data_interface import DataInterface
+from common.data_interface import DataInterface
 from query.query_service import QueryService
 from query.query_interface import QueryInterface
 from trade.trade_service import TradeService
@@ -19,6 +19,3 @@ class Stocking:
         self.queryService.performQueries()
         end = datetime.now()
         self.dataInterface.log('Completed in {}'.format(end - start), 'STAT')
-
-        # self.tradeService = TradeService(self.dataInterface)
-        # self.tradeService.simulateTrading()
