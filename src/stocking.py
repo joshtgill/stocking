@@ -18,7 +18,6 @@ class Stocking:
 
 
     def start(self):
-        start = datetime.now()
+        self.logService.signalStart()
         self.queryService.performQueries()
-        end = datetime.now()
-        self.logService.log('Completed in {}'.format(end - start), 'STAT')
+        self.logService.signalEnd()
