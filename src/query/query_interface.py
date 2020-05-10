@@ -7,8 +7,8 @@ import pytz
 
 class QueryInterface:
 
-    def __init__(self, dataInterface):
-        self.dataInterface = dataInterface
+    def __init__(self, stockDataInterface):
+        self.stockDataInterface = stockDataInterface
 
 
     def performQuery(self, query):

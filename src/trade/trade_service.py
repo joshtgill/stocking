@@ -5,10 +5,10 @@ import pytz
 
 class TradeService():
 
-    def __init__(self, dataInterface):
-        self.dataInterface = dataInterface
+    def __init__(self, stockDataInterface):
+        self.stockDataInterface = stockDataInterface
 
-        self.buyTrades, self.sellTrades = self.dataInterface.loadTradeData()
+        self.buyTrades, self.sellTrades = self.stockDataInterface.loadTradeData()
         self.stocksTrading = self.loadStocksTrading()
         self.timeFrame = self.loadTimeFrame()
 
@@ -16,7 +16,7 @@ class TradeService():
     def loadStocksTrading(self):
         stocks = {}
         for dateTimeKey in self.buyTrades:
-            stock = self.dataInterface.loadStockData(self.buyTrades.get(dateTimeKey)[0], '1m')
+            stock = self.stockDataInterface.loadStockData(self.buyTrades.get(dateTimeKey)[0], '1m')
             stocks.update({stock.symbol: stock.history})
 
         return stocks

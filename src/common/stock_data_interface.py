@@ -4,7 +4,7 @@ from common.stock import Stock
 from datetime import datetime
 
 
-class DataInterface:
+class StockDataInterface:
 
     def __init__(self, mainConfigFilePath):
         self.config = json.loads(self.basicRead(mainConfigFilePath))
