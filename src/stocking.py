@@ -1,3 +1,4 @@
+from common.file_service import FileService
 from common.config_interface import ConfigInterface
 from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
@@ -9,10 +10,10 @@ from datetime import datetime
 class Stocking:
 
     def __init__(self, mainConfigFileName):
-        self.configInterface = ConfigInterface(mainConfigFileName)
-
-        self.stockDataInterface = StockDataInterface()
-        self.logService = LogService()
+        self.fileService = FileService()
+        self.configInterface = ConfigInterface(mainConfigFileName, self.fileService)
+        self.stockDataInterface = StockDataInterface(self.fileService)
+        self.logService = LogService(self.fileService)
         self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface, self.logService)
         self.tradeService = None
 

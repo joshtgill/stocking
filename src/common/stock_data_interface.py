@@ -6,62 +6,35 @@ from datetime import datetime
 
 class StockDataInterface:
 
-    def __init__(self):
-        self.stockDataTitles = self.loadTitles()  # A stock title is of the format SYMBOL_INTERVAL
-
-
-    def loadTitles(self):
-        titles = []
-        for fileName in os.listdir('{}/'.format('data/stock_data')):
-            titles.append(fileName[: fileName.index('.txt')])
-
-        return titles
+    def __init__(self, fileService):
+        self.fileService = fileService
+        self.dataLocation = 'data/stock_data/'
+        self.dataFileNames = self.fileService.listDirectory(self.dataLocation)
 
 
     def save(self, stock):
-        dataStr = ''
-        for history in stock.history:
-            dataStr += str(history) + '\n'
+        historyStr = ''
+        for historyItem in stock.history:
+            historyStr += '{}\n'.format(str(historyItem))
 
-        fileTitle = '{}_{}'.format(stock.symbol, stock.interval)
-        if fileTitle not in self.stockDataTitles:
-            self.stockDataTitles.append(fileTitle)
+        fileName = '{}_{}.txt'.format(stock.symbol, stock.interval)
+        if fileName not in self.dataFileNames:
+            self.dataFileNames.append(fileName)
 
-        filePath = 'data/stock_data/{}.txt'.format(fileTitle)
-        with open(filePath, 'a+') as stockDataFile:
-            stockDataFile.write(dataStr)
+        self.fileService.write(self.dataLocation + fileName, historyStr)
 
 
-    def load(self, symbol, interval):
+    def load(self, symbol, interval, onlyLastItem=False):
         stockDataTitle = symbol + '_' + interval
         if stockDataTitle in self.stockDataTitles:
             stock = Stock(symbol, interval)
-            with open('data/stock_data/{}.txt'.format(stockDataTitle), 'r') as filee:
-                for historyItem in filee.readlines()[: -1]:
+            filePath = self.dataLocation + stockDataTitle
+            if onlyLastItem:
+                stock.history.append(eval(self.fileService.readLastLine(filePath)))
+            else:
+                for historyItem in self.fileService.readlines(filePath)[: -1]:
                     stock.history.append(eval(historyItem))
 
             return stock
-
-        return None
-
-
-    def loadDataEnd(self, symbol, interval):
-        title = '{}_{}'.format(symbol, interval)
-        if title in self.stockDataTitles:
-            lastLines = []
-            with open('data/stock_data/{}.txt'.format(title), 'rb') as filee:
-                filee.seek(-500, 2)
-                lastLines = filee.readlines()
-
-            del lastLines[0]  # First item is likely cut off
-            lastGoodLine = []
-            for line in lastLines:
-                try:
-                    lastGoodLine = eval(line.decode())
-                    break
-                except NameError:
-                    self.log('NAN value for ' + symbol, 'WARNING')
-                    continue
-            return datetime.strptime(lastGoodLine[0], '%Y-%m-%d %H:%M:%S')
 
         return None
