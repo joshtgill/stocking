@@ -1,6 +1,6 @@
 from query.query_interface import QueryInterface
 from query.query import Query
-import datetime
+from datetime import datetime
 
 
 class QueryService:
@@ -26,6 +26,12 @@ class QueryService:
 
 
     def optimizeQuery(self, query):
+        stockData = self.stockDataInterface.load(query.symbol, query.interval, True)
+        if stockData:
+            query.start = datetime.strptime(stockData.history[0][0], '%Y-%m-%d %H:%M:%S')
+            query.end = datetime.now()
+            query.period = None
+
         return query
 
 

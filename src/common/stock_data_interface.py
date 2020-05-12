@@ -25,12 +25,16 @@ class StockDataInterface:
 
 
     def load(self, symbol, interval, onlyLastItem=False):
-        stockDataTitle = symbol + '_' + interval
-        if stockDataTitle in self.stockDataTitles:
+        dataFileName = '{}_{}.txt'.format(symbol, interval)
+        if dataFileName in self.dataFileNames:
             stock = Stock(symbol, interval)
-            filePath = self.dataLocation + stockDataTitle
+            filePath = self.dataLocation + dataFileName
             if onlyLastItem:
-                stock.history.append(eval(self.fileService.readLastLine(filePath)))
+                lastLine = self.fileService.readLastLine(filePath)
+                if lastLine:
+                    stock.history.append(eval(lastLine))
+                else:
+                    return None
             else:
                 for historyItem in self.fileService.readlines(filePath)[: -1]:
                     stock.history.append(eval(historyItem))

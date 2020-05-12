@@ -10,7 +10,11 @@ class QueryInterface:
         stock = Stock(query.symbol, query.interval)
 
         # Get history
-        stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, period=query.period)
+        if query.period:
+            stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, period=query.period)
+        else:
+            stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, start=query.start.strftime('%Y-%m-%d'),
+                                                                                          end=query.end.strftime('%Y-%m-%d'))
 
         # Store history
         dateTimes = stockHistory.index.values

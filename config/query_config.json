@@ -1,7 +1,7 @@
 {
     "queries": {
         "1d": {
-            "symbols": "TSLA",
+            "symbols": "ALL_SYMBOLS",
             "period": "max"
         }
     }

@@ -35,8 +35,11 @@ class FileService:
 
     def readLastLine(self, filePath, maxLineLength=100):
         with open(filePath, 'rb') as filee:
-            filee.seek(-maxLineLength, 2)
-            return filee.readlines()[-1].decode()
+            try:
+                filee.seek(-maxLineLength, 2)
+                return filee.readlines()[-1].decode()
+            except OSError:
+                pass
 
         return ''
 
