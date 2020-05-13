@@ -26,7 +26,7 @@ class StockDataInterface:
         dataFile = '{}_{}.txt'.format(symbol, interval)
         if dataFile in self.dataFiles:
             stock = Stock(symbol, interval)
-            for historyItem in self.fileService.readlines(self.dataLocation + dataFile)[: -1]:
+            for historyItem in self.fileService.readLines(self.dataLocation + dataFile)[: -1]:
                 stock.history.append(eval(historyItem))
 
             return stock
