@@ -4,5 +4,8 @@
 # Python pycache
 __pycache__/
 
-# Log directory
+# Logs
 log/
+
+# Local data
+local/
