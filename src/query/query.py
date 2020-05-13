@@ -4,5 +4,3 @@ class Query:
         self.symbol = symbol
         self.interval = interval
         self.period = period
-        self.start = None
-        self.end = None

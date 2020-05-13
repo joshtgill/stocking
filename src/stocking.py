@@ -14,11 +14,11 @@ class Stocking:
         self.configInterface = ConfigInterface(mainConfigFileName, self.fileService)
         self.stockDataInterface = StockDataInterface(self.fileService)
         self.logService = LogService(self.fileService)
-        self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface, self.logService)
+        self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface)
         self.tradeService = None
 
 
     def start(self):
         self.logService.signalStart()
-        self.queryService.performQueries()
+        self.queryService.initiateQueries()
         self.logService.signalEnd()

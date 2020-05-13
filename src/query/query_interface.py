@@ -7,17 +7,12 @@ import pandas
 class QueryInterface:
 
     def performQuery(self, query):
-        stock = Stock(query.symbol, query.interval)
-
-        # Get history
-        if query.period:
-            stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, period=query.period)
-        else:
-            stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, start=query.start.strftime('%Y-%m-%d'),
-                                                                                          end=query.end.strftime('%Y-%m-%d'))
-
-        # Store history
+        # Get history data
+        stockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, period=query.period)
         dateTimes = stockHistory.index.values
+
+        # Store history data
+        stock = Stock(query.symbol, query.interval)
         for rowIndex in range(len(stockHistory)):
             dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern').strftime('%Y-%m-%d %H:%M:%S')
             stock.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1],

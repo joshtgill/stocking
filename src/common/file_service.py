@@ -3,19 +3,16 @@ import os
 
 class FileService:
 
-    def write(self, filePath, data, clearBefore=False):
-        locationItems = filePath.strip().strip('/').split('/')[: - 1]
+    def write(self, path, data):
+        locationItems = path.strip().strip('/').split('/')[: - 1]
 
-        directoryPath = ''
+        location = ''
         for directory in locationItems:
-            directoryPath += directory + '/'
-            if not os.path.exists(directoryPath):
-                os.mkdir(directoryPath)
+            location += directory + '/'
+            if not os.path.exists(location):
+                os.mkdir(location)
 
-        if clearBefore:
-            open(filePath, 'w').close()
-
-        with open(filePath, 'a+') as filee:
+        with open(path, 'w+') as filee:
             filee.write(data)
 
 
@@ -26,25 +23,14 @@ class FileService:
         return ''
 
 
-    def readLines(self, filePath):
-        with open(filePath, 'r') as filee:
+    def readLines(self, path):
+        with open(path, 'r') as filee:
             return filee.readlines()
 
         return []
 
 
-    def readLastLine(self, filePath, maxLineLength=100):
-        with open(filePath, 'rb') as filee:
-            try:
-                filee.seek(-maxLineLength, 2)
-                return filee.readlines()[-1].decode()
-            except OSError:
-                pass
-
-        return ''
-
-
-    def listDirectory(self, location):
+    def listLocation(self, location):
         try:
             return os.listdir(location)
         except FileNotFoundError:

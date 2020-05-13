@@ -3,11 +3,11 @@ import yfinance
 import pandas
 import pytz
 
+
 class TradeService():
 
     def __init__(self, stockDataInterface):
         self.stockDataInterface = stockDataInterface
-
         self.buyTrades, self.sellTrades = self.buildTradeData()
         self.stocksTrading = self.loadStocksTrading()
         self.timeFrame = self.loadTimeFrame()

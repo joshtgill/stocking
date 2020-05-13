@@ -9,35 +9,25 @@ class StockDataInterface:
     def __init__(self, fileService):
         self.fileService = fileService
         self.dataLocation = 'data/stock_data/'
-        self.dataFileNames = self.fileService.listDirectory(self.dataLocation)
+        self.dataFiles = self.fileService.listLocation(self.dataLocation)
 
 
     def save(self, stock):
-        historyStr = ''
+        historyDataStr = ''
         for historyItem in stock.history:
-            historyStr += '{}\n'.format(str(historyItem))
+            historyDataStr += '{}\n'.format(historyItem)
 
-        fileName = '{}_{}.txt'.format(stock.symbol, stock.interval)
-        if fileName not in self.dataFileNames:
-            self.dataFileNames.append(fileName)
-
-        self.fileService.write(self.dataLocation + fileName, historyStr)
+        dataFile = '{}_{}.txt'.format(stock.symbol, stock.interval)
+        self.dataFiles.append(dataFile)
+        self.fileService.write(self.dataLocation + dataFile, historyDataStr)
 
 
-    def load(self, symbol, interval, onlyLastItem=False):
-        dataFileName = '{}_{}.txt'.format(symbol, interval)
-        if dataFileName in self.dataFileNames:
+    def load(self, symbol, interval):
+        dataFile = '{}_{}.txt'.format(symbol, interval)
+        if dataFile in self.dataFiles:
             stock = Stock(symbol, interval)
-            filePath = self.dataLocation + dataFileName
-            if onlyLastItem:
-                lastLine = self.fileService.readLastLine(filePath)
-                if lastLine:
-                    stock.history.append(eval(lastLine))
-                else:
-                    return None
-            else:
-                for historyItem in self.fileService.readlines(filePath)[: -1]:
-                    stock.history.append(eval(historyItem))
+            for historyItem in self.fileService.readlines(self.dataLocation + dataFile)[: -1]:
+                stock.history.append(eval(historyItem))
 
             return stock
 

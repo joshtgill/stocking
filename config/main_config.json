@@ -1,4 +1,4 @@
 {
-    "queryConfigFilePath": "config/query_config.json",
-    "tradeConfigFilePath": "config/trade_config.json"
+    "queryConfigPath": "config/query_config.json",
+    "tradeConfigPath": "config/trade_config.json"
 }

@@ -5,7 +5,7 @@ class LogService:
 
     def __init__(self, fileService):
         self.fileService = fileService
-        self.logFilePath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
+        self.logPath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
         self.startDateTime = None
 
 
@@ -18,4 +18,4 @@ class LogService:
 
 
     def log(self, message, logType='INFO'):
-        self.fileService.write(self.logFilePath, '[{}] ({}): {}\n'.format(datetime.now(), logType, message))
+        self.fileService.write(self.logPath, '[{}] ({}): {}\n'.format(datetime.now(), logType, message))
