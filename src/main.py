@@ -1,6 +1,7 @@
 import sys
 sys.path.append('common/')
 sys.path.append('query/')
+sys.path.append('learn/')
 sys.path.append('trade/')
 import os
 from stocking import Stocking
