@@ -5,5 +5,5 @@
             "period": "max"
         }
     },
-    "showStatus": true
+    "showStatus": false
 }
