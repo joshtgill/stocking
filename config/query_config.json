@@ -4,5 +4,6 @@
             "symbols": "ALL_SYMBOLS",
             "period": "max"
         }
-    }
+    },
+    "showStatus": true
 }
