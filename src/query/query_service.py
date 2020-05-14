@@ -22,6 +22,10 @@ class QueryService:
 
 
     def initiateQueries(self):
-        for query in self.queries:
-            stock = self.queryInterface.performQuery(query)
+        showStatus = self.queryConfig.get('showStatus')
+        numQueries = len(self.queries)
+        for i in range(numQueries):
+            stock = self.queryInterface.performQuery(self.queries[i])
             self.stockDataInterface.save(stock)
+            if showStatus:
+                print('{}/{}'.format(i + 1, numQueries), end='\r')
