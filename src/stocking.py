@@ -10,10 +10,9 @@ from datetime import datetime
 
 class Stocking:
 
-    def __init__(self, mainConfigFileName, action):
+    def __init__(self, mainConfigFileName):
         self.fileService = FileService()
         self.configInterface = ConfigInterface(mainConfigFileName, self.fileService)
-        self.action = action
         self.stockDataInterface = StockDataInterface(self.fileService)
         self.logService = LogService(self.fileService)
         self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface)
@@ -21,12 +20,12 @@ class Stocking:
         self.tradeService = TradeService(self.configInterface.tradeConfig, self.stockDataInterface)
 
 
-    def start(self):
+    def start(self, action):
         self.logService.signalStart()
 
-        if self.action == 0:
+        if action == 0:
             self.queryService.initiateQueries()
-        elif self.action == 1:
+        elif action == 1:
             self.learnService.analyzeData()
         else:
             self.tradeService.simulateTrading()
