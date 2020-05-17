@@ -1,7 +1,8 @@
 from common.stock import Stock
 import yfinance
-import pytz
 import pandas
+import pytz
+import datetime
 import numpy
 
 
@@ -15,9 +16,10 @@ class QueryInterface:
         # Store history data
         stock = Stock(query.symbol, query.interval)
         for rowIndex in range(len(stockHistory)):
-            dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern').strftime('%Y-%m-%d %H:%M:%S')
             if not numpy.isnan(stockHistory.iloc[rowIndex, 0]):
-                stock.history.append([dataTimestamp, stockHistory.iloc[rowIndex, 0], stockHistory.iloc[rowIndex, 1],
-                                                    stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
+                dataTimestamp = pandas.to_datetime((dateTimes[rowIndex])).replace(tzinfo=pytz.utc).astimezone('US/Eastern')
+                dataTimestampFixed = dataTimestamp + datetime.timedelta(days=1)  # Yfinance's timestamp is behind by one day
+                stock.history.append([dataTimestamp.strftime('%Y-%m-%d %H:%M:%S'), stockHistory.iloc[rowIndex, 0],
+                                      stockHistory.iloc[rowIndex, 1], stockHistory.iloc[rowIndex, 2], stockHistory.iloc[rowIndex, 3]])
 
         return stock
