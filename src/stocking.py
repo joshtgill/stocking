@@ -17,7 +17,7 @@ class Stocking:
         self.logService = LogService(self.fileService)
         self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface)
         self.learnService = LearnService(self.stockDataInterface)
-        self.tradeService = TradeService(self.configInterface.tradeConfig, self.stockDataInterface)
+        # self.tradeService = TradeService(self.configInterface.tradeConfig, self.stockDataInterface)
 
 
     def start(self, action):
@@ -27,7 +27,5 @@ class Stocking:
             self.queryService.initiateQueries()
         elif action == 1:
             self.learnService.analyzeData()
-        else:
-            self.tradeService.simulateTrading()
 
         self.logService.signalEnd()

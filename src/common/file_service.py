@@ -30,6 +30,18 @@ class FileService:
         return []
 
 
+    def readLastLines(self, path, numLastLines, maxLineLength=70):
+        with open(path, 'rb') as filee:
+            try:
+                filee.seek(-(numLastLines * maxLineLength), 2)
+            except OSError:
+                return []
+
+            return filee.readlines()[-numLastLines :]
+
+        return []
+
+
     def listLocation(self, location):
         try:
             return os.listdir(location)
