@@ -3,11 +3,8 @@ import json
 
 class ConfigInterface:
 
-    def __init__(self, mainConfigPath, fileService):
+    def __init__(self, fileService):
         self.fileService = fileService
-        self.mainConfig = self.loadConfig(mainConfigPath)
-        self.queryConfig = self.loadQueryConfig(self.mainConfig.get('queryConfigPath'))
-        self.tradeConfig = self.loadConfig(self.mainConfig.get('tradeConfigPath'))
 
 
     def loadConfig(self, configPath):
