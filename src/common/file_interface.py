@@ -1,7 +1,7 @@
 import os
 
 
-class FileService:
+class FileInterface:
 
     def write(self, path, data):
         locationItems = path.strip().strip('/').split('/')[: - 1]

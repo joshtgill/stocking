@@ -6,10 +6,10 @@ from datetime import datetime
 
 class StockDataInterface:
 
-    def __init__(self, fileService):
-        self.fileService = fileService
+    def __init__(self, fileInterface):
+        self.fileInterface = fileInterface
         self.dataLocation = 'data/stock_data/'
-        self.dataFiles = self.fileService.listLocation(self.dataLocation)
+        self.dataFiles = self.fileInterface.listLocation(self.dataLocation)
 
 
     def save(self, stock):
@@ -19,17 +19,17 @@ class StockDataInterface:
 
         dataFile = '{}_{}.txt'.format(stock.symbol, stock.interval)
         self.dataFiles.append(dataFile)
-        self.fileService.write(self.dataLocation + dataFile, historyDataStr)
+        self.fileInterface.write(self.dataLocation + dataFile, historyDataStr)
 
 
     def load(self, symbol, interval, numLastLines=0):
         dataFile = '{}_{}.txt'.format(symbol, interval)
         stock = Stock(symbol, interval)
         if numLastLines == 0:
-            for historyItem in self.fileService.readLines(self.dataLocation + dataFile)[: -1]:
+            for historyItem in self.fileInterface.readLines(self.dataLocation + dataFile)[: -1]:
                 stock.history.append(eval(historyItem))
         else:
-            for historyItem in self.fileService.readLastLines(self.dataLocation + dataFile, numLastLines):
+            for historyItem in self.fileInterface.readLastLines(self.dataLocation + dataFile, numLastLines):
                 stock.history.append(eval(historyItem))
 
         return stock if stock.history else None

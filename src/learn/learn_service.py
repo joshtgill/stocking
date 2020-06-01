@@ -4,7 +4,7 @@ class LearnService:
         self.stockDataInterface = stockDataInterface
 
 
-    def analyzeData(self):
+    def start(self):
         hottestStocks = self.findHottestStocks(10, 10, 5)
         print(hottestStocks)
 

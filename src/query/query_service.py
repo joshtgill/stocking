@@ -22,7 +22,7 @@ class QueryService:
         return queries
 
 
-    def initiateQueries(self):
+    def start(self):
         showStatus = self.queryConfig.get('showStatus')
         for i in range(len(self.queries)):
             stock = self.queryInterface.performQuery(self.queries[i])

@@ -1,4 +1,4 @@
-from common.file_service import FileService
+from common.file_interface import FileInterface
 from common.config_interface import ConfigInterface
 from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
@@ -9,24 +9,24 @@ from learn.learn_service import LearnService
 class Stocking:
 
     def __init__(self):
-        self.fileService = FileService()
-        self.stockDataInterface = StockDataInterface(self.fileService)
+        self.fileInterface = FileInterface()
+        self.stockDataInterface = StockDataInterface(self.fileInterface)
 
 
     def query(self, queryConfigFileName):
-        configInterface = ConfigInterface(self.fileService)
+        configInterface = ConfigInterface(self.fileInterface)
         queryConfig = configInterface.loadQueryConfig(queryConfigFileName)
         queryService = QueryService(queryConfig, self.stockDataInterface)
-        logService = LogService(self.fileService)
+        logService = LogService(self.fileInterface)
 
-        logService.signalStart()
+        logService.start()
 
-        queryService.initiateQueries()
+        queryService.start()
 
-        logService.signalEnd()
+        logService.stop()
 
 
     def learn(self):
         learnService = LearnService(self.stockDataInterface)
 
-        learnService.analyzeData()
+        learnService.start()
