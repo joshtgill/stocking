@@ -8,4 +8,3 @@ python3 src/main.py query run/config/query_all_1d.json
 git add data/stock_data/
 git commit -m "Update stock data"
 git push
-
