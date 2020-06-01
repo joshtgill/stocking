@@ -8,21 +8,24 @@ from learn.learn_service import LearnService
 
 class Stocking:
 
-    def __init__(self, mainConfigFileName):
+    def __init__(self):
         self.fileService = FileService()
-        self.configInterface = ConfigInterface(mainConfigFileName, self.fileService)
         self.stockDataInterface = StockDataInterface(self.fileService)
-        self.logService = LogService(self.fileService)
-        self.queryService = QueryService(self.configInterface.queryConfig, self.stockDataInterface)
-        self.learnService = LearnService(self.stockDataInterface)
 
 
-    def start(self, action):
-        self.logService.signalStart()
+    def query(self, mainConfigFileName):
+        queryConfigInterface = ConfigInterface(mainConfigFileName, self.fileService)
+        queryService = QueryService(queryConfigInterface.queryConfig, self.stockDataInterface)
+        logService = LogService(self.fileService)
 
-        if action == 0:
-            self.queryService.initiateQueries()
-        elif action == 1:
-            self.learnService.analyzeData()
+        logService.signalStart()
 
-        self.logService.signalEnd()
+        queryService.initiateQueries()
+
+        logService.signalEnd()
+
+
+    def learn(self):
+        learnService = LearnService(self.stockDataInterface)
+
+        learnService.analyzeData()

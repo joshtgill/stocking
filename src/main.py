@@ -11,5 +11,10 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     os.chdir('..')
 
-    # Start Stocking with main config file and action
-    Stocking(sys.argv[1]).start(int(sys.argv[2]))
+    # Start Stocking with config based on action
+    stocking = Stocking()
+    action = sys.argv[1].lower()
+    if action == 'query':  # Query
+        stocking.query(sys.argv[2])
+    elif action == 'learn':  # Learn
+        stocking.learn()
