@@ -1,9 +1,6 @@
 {
-    "queries": {
-        "1d": {
-            "symbols": "ALL_SYMBOLS",
-            "period": "max"
-        }
-    },
-    "showStatus": false
+    "symbols": "ALL_SYMBOLS",
+    "interval": "1d",
+    "period": "max",
+    "showStatus": true
 }

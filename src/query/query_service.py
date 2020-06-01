@@ -14,18 +14,18 @@ class QueryService:
 
     def buildQueries(self):
         queries = []
-        for interval, intervalData in self.queryConfig.get('queries').items():
-            for symbol in intervalData.get('symbols'):
-                queries.append(Query(symbol, interval, intervalData.get('period')))
+        interval = self.queryConfig.get('interval')
+        period = self.queryConfig.get('period')
+        for symbol in self.queryConfig.get('symbols'):
+            queries.append(Query(symbol, interval, period))
 
         return queries
 
 
     def initiateQueries(self):
         showStatus = self.queryConfig.get('showStatus')
-        numQueries = len(self.queries)
-        for i in range(numQueries):
+        for i in range(len(self.queries)):
             stock = self.queryInterface.performQuery(self.queries[i])
             self.stockDataInterface.save(stock)
             if showStatus:
-                print('{}/{}'.format(i + 1, numQueries), end='\r')
+                print('{}/{}'.format(i + 1, len(self.queries)), end='\r')

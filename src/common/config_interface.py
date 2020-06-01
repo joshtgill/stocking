@@ -15,17 +15,16 @@ class ConfigInterface:
 
 
     def loadQueryConfig(self, configPath):
-        config = json.loads(self.fileService.read(configPath))
+        config = self.loadConfig(configPath)
 
         # Load any config vars
         configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json'}
-        for interval, intervalData in config.get('queries').items():
-            symbolsValue = intervalData.get('symbols')
-            if not isinstance(symbolsValue, list):
-                if symbolsValue in configVarMap.keys():  # Symbols value is config var
-                    symbolsData = json.loads(self.fileService.read(configVarMap.get(symbolsValue)))
-                else:  # Symbols value is a single symbol
-                    symbolsData = [symbolsValue]
-                intervalData.update({'symbols': symbolsData})
+        symbols = config.get('symbols')
+        if not isinstance(symbols, list):
+            if symbols in configVarMap.keys():  # Symbols value is config var
+                symbols = json.loads(self.fileService.read(configVarMap.get(symbols)))
+            else:  # Symbols value is a single symbol
+                symbols = [symbols]
+            config.update({'symbols': symbols})
 
         return config
