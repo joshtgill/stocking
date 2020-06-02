@@ -5,8 +5,8 @@ from datetime import datetime
 
 class QueryService:
 
-    def __init__(self, queryConfig, stockDataInterface):
-        self.queryConfig = queryConfig
+    def __init__(self, config, stockDataInterface):
+        self.config = config
         self.stockDataInterface = stockDataInterface
         self.queryInterface = QueryInterface()
         self.queries = self.buildQueries()
@@ -14,18 +14,15 @@ class QueryService:
 
     def buildQueries(self):
         queries = []
-        interval = self.queryConfig.get('interval')
-        period = self.queryConfig.get('period')
-        for symbol in self.queryConfig.get('symbols'):
+        interval = self.config.get('interval')
+        period = self.config.get('period')
+        for symbol in self.config.get('symbols'):
             queries.append(Query(symbol, interval, period))
 
         return queries
 
 
     def start(self):
-        showStatus = self.queryConfig.get('showStatus')
-        for i in range(len(self.queries)):
-            stock = self.queryInterface.performQuery(self.queries[i])
+        for query in self.queries:
+            stock = self.queryInterface.performQuery(query)
             self.stockDataInterface.save(stock)
-            if showStatus:
-                print('{}/{}'.format(i + 1, len(self.queries)), end='\r')

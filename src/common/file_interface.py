@@ -4,13 +4,13 @@ import os
 class FileInterface:
 
     def write(self, path, data):
-        locationItems = path.strip().strip('/').split('/')[: - 1]
+        locationDirectories = path.strip().strip('/').split('/')[: - 1]
 
-        location = ''
-        for directory in locationItems:
-            location += directory + '/'
-            if not os.path.exists(location):
-                os.mkdir(location)
+        locationStr = ''
+        for directory in locationDirectories:
+            locationStr += directory + '/'
+            if not os.path.exists(locationStr):
+                os.mkdir(locationStr)
 
         with open(path, 'w+') as filee:
             filee.write(data)
@@ -30,7 +30,7 @@ class FileInterface:
         return []
 
 
-    def readLastLines(self, path, numLastLines, maxLineLength=70):
+    def readLastLines(self, path, numLastLines, maxLineLength = 70):
         with open(path, 'rb') as filee:
             try:
                 filee.seek(-(numLastLines * maxLineLength), 2)

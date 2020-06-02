@@ -13,9 +13,9 @@ class Stocking:
         self.stockDataInterface = StockDataInterface(self.fileInterface)
 
 
-    def query(self, queryConfigFileName):
+    def query(self, configFilePath):
         configInterface = ConfigInterface(self.fileInterface)
-        queryConfig = configInterface.loadQueryConfig(queryConfigFileName)
+        queryConfig = configInterface.load(configFilePath, 'query')
         queryService = QueryService(queryConfig, self.stockDataInterface)
         logService = LogService(self.fileInterface)
 

@@ -5,15 +5,15 @@ class LearnService:
 
 
     def start(self):
-        hottestStocks = self.findHottestStocks(10, 10, 5)
+        hottestStocks = self.determineHottestStocks(10, 10, 5)
         print(hottestStocks)
 
 
-    def findHottestStocks(self, numStocks, daysPast, minimumDifference=0):
+    def determineHottestStocks(self, numStocks, daysPast, minimumDifference=0):
         hottestStocks = [('', 0)] * numStocks
-        for stockDataFile in self.stockDataInterface.dataFiles:
+        for stockDataFileName in self.stockDataInterface.dataFileNames:
             # Get stock data
-            symbol, interval = self.stockDataInterface.parseSymbolAndInterval(stockDataFile)
+            symbol, interval = self.stockDataInterface.parseSymbolAndInterval(stockDataFileName)
             data = self.stockDataInterface.load(symbol, interval, daysPast)
             if not data:
                 continue
@@ -33,4 +33,3 @@ class LearnService:
         hottestStocks[:] = [a for a in hottestStocks if a != ('', 0)]
 
         return hottestStocks
-
