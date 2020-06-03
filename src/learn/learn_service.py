@@ -9,23 +9,22 @@ class LearnService:
         print(hottestStocks)
 
 
-    def determineHottestStocks(self, numStocks, daysPast, minimumDifference=0):
+    def determineHottestStocks(self, numStocks, historyItemsBack, minimumDifference=0):
         hottestStocks = [('', 0)] * numStocks
         for stockDataFileName in self.stockDataInterface.dataFileNames:
             # Get stock data
-            symbol, interval = self.stockDataInterface.parseSymbolAndInterval(stockDataFileName)
-            data = self.stockDataInterface.load(symbol, interval, daysPast)
-            if not data:
+            stockData = self.stockDataInterface.load(stockDataFileName, historyItemsBack)
+            if not stockData:
                 continue
             # Calculate relevant data
-            difference = data.history[daysPast - 1][4] - data.history[0][1]
+            difference = stockData.history[historyItemsBack - 1][4] - stockData.history[0][1]
             if difference < minimumDifference:
                 continue
-            growthPoints = (difference / data.history[0][1]) * 100
+            growthPoints = (difference / stockData.history[0][1]) * 100
             # Insert into list
             minHottestIndex = hottestStocks.index(min(hottestStocks, key=lambda a: a[1]))
             if growthPoints > hottestStocks[minHottestIndex][1]:
-                hottestStocks[minHottestIndex] = (symbol, round(growthPoints, 3))
+                hottestStocks[minHottestIndex] = (stockData.symbol, round(growthPoints, 3))
 
         # Organize
         hottestStocks.sort(key=lambda a: a[1])

@@ -22,8 +22,13 @@ class StockDataInterface:
         self.fileInterface.write(self.dataLocation + dataFileName, stockHistoryStr)
 
 
-    def load(self, symbol, interval, numLastLines=0):
-        dataFileName = '{}_{}.txt'.format(symbol, interval)
+    def load(self, dataFileName, numLastLines=0):
+        # Extract symbol and interval from data file name
+        splitDataFileName = dataFileName.split('_')
+        symbol = splitDataFileName[0]
+        interval = splitDataFileName[1][: splitDataFileName[1].index('.txt')]
+
+        # Build stock data
         stock = Stock(symbol, interval)
         if numLastLines == 0:
             for historyItem in self.fileInterface.readLines(self.dataLocation + dataFileName)[: -1]:
@@ -33,11 +38,3 @@ class StockDataInterface:
                 stock.history.append(eval(historyItem))
 
         return stock if stock.history else None
-
-
-    def parseSymbolAndInterval(self, dataFile):
-        splitDataFile = dataFile.split('_')
-        symbol = splitDataFile[0]
-        interval = splitDataFile[1][: splitDataFile[1].index('.txt')]
-
-        return symbol, interval
