@@ -3,7 +3,7 @@ from common.config_interface import ConfigInterface
 from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
 from query.query_service import QueryService
-from learn.learn_service import LearnService
+from process.analyze_service import AnalyzeService
 
 
 class Stocking:
@@ -26,7 +26,7 @@ class Stocking:
         logService.stop()
 
 
-    def learn(self):
-        learnService = LearnService(self.stockDataInterface)
+    def analyze(self):
+        analyzeService = AnalyzeService(self.stockDataInterface, self.fileInterface)
 
-        learnService.start()
+        analyzeService.start()

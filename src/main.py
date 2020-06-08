@@ -1,7 +1,7 @@
 import sys
 sys.path.append('common/')
 sys.path.append('query/')
-sys.path.append('learn/')
+sys.path.append('process/')
 import os
 from stocking import Stocking
 
@@ -16,5 +16,5 @@ if __name__ == "__main__":
     role = sys.argv[1].lower()
     if role == 'query':
         stocking.query(sys.argv[2])
-    elif role == 'learn':
-        stocking.learn()
+    elif role == 'process':
+        stocking.analyze()

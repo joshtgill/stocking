@@ -1,12 +1,19 @@
-class LearnService:
+import datetime
+import json
 
-    def __init__(self, stockDataInterface):
+
+class AnalyzeService:
+
+    def __init__(self, stockDataInterface, fileInterface):
         self.stockDataInterface = stockDataInterface
+        self.fileInterface = fileInterface
 
 
     def start(self):
         hottestStocks = self.determineHottestStocks(10, 10, 5)
         print(hottestStocks)
+
+        symbols = ['TSLA', 'AAPL', 'MSFT']
 
 
     def determineHottestStocks(self, numStocks, historyItemsBack, minimumDifference=0):
@@ -32,3 +39,12 @@ class LearnService:
         hottestStocks[:] = [a for a in hottestStocks if a != ('', 0)]
 
         return hottestStocks
+
+
+    def createOrder(self, symbols):
+        # Get the next trading day
+
+        orderFilePath = 'orders/{}.json'.format(datetime.strftime(datetime.now(), '%Y%m%d'))
+        self.logPath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
+
+        self.fileInterface.write('data/order.json', json.dumps(symbols))
