@@ -15,9 +15,8 @@ class QueryService:
     def buildQueries(self):
         queries = []
         interval = self.config.get('interval')
-        period = self.config.get('period')
         for symbol in self.config.get('symbols'):
-            queries.append(Query(symbol, interval, period))
+            queries.append(Query(symbol, interval))
 
         return queries
 

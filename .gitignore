@@ -4,6 +4,9 @@
 # Python pycache
 __pycache__/
 
+# Stock data
+data/stock_data/
+
 # Logs
 log/
 
