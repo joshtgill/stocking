@@ -10,13 +10,14 @@ class Stocking:
 
     def __init__(self):
         self.fileInterface = FileInterface()
-        self.stockDataInterface = StockDataInterface(self.fileInterface)
+        self.dayStockDataInterface = StockDataInterface(self.fileInterface, '1d')
+        self.minuteStockDataInterface = StockDataInterface(self.fileInterface, '1m')
 
 
     def query(self, configFilePath):
         configInterface = ConfigInterface(self.fileInterface)
         queryConfig = configInterface.load(configFilePath, 'query')
-        queryService = QueryService(queryConfig, self.stockDataInterface)
+        queryService = QueryService(queryConfig, self.minuteStockDataInterface)
         logService = LogService(self.fileInterface)
 
         logService.start()
@@ -27,6 +28,6 @@ class Stocking:
 
 
     def analyze(self):
-        analyzeService = AnalyzeService(self.stockDataInterface, self.fileInterface)
+        analyzeService = AnalyzeService(self.dayStockDataInterface, self.fileInterface)
 
         analyzeService.start()

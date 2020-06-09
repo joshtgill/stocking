@@ -6,9 +6,9 @@ from datetime import datetime
 
 class StockDataInterface:
 
-    def __init__(self, fileInterface):
+    def __init__(self, fileInterface, interval):
         self.fileInterface = fileInterface
-        self.dataLocation = 'data/stock_data/'
+        self.dataLocation = 'data/stock_data/{}/'.format(interval)
         self.dataFileNames = self.fileInterface.listLocation(self.dataLocation)
 
 

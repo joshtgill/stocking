@@ -1,5 +1,5 @@
 {
     "symbols": "ALL_SYMBOLS",
     "interval": "1m",
-    "period": "max"
+    "period": "5d"
 }
