@@ -12,7 +12,7 @@ class QueryInterface:
         dateTimeFormat = '%Y-%m-%d' if query.interval == '1d' else '%Y-%m-%d %H:%M:%S'
 
         # Get history data
-        yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval)
+        yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval, start=query.start, end=query.end)
         dateTimes = yStockHistory.index.values
 
         # Store stock data

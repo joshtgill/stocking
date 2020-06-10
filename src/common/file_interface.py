@@ -12,7 +12,7 @@ class FileInterface:
             if not os.path.exists(locationStr):
                 os.mkdir(locationStr)
 
-        with open(path, 'w+') as filee:
+        with open(path, 'a+') as filee:
             filee.write(data)
 
 

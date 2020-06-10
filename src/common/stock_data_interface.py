@@ -8,33 +8,32 @@ class StockDataInterface:
 
     def __init__(self, fileInterface, interval):
         self.fileInterface = fileInterface
+        self.interval = interval
         self.dataLocation = 'data/stock_data/{}/'.format(interval)
         self.dataFileNames = self.fileInterface.listLocation(self.dataLocation)
 
 
     def save(self, stock):
-        stockHistoryStr = ''
-        for stockHistoryItem in stock.history:
-            stockHistoryStr += '{}\n'.format(stockHistoryItem)
+        historyStr = ''
+        for historyEntry in stock.history:
+            historyStr += '{}\n'.format(historyEntry)
 
-        dataFileName = '{}_{}.txt'.format(stock.symbol, stock.interval)
+        dataFileName = '{}_{}.txt'.format(stock.symbol, self.interval)
         self.dataFileNames.append(dataFileName)
-        self.fileInterface.write(self.dataLocation + dataFileName, stockHistoryStr)
+        self.fileInterface.write(self.dataLocation + dataFileName, historyStr)
 
 
-    def load(self, dataFileName, numLastLines=0):
-        # Extract symbol and interval from data file name
-        splitDataFileName = dataFileName.split('_')
-        symbol = splitDataFileName[0]
-        interval = splitDataFileName[1][: splitDataFileName[1].index('.txt')]
+    def load(self, symbol, numLastLines=0):
+        # Make date file name
+        dataFileName = '{}_{}.txt'.format(symbol, self.interval)
 
-        # Build stock data
-        stock = Stock(symbol, interval)
+        # Build stock history
+        stockHistory = []
         if numLastLines == 0:
-            for historyItem in self.fileInterface.readLines(self.dataLocation + dataFileName)[: -1]:
-                stock.history.append(eval(historyItem))
+            for historyEntry in self.fileInterface.readLines(self.dataLocation + dataFileName)[: -1]:
+                stockHistory.append(eval(historyEntry))
         else:
-            for historyItem in self.fileInterface.readLastLines(self.dataLocation + dataFileName, numLastLines):
-                stock.history.append(eval(historyItem))
+            for historyEntry in self.fileInterface.readLastLines(self.dataLocation + dataFileName, numLastLines):
+                stockHistory.append(eval(historyEntry))
 
-        return stock if stock.history else None
+        return stockHistory
