@@ -1,7 +1,6 @@
 from query.query_interface import QueryInterface
 from query.query import Query
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 
 class QueryService:
@@ -23,23 +22,23 @@ class QueryService:
 
 
     def determineQueryPeriod(self, symbol, interval):
-        # Default start and end datetime
+        # Default query start and end
         start = datetime(1970, 1, 1)
-        end = datetime.now().replace(second=0, microsecond=0)
+        end = datetime.now()
+        if interval == '1m':
+            daysBack = 29 if (datetime.now() > datetime(end.year, end.month, end.day, 9, 30)) else 30
+            start = end - timedelta(days=daysBack)
 
-        # Load stock history containing only last history entry
-        # If no history exists, return default period
+        # If stock history already exists, determine query start
         stockHistory = self.stockDataInterface.load(symbol, 1)
-        if not stockHistory:
-            return start, end
+        if stockHistory:
+            lastHistoryEntry = stockHistory[0][0]
+            if interval == '1d':
+                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d') + timedelta(days=1)
+            elif interval == '1m':
+                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d %H:%M:%S')
 
-        # Determine start datetime
-        lastHistoryEntry = stockHistory[0][0]
-        start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d').replace(second=0)
-        if interval == '1d':
-            start = start + timedelta(days=1)
-
-        return start, end
+        return start.date(), end.date()
 
 
     def start(self):
