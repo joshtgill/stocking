@@ -2,4 +2,5 @@
 cd ~/stocking/
 
 # Run stocking's query service
-python3 src/main.py run/config.json
+python3 src/main.py exe/config.json
+
