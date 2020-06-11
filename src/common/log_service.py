@@ -1,4 +1,3 @@
-import sys
 from datetime import datetime
 
 
@@ -7,7 +6,6 @@ class LogService:
     def __init__(self, fileInterface):
         self.fileInterface = fileInterface
         self.logPath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
-        sys.stdout = open(self.logPath, 'w')
         self.startDateTime = None
 
 

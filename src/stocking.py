@@ -8,22 +8,23 @@ from process.analyze_service import AnalyzeService
 
 class Stocking:
 
-    def __init__(self):
+    def __init__(self, configPath):
         self.fileInterface = FileInterface()
-
-
-    def query(self, configFilePath):
         configInterface = ConfigInterface(self.fileInterface)
-        queryConfig = configInterface.load(configFilePath, 'query')
-        stockDataInterface = StockDataInterface(self.fileInterface, queryConfig.get('interval'))
-        queryService = QueryService(queryConfig, stockDataInterface)
-        logService = LogService(self.fileInterface)
+        self.config = configInterface.load(configPath)
+        self.logService = LogService(self.fileInterface)
 
-        logService.start()
 
-        queryService.start()
+    def query(self):
+        self.logService.start()
+        for queryConfig in self.config.get('queries'):
+            self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
 
-        logService.stop()
+            stockDataInterface = StockDataInterface(self.fileInterface, queryConfig.get('interval'))
+            queryService = QueryService(queryConfig, stockDataInterface)
+            queryService.start()
+
+        self.logService.stop()
 
 
     def analyze(self):

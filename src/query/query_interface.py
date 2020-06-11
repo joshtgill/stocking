@@ -23,7 +23,6 @@ class QueryInterface:
             localQueryEnd = localQueryStart + timedelta(days=7)
 
         while (query.end - localQueryStart).days > 0:
-            print(localQueryStart, localQueryEnd)
             # Get history data
             yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval,
                                                                   start=localQueryStart,
