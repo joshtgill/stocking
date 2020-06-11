@@ -33,8 +33,8 @@ class QueryInterface:
             for rowIndex in range(len(yStockHistory)):
                 if not numpy.isnan(yStockHistory.iloc[rowIndex, 0]):
                     historyDate = pandas.to_datetime((dateTimes[rowIndex])).strftime(dateTimeFormat)
-                    stock.history.append([historyDate, yStockHistory.iloc[rowIndex, 0], yStockHistory.iloc[rowIndex, 1],
-                                        yStockHistory.iloc[rowIndex, 2], yStockHistory.iloc[rowIndex, 3]])
+                    stock.history.append((historyDate, yStockHistory.iloc[rowIndex, 0], yStockHistory.iloc[rowIndex, 1],
+                                        yStockHistory.iloc[rowIndex, 2], yStockHistory.iloc[rowIndex, 3]))
 
             # Increment start and end
             localQueryStart = localQueryEnd

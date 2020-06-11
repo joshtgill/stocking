@@ -1,11 +1,11 @@
 {
     "queries": [
         {
-            "symbols": "ALL_SYMBOLS",
+            "symbols": "TSLA",
             "interval": "1m"
         },
         {
-            "symbols": "ALL_SYMBOLS",
+            "symbols": "TSLA",
             "interval": "1d"
         }
     ]

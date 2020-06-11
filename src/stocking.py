@@ -17,6 +17,7 @@ class Stocking:
 
     def query(self):
         self.logService.start()
+
         for queryConfig in self.config.get('queries'):
             self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
 
