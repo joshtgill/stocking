@@ -5,7 +5,7 @@ class ConfigInterface:
 
     def __init__(self, fileInterface):
         self.fileInterface = fileInterface
-        self.configVarMap = {'ALL_SYMBOLS': 'data/symbols/all_symbols.json'}
+        self.configVarMap = {'ALL_SYMBOLS': 'exe/symbols/all_symbols.json'}
 
 
     def load(self, configPath):
