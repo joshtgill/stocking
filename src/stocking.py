@@ -17,7 +17,6 @@ class Stocking:
         queryConfig = configInterface.load(configFilePath, 'query')
         stockDataInterface = StockDataInterface(self.fileInterface, queryConfig.get('interval'))
         queryService = QueryService(queryConfig, stockDataInterface)
-
         logService = LogService(self.fileInterface)
 
         logService.start()

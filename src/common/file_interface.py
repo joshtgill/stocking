@@ -31,13 +31,13 @@ class FileInterface:
 
 
     def readLastLines(self, path, numLastLines, maxLineLength = 70):
-        with open(path, 'rb') as filee:
-            try:
+        try:
+            with open(path, 'rb') as filee:
                 filee.seek(-(numLastLines * maxLineLength), 2)
-            except OSError:
-                return []
 
-            return filee.readlines()[-numLastLines :]
+                return filee.readlines()[-numLastLines :]
+        except:
+            pass
 
         return []
 
