@@ -22,12 +22,14 @@ class QueryService:
 
 
     def determineQueryPeriod(self, symbol, interval):
+        # Record current datetime
+        now = datetime.now()
+
         # Default query start and end
         start = datetime(1970, 1, 1)
-        end = datetime.now()
+        end = now
         if interval == '1m':
-            daysBack = 29 if (datetime.now() > datetime(end.year, end.month, end.day, 9, 30)) else 30
-            start = end - timedelta(days=daysBack)
+            start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
         stockHistory = self.stockDataInterface.load(symbol, 1)
