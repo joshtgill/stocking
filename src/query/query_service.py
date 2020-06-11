@@ -38,7 +38,7 @@ class QueryService:
             if interval == '1d':
                 start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d') + timedelta(days=1)
             elif interval == '1m':
-                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d %H:%M:%S')
+                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d %H:%M:%S') + timedelta(days=1)
 
         return start.date(), end.date()
 
