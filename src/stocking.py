@@ -10,9 +10,14 @@ class Stocking:
 
     def __init__(self, configPath):
         self.fileInterface = FileInterface()
-        configInterface = ConfigInterface(self.fileInterface)
-        self.config = configInterface.load(configPath)
+        self.config = ConfigInterface(self.fileInterface).load(configPath)
         self.logService = LogService(self.fileInterface)
+
+
+    def startServices(self):
+        # Start services based on config
+        if 'queries' in self.config:
+            self.query()
 
 
     def query(self):
