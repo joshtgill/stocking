@@ -26,7 +26,7 @@ class Stocking:
         for queryConfig in self.config.get('queries'):
             self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
 
-            stockDataInterface = StockDataInterface(self.fileInterface, queryConfig.get('interval'))
+            stockDataInterface = StockDataInterface(queryConfig.get('interval'))
             queryService = QueryService(queryConfig, stockDataInterface)
             queryService.start()
 

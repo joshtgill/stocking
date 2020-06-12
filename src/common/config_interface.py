@@ -13,12 +13,12 @@ class ConfigInterface:
         config = json.loads(self.fileInterface.read(configPath))
 
         for queryConfig in config.get('queries'):
-            self.loadSymbols(queryConfig)
+            self.loadStockSymbols(queryConfig)
 
         return config
 
 
-    def loadSymbols(self, queryConfig):
+    def loadStockSymbols(self, queryConfig):
         symbols = queryConfig.get('symbols')
         if not isinstance(symbols, list):
             if symbols in self.configVarMap.keys():  # Symbols value is config var
