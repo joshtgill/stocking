@@ -3,6 +3,10 @@
         {
             "symbols": "ALL_SYMBOLS",
             "interval": "1d"
-        }
+        },
+	{
+	    "symbols": "ALL_SYMBOLS",
+	    "interval": "1m"
+	}
     ]
 }
