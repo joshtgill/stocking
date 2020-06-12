@@ -35,9 +35,9 @@ class DataInterface:
 
         if numLastEntries:
             self.cursor.execute('''SELECT * FROM
-                                   (SELECT * FROM {} ORDER BY timestamp DESC LIMIT {})
+                                   (SELECT * FROM '{}' ORDER BY timestamp DESC LIMIT {})
                                    ORDER BY timestamp ASC'''.format(tableName, numLastEntries))
         else:
-            self.cursor.execute("SELECT * FROM {}".format(tableName))
+            self.cursor.execute("SELECT * FROM '{}'".format(tableName))
 
         return self.cursor.fetchall()
