@@ -2,10 +2,6 @@
     "queries": [
         {
             "symbols": "ALL_SYMBOLS",
-            "interval": "1m"
-        },
-        {
-            "symbols": "ALL_SYMBOLS",
             "interval": "1d"
         }
     ]
