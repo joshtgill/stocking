@@ -10,7 +10,7 @@ class DataInterface:
 
     def createTable(self, name, header):
         if not self.tableExists(name):
-            self.cursor.execute("CREATE TABLE {} {}".format(name, header))
+            self.cursor.execute("CREATE TABLE '{}' {}".format(name, header))
 
 
     def tableExists(self, name):
