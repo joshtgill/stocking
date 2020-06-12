@@ -8,6 +8,14 @@ class DataInterface:
         self.cursor =  self.database.cursor()
 
 
+    def insert(self, tableName, tableHeader, data):
+        self.createTable(tableName, tableHeader)
+
+        self.cursor.executemany("INSERT INTO {} VALUES (?, ?, ?, ?, ?)".format(tableName), data)
+
+        self.database.commit()
+
+
     def createTable(self, name, header):
         if not self.tableExists(name):
             self.cursor.execute("CREATE TABLE '{}' {}".format(name, header))
@@ -17,14 +25,6 @@ class DataInterface:
         self.cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}'".format(name))
 
         return self.cursor.fetchone()[0] != 0
-
-
-    def insert(self, tableName, tableHeader, data):
-        self.createTable(tableName, tableHeader)
-
-        self.cursor.executemany("INSERT INTO {} VALUES (?, ?, ?, ?, ?)".format(tableName), data)
-
-        self.database.commit()
 
 
     def select(self, tableName, numLastEntries=0):

@@ -21,31 +21,3 @@ class FileInterface:
             return filee.read()
 
         return ''
-
-
-    def readLines(self, path):
-        with open(path, 'r') as filee:
-            return filee.readlines()
-
-        return []
-
-
-    def readLastLines(self, path, numLastLines, maxLineLength = 70):
-        try:
-            with open(path, 'rb') as filee:
-                filee.seek(-(numLastLines * maxLineLength), 2)
-
-                return filee.readlines()[-numLastLines :]
-        except:
-            pass
-
-        return []
-
-
-    def listLocation(self, location):
-        try:
-            return os.listdir(location)
-        except FileNotFoundError:
-            pass
-
-        return []

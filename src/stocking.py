@@ -10,9 +10,14 @@ class Stocking:
 
     def __init__(self, configPath):
         self.fileInterface = FileInterface()
-        configInterface = ConfigInterface(self.fileInterface)
-        self.config = configInterface.load(configPath)
+        self.config = ConfigInterface(self.fileInterface).load(configPath)
         self.logService = LogService(self.fileInterface)
+
+
+    def startServices(self):
+        # Start services based on config
+        if 'queries' in self.config:
+            self.query()
 
 
     def query(self):
@@ -21,7 +26,7 @@ class Stocking:
         for queryConfig in self.config.get('queries'):
             self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
 
-            stockDataInterface = StockDataInterface(self.fileInterface, queryConfig.get('interval'))
+            stockDataInterface = StockDataInterface(queryConfig.get('interval'))
             queryService = QueryService(queryConfig, stockDataInterface)
             queryService.start()
 
