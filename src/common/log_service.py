@@ -5,8 +5,9 @@ class LogService:
 
     def __init__(self, fileInterface):
         self.fileInterface = fileInterface
-        self.logPath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
+        self.logPath = 'out/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
         self.serviceStartDateTimes = {}
+        self.errorOccurred = False
 
 
     def start(self, service):
@@ -21,3 +22,6 @@ class LogService:
 
     def log(self, service, message, logType='INFO'):
         self.fileInterface.write(self.logPath, '[{}] ({}::{}): {}\n'.format(datetime.now(), logType, service, message))
+
+        if logType == 'ERROR':
+            self.errorOccurred = True

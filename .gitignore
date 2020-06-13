@@ -7,8 +7,8 @@ __pycache__/
 # Data files
 data/
 
-# Logs
-log/
+# Logs, output, email file
+out/
 
 # Local data
 local/

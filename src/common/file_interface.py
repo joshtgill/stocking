@@ -21,3 +21,11 @@ class FileInterface:
             return filee.read()
 
         return ''
+
+
+    def clearFile(self, path):
+        try:
+            with open(path, 'w') as filee:
+                pass
+        except FileNotFoundError:
+            pass

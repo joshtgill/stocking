@@ -5,6 +5,8 @@ from common.log_service import LogService
 from query.query_service import QueryService
 from process.analyze_service import AnalyzeService
 import traceback
+from utility.email_interface import EmailInterface
+
 
 class Stocking:
 
@@ -20,24 +22,49 @@ class Stocking:
         # Start services based on config
         try:
             if 'queries' in self.config:
-                pass
                 self.query()
         except Exception as e:
             self.logService.log('STOCKING', traceback.format_exc(), 'ERROR')
 
         self.logService.stop('STOCKING')
 
+        # Email results of run
+        self.email()
+
 
     def query(self):
         for queryConfig in self.config.get('queries'):
             self.logService.start('QUERY {}'.format(queryConfig.get('interval')))
 
-            stockDataInterface = StockDataInterface(queryConfig.get('interval'))
-            queryService = QueryService(queryConfig, stockDataInterface)
-            queryService.start()
+            # stockDataInterface = StockDataInterface(queryConfig.get('interval'))
+            # queryService = QueryService(queryConfig, stockDataInterface)
+            # queryService.start()
 
             self.logService.stop('QUERY {}'.format(queryConfig.get('interval')))
 
 
     def analyze(self):
         pass
+
+
+    def email(self):
+        # Subject is based on if an error occurred
+        emailSubject = 'Stocking COMPLETE\n'
+        if self.logService.errorOccurred:
+            emailSubject = 'Stocking FAILED\n'
+
+        # Email body consists of services initiated and log text
+        emailBody = ''
+        # Display services initiated
+        initiatedServices = 'Services initiated: '
+        for queryConfig in self.config.get('queries'):
+            initiatedServices += 'QUERY {}, '.format(queryConfig.get('interval'))
+        emailBody += initiatedServices[: -2] + '\n'
+        # Display log text
+        logText = 'Log:\n'
+        with open(self.logService.logPath, 'r') as logFile:
+            logText += logFile.read()
+        emailBody += logText
+
+        emailInterface = EmailInterface(self.fileInterface)
+        emailInterface.sendEmail('joshtg.007@gmail.com', emailSubject, emailBody)
