@@ -6,16 +6,18 @@ class LogService:
     def __init__(self, fileInterface):
         self.fileInterface = fileInterface
         self.logPath = 'log/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
-        self.startDateTime = None
+        self.serviceStartDateTimes = {}
 
 
-    def start(self):
-        self.startDateTime = datetime.now()
+    def start(self, service):
+        self.serviceStartDateTimes.update({service: datetime.now()})
+        self.log(service, 'Started', 'STAT')
 
 
-    def stop(self):
-        self.log('Completed in {}'.format(datetime.now() - self.startDateTime), 'STAT')
+    def stop(self, service):
+        startDateTime = self.serviceStartDateTimes.get(service)
+        self.log(service, 'Completed in {}'.format(datetime.now() - startDateTime), 'STAT')
 
 
-    def log(self, message, logType='INFO'):
-        self.fileInterface.write(self.logPath, '[{}] ({}): {}\n'.format(datetime.now(), logType, message))
+    def log(self, service, message, logType='INFO'):
+        self.fileInterface.write(self.logPath, '[{}] ({}::{}): {}\n'.format(datetime.now(), logType, service, message))

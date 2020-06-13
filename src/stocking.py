@@ -15,26 +15,28 @@ class Stocking:
 
 
     def startServices(self):
-        self.logService.start()
+        self.logService.start('STOCKING')
 
         # Start services based on config
         try:
             if 'queries' in self.config:
+                pass
                 self.query()
         except Exception as e:
-            tb = traceback.format_exc()
-            print(tb)
+            self.logService.log('STOCKING', traceback.format_exc(), 'ERROR')
 
-        self.logService.stop()
+        self.logService.stop('STOCKING')
 
 
     def query(self):
         for queryConfig in self.config.get('queries'):
-            self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
+            self.logService.start('QUERY {}'.format(queryConfig.get('interval')))
 
             stockDataInterface = StockDataInterface(queryConfig.get('interval'))
             queryService = QueryService(queryConfig, stockDataInterface)
             queryService.start()
+
+            self.logService.stop('QUERY {}'.format(queryConfig.get('interval')))
 
 
     def analyze(self):
