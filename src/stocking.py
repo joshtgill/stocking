@@ -4,7 +4,7 @@ from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
 from query.query_service import QueryService
 from process.analyze_service import AnalyzeService
-
+import traceback
 
 class Stocking:
 
@@ -22,7 +22,8 @@ class Stocking:
             if 'queries' in self.config:
                 self.query()
         except Exception as e:
-            self.logService.log(e)
+            tb = traceback.format_exc()
+            print(tb)
 
         self.logService.stop()
 
