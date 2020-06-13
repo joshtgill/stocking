@@ -11,7 +11,7 @@ class DataInterface:
     def insert(self, tableName, tableHeader, data):
         self.createTable(tableName, tableHeader)
 
-        self.cursor.executemany("INSERT INTO {} VALUES (?, ?, ?, ?, ?)".format(tableName), data)
+        self.cursor.executemany("INSERT INTO '{}' VALUES (?, ?, ?, ?, ?)".format(tableName), data)
 
         self.database.commit()
 
