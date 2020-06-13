@@ -4,6 +4,9 @@
 # Python pycache
 __pycache__/
 
+# Data files
+data/
+
 # Logs
 log/
 
