@@ -4,7 +4,7 @@ from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
 from query.query_service import QueryService
 from process.analyze_service import AnalyzeService
-
+import traceback
 
 class Stocking:
 
@@ -15,22 +15,26 @@ class Stocking:
 
 
     def startServices(self):
+        self.logService.start()
+
         # Start services based on config
-        if 'queries' in self.config:
-            self.query()
+        try:
+            if 'queries' in self.config:
+                self.query()
+        except Exception as e:
+            tb = traceback.format_exc()
+            print(tb)
+
+        self.logService.stop()
 
 
     def query(self):
-        self.logService.start()
-
         for queryConfig in self.config.get('queries'):
             self.logService.log('Starting {} query'.format(queryConfig.get('interval')))
 
             stockDataInterface = StockDataInterface(queryConfig.get('interval'))
             queryService = QueryService(queryConfig, stockDataInterface)
             queryService.start()
-
-        self.logService.stop()
 
 
     def analyze(self):

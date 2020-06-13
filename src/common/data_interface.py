@@ -9,16 +9,19 @@ class DataInterface:
 
 
     def insert(self, tableName, tableHeader, data):
-        self.createTable(tableName, tableHeader)
+        self.createTable(tableName, tableHeader, 0)
 
-        self.cursor.executemany("INSERT INTO '{}' VALUES (?, ?, ?, ?, ?)".format(tableName), data)
+        self.cursor.executemany("INSERT OR REPLACE INTO '{}' {} VALUES (?, ?, ?, ?, ?)".format(tableName, tableHeader), data)
 
         self.database.commit()
 
 
-    def createTable(self, name, header):
-        if not self.tableExists(name):
-            self.cursor.execute("CREATE TABLE '{}' {}".format(name, header))
+    def createTable(self, name, header, uniqueIndex=-1):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS '{}' {}".format(name, header))
+
+        if uniqueIndex != -1:
+            uniqueIndexName = header[1 : -1].replace(' ', '').split(',')[uniqueIndex]
+            self.cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_{} on '{}' ({})".format(uniqueIndexName, name, uniqueIndexName))
 
 
     def tableExists(self, name):
@@ -28,16 +31,14 @@ class DataInterface:
 
 
     def select(self, tableName, numLastEntries=0):
-        data = []
-
         if not self.tableExists(tableName):
-            return data
+            return []
 
-        if numLastEntries:
+        if not numLastEntries:
+            self.cursor.execute("SELECT * FROM '{}'".format(tableName))
+        else:
             self.cursor.execute('''SELECT * FROM
                                    (SELECT * FROM '{}' ORDER BY timestamp DESC LIMIT {})
                                    ORDER BY timestamp ASC'''.format(tableName, numLastEntries))
-        else:
-            self.cursor.execute("SELECT * FROM '{}'".format(tableName))
 
         return self.cursor.fetchall()
