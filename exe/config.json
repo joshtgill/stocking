@@ -8,5 +8,8 @@
             "symbols": "ALL_SYMBOLS",
             "interval": "1m"
         }
-    ]
+    ],
+    "analyze": {
+        "symbols": "ALL_SYMBOLS"
+    }
 }

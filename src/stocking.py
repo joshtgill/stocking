@@ -23,6 +23,9 @@ class Stocking:
         try:
             if 'queries' in self.config:
                 self.query()
+
+            if 'analyze' in self.config:
+                self.analyze()
         except Exception as e:
             self.logService.log('STOCKING', traceback.format_exc(), 'ERROR')
 
@@ -44,7 +47,13 @@ class Stocking:
 
 
     def analyze(self):
-        pass
+        self.logService.start('ANALYZE')
+
+        dayStockDataInterface = StockDataInterface('1d')
+        analyzeService = AnalyzeService(self.config.get('analyze'), dayStockDataInterface, self.fileInterface)
+        analyzeService.start()
+
+        self.logService.stop('ANALYZE')
 
 
     def email(self):

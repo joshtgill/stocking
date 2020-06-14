@@ -12,19 +12,21 @@ class ConfigInterface:
         # Get general config
         config = json.loads(self.fileInterface.read(configPath))
 
+        # Load stock symbols for declared services
         for queryConfig in config.get('queries'):
             self.loadStockSymbols(queryConfig)
+        self.loadStockSymbols(config.get('analyze'))
 
         return config
 
 
-    def loadStockSymbols(self, queryConfig):
-        symbols = queryConfig.get('symbols')
+    def loadStockSymbols(self, config):
+        symbols = config.get('symbols')
         if not isinstance(symbols, list):
             if symbols in self.configVarMap.keys():  # Symbols value is config var
                 symbols = json.loads(self.fileInterface.read(self.configVarMap.get(symbols)))
             else:  # Symbols value is a single symbol
                 symbols = [symbols]
-            queryConfig.update({'symbols': symbols})
+            config.update({'symbols': symbols})
 
-        return queryConfig
+        return config
