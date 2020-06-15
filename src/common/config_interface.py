@@ -13,9 +13,15 @@ class ConfigInterface:
     def loadVariables(self, config):
         variables = {'ALL_SYMBOLS': 'exe/symbols/all_symbols.json'}
 
+        if type(config) is not dict:
+            return
+
         for key in config:
             if type(config.get(key)) is dict:
                 self.loadVariables(config.get(key))
+            elif type(config.get(key)) is list:
+                for itemValue in config.get(key):
+                    self.loadVariables(itemValue)
             else:
                 if config.get(key) in variables.keys():
                     variableData = json.loads(self.fileInterface.read(variables.get(config.get(key))))

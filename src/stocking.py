@@ -36,7 +36,7 @@ class Stocking:
 
 
     def query(self):
-        for queryConfig in self.configInterface.get('queries'):
+        for queryConfig in self.configInterface.get():
             self.logService.start('QUERY {}'.format(queryConfig.get('interval')))
 
             stockDataInterface = StockDataInterface(queryConfig.get('interval'))
@@ -68,11 +68,11 @@ class Stocking:
         # Display services initiated
         initiatedServices = 'Services initiated: '
         for i in range(len(self.configInterface.get('queries', []))):
-            initiatedServices += 'QUERY {}'.format(self.configInterface.get('queries')[i])
+            initiatedServices += 'QUERY {}'.format(self.configInterface.get('queries')[i].get('interval'))
             if i < len(self.configInterface.get('queries')) - 1:
                 initiatedServices += ', '
         if self.configInterface.get('analyze'):
-            initiatedServices += 'ANALYZE'
+            initiatedServices += ', ANALYZE'
         emailBody += initiatedServices + '\n\n'
 
         # Display log text
