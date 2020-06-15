@@ -27,7 +27,7 @@ class QueryService:
 
         # Default query start and end
         start = datetime(1970, 1, 1)
-        end = now
+        end = now + timedelta(days=1)
         if interval == '1m':
             start = now - timedelta(days=29)
 
@@ -35,10 +35,7 @@ class QueryService:
         stockHistory = self.stockDataInterface.load(symbol, 1)
         if stockHistory:
             lastHistoryEntry = stockHistory[0][0]
-            if interval == '1d':
-                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d') + timedelta(days=1)
-            elif interval == '1m':
-                start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d %H:%M:%S') + timedelta(days=1)
+            start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d' if interval == '1d' else '%Y-%m-%d %H:%M:%S')
 
         return start.date(), end.date()
 
