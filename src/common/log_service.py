@@ -12,7 +12,7 @@ class LogService:
 
     def start(self, service):
         self.serviceStartDateTimes.update({service: datetime.now()})
-        self.log(service, 'Started', 'STAT')
+        self.log(service, 'Started', 'INFO')
 
 
     def stop(self, service):

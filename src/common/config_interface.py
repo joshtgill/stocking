@@ -3,30 +3,41 @@ import json
 
 class ConfigInterface:
 
-    def __init__(self, fileInterface):
+    def __init__(self, configPath, fileInterface):
         self.fileInterface = fileInterface
-        self.configVarMap = {'ALL_SYMBOLS': 'exe/symbols/all_symbols.json'}
+        self.config = json.loads(self.fileInterface.read(configPath))
+        self.loadVariables(self.config)
+        self.rootConfig = self.config
 
 
-    def load(self, configPath):
-        # Get general config
-        config = json.loads(self.fileInterface.read(configPath))
+    def loadVariables(self, config):
+        variables = {'ALL_SYMBOLS': 'exe/symbols/all_symbols.json'}
 
-        # Load stock symbols for declared services
-        for queryConfig in config.get('queries'):
-            self.loadStockSymbols(queryConfig)
-        self.loadStockSymbols(config.get('analyze'))
+        for key in config:
+            if type(config.get(key)) is dict:
+                self.loadVariables(config.get(key))
+            else:
+                if config.get(key) in variables.keys():
+                    variableData = json.loads(self.fileInterface.read(variables.get(config.get(key))))
+                    config.update({key: variableData})
 
-        return config
+
+    def get(self, path='', defaultData=None):
+        # Empty path returns the config
+        if not path:
+            return self.config
+
+        data = self.config.get(path)
+
+        # If key does not exists, return default data
+        if not data:
+            return defaultData
+
+        return data
 
 
-    def loadStockSymbols(self, config):
-        symbols = config.get('symbols')
-        if not isinstance(symbols, list):
-            if symbols in self.configVarMap.keys():  # Symbols value is config var
-                symbols = json.loads(self.fileInterface.read(self.configVarMap.get(symbols)))
-            else:  # Symbols value is a single symbol
-                symbols = [symbols]
-            config.update({'symbols': symbols})
-
-        return config
+    def setScope(self, path=''):
+        if path:
+            self.config = self.config.get(path)
+        else:  # Set config scope to root
+            self.config = self.rootConfig

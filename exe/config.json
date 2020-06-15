@@ -10,6 +10,6 @@
         }
     ],
     "analyze": {
-        "symbols": "ALL_SYMBOLS"
+        "symbols": "TSLA"
     }
 }

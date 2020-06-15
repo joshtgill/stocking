@@ -12,31 +12,31 @@ class Stocking:
 
     def __init__(self, configPath):
         self.fileInterface = FileInterface()
-        self.config = ConfigInterface(self.fileInterface).load(configPath)
+        self.configInterface = ConfigInterface(configPath, self.fileInterface)
         self.logService = LogService(self.fileInterface)
 
 
-    def startServices(self):
+    def start(self):
         self.logService.start('STOCKING')
 
-        # Start services based on config
         try:
-            if 'queries' in self.config:
-                self.query()
+            configServiceMap = {'queries': self.query, 'analyze': self.analyze}
+            for serviceConfig in self.configInterface.get():
+                self.configInterface.setScope(serviceConfig)
 
-            if 'analyze' in self.config:
-                self.analyze()
-        except Exception as e:
+                configServiceMap.get(serviceConfig)()
+
+                self.configInterface.setScope()
+        except Exception:
             self.logService.log('STOCKING', traceback.format_exc(), 'ERROR')
 
         self.logService.stop('STOCKING')
 
-        # Email results of run
         self.email()
 
 
     def query(self):
-        for queryConfig in self.config.get('queries'):
+        for queryConfig in self.configInterface.get('queries'):
             self.logService.start('QUERY {}'.format(queryConfig.get('interval')))
 
             stockDataInterface = StockDataInterface(queryConfig.get('interval'))
@@ -50,7 +50,7 @@ class Stocking:
         self.logService.start('ANALYZE')
 
         dayStockDataInterface = StockDataInterface('1d')
-        analyzeService = AnalyzeService(self.config.get('analyze'), dayStockDataInterface, self.fileInterface)
+        analyzeService = AnalyzeService(self.configInterface, dayStockDataInterface, self.fileInterface)
         analyzeService.start()
 
         self.logService.stop('ANALYZE')
@@ -64,13 +64,19 @@ class Stocking:
 
         # Email body consists of services initiated and log text
         emailBody = ''
+
         # Display services initiated
         initiatedServices = 'Services initiated: '
-        for queryConfig in self.config.get('queries'):
-            initiatedServices += 'QUERY {}, '.format(queryConfig.get('interval'))
-        emailBody += initiatedServices[: -2] + '\n'
+        for i in range(len(self.configInterface.get('queries', []))):
+            initiatedServices += 'QUERY {}'.format(self.configInterface.get('queries')[i])
+            if i < len(self.configInterface.get('queries')) - 1:
+                initiatedServices += ', '
+        if self.configInterface.get('analyze'):
+            initiatedServices += 'ANALYZE'
+        emailBody += initiatedServices + '\n\n'
+
         # Display log text
-        logText = 'Log:\n'
+        logText = ''
         with open(self.logService.logPath, 'r') as logFile:
             logText += logFile.read()
         emailBody += logText

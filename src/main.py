@@ -14,4 +14,4 @@ if __name__ == "__main__":
     os.chdir('..')
 
     # Start Stocking with config
-    Stocking(sys.argv[1]).startServices()
+    Stocking(sys.argv[1]).start()
