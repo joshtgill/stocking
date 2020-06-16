@@ -6,8 +6,9 @@ from query.query_interface import QueryInterface
 
 class QueryService:
 
-    def __init__(self, configInterface):
+    def __init__(self, configInterface, logService):
         self.configInterface = configInterface
+        self.logService = logService
         self.stockDataInterfaces = self.initStockDataInterfaces()
         self.queries = self.buildQueries()
 
@@ -22,11 +23,12 @@ class QueryService:
 
 
     def buildQueries(self):
-        queries = []
+        queries = {}
         for queryConfig in self.configInterface.get('queries'):
+            queries.update({queryConfig.get('interval'): []})
             for symbol in queryConfig.get('symbols'):
                 start, end = self.determineQueryPeriod(symbol, queryConfig.get('interval'))
-                queries.append(Query(symbol, queryConfig.get('interval'), start, end))
+                queries.get(queryConfig.get('interval')).append(Query(symbol, queryConfig.get('interval'), start, end))
 
         return queries
 
@@ -52,6 +54,8 @@ class QueryService:
 
     def start(self):
         queryInterface = QueryInterface()
-        for query in self.queries:
-            stock = queryInterface.performQuery(query)
-            self.stockDataInterfaces.get(query.interval).save(stock)
+        for interval in self.queries:
+            self.logService.log('Query', 'Performing {} queries'.format(interval))
+            for query in self.queries.get(interval):
+                stock = queryInterface.performQuery(query)
+                self.stockDataInterfaces.get(interval).save(stock)

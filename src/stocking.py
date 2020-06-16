@@ -30,7 +30,7 @@ class Stocking:
                 # Start corresponding service
                 serviceDirectory.get(service)()
 
-                # Revert confg to root config
+                # Revert config to root config
                 self.configInterface.resetConfig()
 
                 self.logService.stop(service)
@@ -43,7 +43,7 @@ class Stocking:
 
 
     def query(self):
-        QueryService(self.configInterface).start()
+        QueryService(self.configInterface, self.logService).start()
 
 
     def analyze(self):
