@@ -3,7 +3,7 @@ sys.path.append('common/')
 sys.path.append('query/')
 sys.path.append('process/')
 sys.path.append('utility/')
-sys.stdout = open('out/output.log', 'w+')
+sys.stdout = open('out/output.txt', 'w+')
 import os
 from stocking import Stocking
 
