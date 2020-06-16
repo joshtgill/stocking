@@ -1,7 +1,7 @@
-from common.database_interface import DatabaseInterface
+from common.data_interface import DataInterface
 
 
-class StockDataInterface(DatabaseInterface):
+class StockDataInterface(DataInterface):
 
     def __init__(self, interval):
         super().__init__('data/stocks_{}.db'.format(interval))

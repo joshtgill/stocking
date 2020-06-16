@@ -42,8 +42,9 @@ class ConfigInterface:
         return data
 
 
-    def setScope(self, path=''):
-        if path:
-            self.config = self.config.get(path)
-        else:  # Set config scope to root
-            self.config = self.rootConfig
+    def setConfig(self, key):
+        self.config = self.config.get(key)
+
+
+    def resetConfig(self):
+        self.config = self.rootConfig

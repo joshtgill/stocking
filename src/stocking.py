@@ -1,6 +1,5 @@
 from common.file_interface import FileInterface
 from common.config_interface import ConfigInterface
-from common.stock_data_interface import StockDataInterface
 from common.log_service import LogService
 from query.query_service import QueryService
 from process.analyze_service import AnalyzeService
@@ -12,51 +11,46 @@ class Stocking:
 
     def __init__(self, configPath):
         self.fileInterface = FileInterface()
-        self.configInterface = ConfigInterface(configPath, self.fileInterface)
         self.logService = LogService(self.fileInterface)
+        self.configInterface = ConfigInterface(configPath, self.fileInterface)
 
 
     def start(self):
-        self.logService.start('STOCKING')
+        self.logService.start('stocking')
+
+        serviceDirectory = {'query': self.query, 'analyze': self.analyze}
 
         try:
-            configServiceMap = {'queries': self.query, 'analyze': self.analyze}
-            for serviceConfig in self.configInterface.get():
-                self.configInterface.setScope(serviceConfig)
+            for service in self.configInterface.get():
+                self.logService.start(service)
 
-                configServiceMap.get(serviceConfig)()
+                # Set to service's config
+                self.configInterface.setConfig(service)
 
-                self.configInterface.setScope()
+                # Start corresponding service
+                serviceDirectory.get(service)()
+
+                # Revert confg to root config
+                self.configInterface.resetConfig()
+
+                self.logService.stop(service)
         except Exception:
-            self.logService.log('STOCKING', traceback.format_exc(), 'ERROR')
+            self.logService.log('stocking', traceback.format_exc(), 'error')
 
-        self.logService.stop('STOCKING')
+        self.logService.stop('stocking')
 
-        self.email()
+        self.buildEmail()
 
 
     def query(self):
-        for queryConfig in self.configInterface.get():
-            self.logService.start('QUERY {}'.format(queryConfig.get('interval')))
-
-            stockDataInterface = StockDataInterface(queryConfig.get('interval'))
-            queryService = QueryService(queryConfig, stockDataInterface)
-            queryService.start()
-
-            self.logService.stop('QUERY {}'.format(queryConfig.get('interval')))
+        QueryService(self.configInterface).start()
 
 
     def analyze(self):
-        self.logService.start('ANALYZE')
-
-        dayStockDataInterface = StockDataInterface('1d')
-        analyzeService = AnalyzeService(self.configInterface, dayStockDataInterface, self.fileInterface)
-        analyzeService.start()
-
-        self.logService.stop('ANALYZE')
+        AnalyzeService(self.configInterface, self.fileInterface).start()
 
 
-    def email(self):
+    def buildEmail(self):
         # Subject is based on if an error occurred
         emailSubject = 'Stocking COMPLETE\n'
         if self.logService.errorOccurred:
@@ -81,5 +75,4 @@ class Stocking:
             logText += logFile.read()
         emailBody += logText
 
-        emailInterface = EmailInterface(self.fileInterface)
-        emailInterface.sendEmail('joshtg.007@gmail.com', emailSubject, emailBody)
+        EmailInterface(self.fileInterface).sendEmail('joshtg.007@gmail.com', emailSubject, emailBody)

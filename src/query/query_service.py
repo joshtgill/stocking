@@ -1,22 +1,32 @@
-from query.query_interface import QueryInterface
+from common.stock_data_interface import StockDataInterface
 from query.query import Query
 from datetime import datetime, timedelta
+from query.query_interface import QueryInterface
 
 
 class QueryService:
 
-    def __init__(self, config, stockDataInterface):
-        self.config = config
-        self.stockDataInterface = stockDataInterface
-        self.queryInterface = QueryInterface()
+    def __init__(self, configInterface):
+        self.configInterface = configInterface
+        self.stockDataInterfaces = self.initStockDataInterfaces()
         self.queries = self.buildQueries()
+
+
+    def initStockDataInterfaces(self):
+        stockDataInterfaces = {}
+        for queryConfig in self.configInterface.get('queries'):
+            stockDataInterfaces.update({queryConfig.get('interval'):
+                                        StockDataInterface(queryConfig.get('interval'))})
+
+        return stockDataInterfaces
 
 
     def buildQueries(self):
         queries = []
-        for symbol in self.config.get('symbols'):
-            start, end = self.determineQueryPeriod(symbol, self.config.get('interval'))
-            queries.append(Query(symbol, self.config.get('interval'), start, end))
+        for queryConfig in self.configInterface.get('queries'):
+            for symbol in queryConfig.get('symbols'):
+                start, end = self.determineQueryPeriod(symbol, queryConfig.get('interval'))
+                queries.append(Query(symbol, queryConfig.get('interval'), start, end))
 
         return queries
 
@@ -32,7 +42,7 @@ class QueryService:
             start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
-        stockHistory = self.stockDataInterface.load(symbol, 1)
+        stockHistory = self.stockDataInterfaces.get(interval).load(symbol, 1)
         if stockHistory:
             lastHistoryEntry = stockHistory[0][0]
             start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d' if interval == '1d' else '%Y-%m-%d %H:%M:%S')
@@ -41,6 +51,7 @@ class QueryService:
 
 
     def start(self):
+        queryInterface = QueryInterface()
         for query in self.queries:
-            stock = self.queryInterface.performQuery(query)
-            self.stockDataInterface.save(stock)
+            stock = queryInterface.performQuery(query)
+            self.stockDataInterfaces.get(query.interval).save(stock)

@@ -1,15 +1,17 @@
 {
-    "queries": [
-        {
-            "symbols": "ALL_SYMBOLS",
-            "interval": "1d"
-        },
-        {
-            "symbols": "ALL_SYMBOLS",
-            "interval": "1m"
-        }
-    ],
+    "query": {
+        "queries": [
+            {
+                "symbols": ["TSLA"],
+                "interval": "1d"
+            },
+            {
+                "symbols": ["TSLA"],
+                "interval": "1m"
+            }
+        ]
+    },
     "analyze": {
-        "symbols": "TSLA"
+        "symbols": ["TSLA"]
     }
 }

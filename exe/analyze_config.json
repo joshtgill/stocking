@@ -1,5 +1,5 @@
 {
     "analyze": {
-        "symbols": "TSLA"
+        "symbols": ["TSLA"]
     }
 }

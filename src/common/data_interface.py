@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class DatabaseInterface:
+class DataInterface:
 
     def __init__(self, databasePath):
         self.database = sqlite3.connect(databasePath)
