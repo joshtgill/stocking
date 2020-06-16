@@ -39,7 +39,7 @@ class Stocking:
 
         self.logService.stop('stocking')
 
-        self.buildEmail()
+        self.writeEmail()
 
 
     def query(self):
@@ -50,7 +50,7 @@ class Stocking:
         AnalyzeService(self.configInterface, self.fileInterface).start()
 
 
-    def buildEmail(self):
+    def writeEmail(self):
         # Subject is based on if an error occurred
         emailSubject = 'Stocking COMPLETE\n'
         if self.logService.errorOccurred:
