@@ -5,7 +5,7 @@ cd ~/stocking/
 python3 src/main.py exe/config.json
 
 # Notify Josh with results
-sendmail joshtg.007@gmail.com < email.txt
+sendmail joshtg.007@gmail.com < out/email.txt
 
 # Remove log file in email
 # rm *.log
