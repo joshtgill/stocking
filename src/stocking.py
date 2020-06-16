@@ -39,7 +39,7 @@ class Stocking:
 
         self.logService.stop('stocking')
 
-        self.writeEmail()
+        self.email()
 
 
     def query(self):
@@ -50,29 +50,19 @@ class Stocking:
         AnalyzeService(self.configInterface, self.fileInterface).start()
 
 
-    def writeEmail(self):
-        # Subject is based on if an error occurred
-        emailSubject = 'Stocking COMPLETE\n'
-        if self.logService.errorOccurred:
-            emailSubject = 'Stocking FAILED\n'
+    def email(self):
+        # Subject is based on whether an error occurred
+        emailSubject = 'Stocking COMPLETE' if not self.logService.errorOccurred else 'Stocking FAILED'
 
-        # Email body consists of services initiated and log text
-        emailBody = ''
-
-        # Display services initiated
-        initiatedServices = 'Services initiated: '
-        for i in range(len(self.configInterface.get('queries', []))):
-            initiatedServices += 'QUERY {}'.format(self.configInterface.get('queries')[i].get('interval'))
-            if i < len(self.configInterface.get('queries')) - 1:
-                initiatedServices += ', '
+        # Body containts services initiated
+        initiatedServices = []
+        for queryConfig in self.configInterface.get('query').get('queries', []):
+            initiatedServices.append('Query {}'.format(queryConfig.get('interval')))
         if self.configInterface.get('analyze'):
-            initiatedServices += ', ANALYZE'
-        emailBody += initiatedServices + '\n\n'
+            initiatedServices.append('Analyze')
+        emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
 
-        # Display log text
-        logText = ''
-        with open(self.logService.logPath, 'r') as logFile:
-            logText += logFile.read()
-        emailBody += logText
+        # Body contains log text
+        emailBody += 'Log:\n' + self.fileInterface.read(self.logService.logPath)
 
-        EmailInterface(self.fileInterface).sendEmail('joshtg.007@gmail.com', emailSubject, emailBody)
+        EmailInterface(self.fileInterface).buildEmail(emailSubject, emailBody)

@@ -3,3 +3,6 @@ cd ~/stocking/
 
 # Run stocking's query service
 python3 src/main.py exe/config.json
+
+# Notify Josh with results
+sendmail joshtg.007@gmail.com < email.txt
