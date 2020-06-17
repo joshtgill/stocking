@@ -29,21 +29,28 @@ class ConfigInterface:
 
 
     def get(self, path='', defaultData=None):
-        # Empty path returns the config
         if not path:
             return self.config
 
-        data = self.config.get(path)
+        pathList = path.strip().strip('/').split('/')
 
-        # If key does not exists, return default data
-        if not data:
+        configRunner = self.config
+        try:
+            for key in pathList:
+                if '[' in key:
+                    keyIndex = int(key[key.index('[') + 1 : key.index(']')])
+                    key = key[0: key.index('[')]
+                    configRunner = configRunner.get(key)[keyIndex]
+                else:
+                    configRunner = configRunner.get(key)
+        except AttributeError:
             return defaultData
 
-        return data
+        return configRunner
 
 
-    def setConfig(self, key):
-        self.config = self.config.get(key)
+    def setConfig(self, path):
+        self.config = self.get(path)
 
 
     def resetConfig(self):

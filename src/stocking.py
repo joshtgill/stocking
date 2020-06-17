@@ -56,7 +56,7 @@ class Stocking:
 
         # Body containts services initiated
         initiatedServices = []
-        for queryConfig in self.configInterface.get('query').get('queries', []):
+        for queryConfig in self.configInterface.get('query/queries', []):
             initiatedServices.append('Query {}'.format(queryConfig.get('interval')))
         if self.configInterface.get('analyze'):
             initiatedServices.append('Analyze')
