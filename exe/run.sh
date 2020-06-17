@@ -8,4 +8,4 @@ python3 src/main.py exe/config.json
 /usr/sbin/sendmail joshtg.007@gmail.com < out/email.txt
 
 # Remove log file in email
-# rm *.log
+rm *.log
