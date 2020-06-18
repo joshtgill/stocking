@@ -1,18 +1,15 @@
-from datetime import timedelta
 from common.stock import Stock
+from datetime import timedelta
 import yfinance
 import pandas
-import pytz
 import numpy
 
 
 class QueryInterface:
 
     def performQuery(self, query):
-        # Stock to populate
         stock = Stock(query.symbol, query.interval)
 
-        # Get time format
         dateTimeFormat = '%Y-%m-%d' if query.interval == '1d' else '%Y-%m-%d %H:%M:%S'
 
         # yFinance only allows a period of up to 7 days for 1m intervals
