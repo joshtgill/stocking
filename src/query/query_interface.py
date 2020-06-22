@@ -7,10 +7,17 @@ import numpy
 
 class QueryInterface:
 
+    def __init__(self, logService):
+        self.logService = logService
+
+
     def performQuery(self, query):
         stock = Stock(query.symbol, query.interval)
 
         dateTimeFormat = '%Y-%m-%d' if query.interval == '1d' else '%Y-%m-%d %H:%M:%S'
+
+        # Track number of consecutive yFinance errors
+        numYErrors = 0
 
         # yFinance only allows a period of up to 7 days for 1m intervals
         # so break up queries into 7 day contiguous periods
@@ -21,9 +28,20 @@ class QueryInterface:
 
         while (query.end - localQueryStart).days > 0:
             # Get history data
-            yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval,
-                                                                  start=localQueryStart,
-                                                                  end=localQueryEnd)
+            try:
+                yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval,
+                                                                      start=localQueryStart,
+                                                                      end=localQueryEnd)
+                numYErrors = 0
+            except ValueError:  # Weird json-decode-error with yfinance, try again (up to 5 times)
+                if numYErrors < 6:
+                    self.logService.log('query', 'yFinance json-decode-error', 'info')
+                    numYErrors += 1
+                    continue
+                else:
+                    self.logService.log('query', 'Max yFinance json-decode-errors', 'error')
+                    return
+
             dateTimes = yStockHistory.index.values
 
             # Store stock data

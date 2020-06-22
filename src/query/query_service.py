@@ -53,7 +53,7 @@ class QueryService:
 
 
     def start(self):
-        queryInterface = QueryInterface()
+        queryInterface = QueryInterface(self.logService)
 
         for interval in self.queries:
             self.logService.log('Query', 'Performing {} queries'.format(interval))
