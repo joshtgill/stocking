@@ -2,7 +2,7 @@ from common.file_interface import FileInterface
 from common.config_interface import ConfigInterface
 from common.log_service import LogService
 from query.query_service import QueryService
-from process.analyze_service import AnalyzeService
+from process.process_service import ProcessService
 import traceback
 from utility.email_interface import EmailInterface
 
@@ -18,7 +18,7 @@ class Stocking:
     def start(self):
         self.logService.start('stocking')
 
-        serviceDirectory = {'query': self.query, 'analyze': self.analyze}
+        serviceDirectory = {'query': self.query, 'process': self.process}
 
         try:
             for service in self.configInterface.get():
@@ -46,8 +46,8 @@ class Stocking:
         QueryService(self.configInterface, self.logService).start()
 
 
-    def analyze(self):
-        AnalyzeService(self.configInterface, self.fileInterface).start()
+    def process(self):
+        ProcessService(self.configInterface).start()
 
 
     def email(self):

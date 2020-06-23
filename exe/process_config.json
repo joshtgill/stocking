@@ -1,0 +1,10 @@
+{
+    "process": {
+        "1d": {
+            "symbols": ["TSLA"],
+            "services": [
+                "analyze"
+            ]
+        }
+    }
+}

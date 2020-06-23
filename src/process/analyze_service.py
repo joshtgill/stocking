@@ -1,13 +1,12 @@
-import datetime
-import json
+from common.stock_data_interface import StockDataInterface
 
 
 class AnalyzeService:
 
-    def __init__(self, configInterface, fileInterface):
-        self.configInterface = configInterface
-        self.fileInterface = fileInterface
+    def __init__(self, interval, symbols):
+        self.stockDataInterface = StockDataInterface(interval)
+        self.symbols = symbols
 
 
     def start(self):
-        pass
+        print('goz')
