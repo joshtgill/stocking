@@ -1,4 +1,4 @@
-from process.analyze_service import AnalyzeService
+from process.analyze.analyze_service import AnalyzeService
 
 
 class ProcessService():
