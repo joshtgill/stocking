@@ -47,7 +47,7 @@ class Stocking:
 
 
     def process(self):
-        ProcessService(self.configInterface).start()
+        ProcessService(self.configInterface, self.logService).start()
 
 
     def email(self):
