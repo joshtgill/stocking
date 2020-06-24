@@ -30,15 +30,13 @@ class DataInterface:
         return self.cursor.fetchone()[0] != 0
 
 
-    def select(self, tableName, numLastEntries=0):
+    def select(self, tableName, start='', end=''):
         if not self.tableExists(tableName):
             return []
 
-        if not numLastEntries:
+        if not start and not end:
             self.cursor.execute("SELECT * FROM '{}'".format(tableName))
         else:
-            self.cursor.execute('''SELECT * FROM
-                                   (SELECT * FROM '{}' ORDER BY timestamp DESC LIMIT {})
-                                   ORDER BY timestamp ASC'''.format(tableName, numLastEntries))
+            self.cursor.execute("SELECT * FROM '{}' WHERE timestamp BETWEEN '{}' AND '{}'".format(tableName, start, end))
 
         return self.cursor.fetchall()

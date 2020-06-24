@@ -17,5 +17,5 @@ class StockDataInterface(DataInterface):
         self.insert(stock.symbol, self.header, stock.history)
 
 
-    def load(self, symbol, numLastEntries=0):
-        return self.select(symbol, numLastEntries)
+    def load(self, symbol, start='', end=''):
+        return self.select(symbol, start, end)
