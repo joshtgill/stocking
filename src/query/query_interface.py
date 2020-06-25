@@ -33,7 +33,7 @@ class QueryInterface:
                                                                       start=localQueryStart,
                                                                       end=localQueryEnd)
                 numYErrors = 0
-            except ValueError:  # Weird json-decode-error with yfinance, try again (up to 5 times)
+            except (ValueError, requests.exceptions.SSLError):  # Weird json-decode-error with yfinance, try again (up to 5 times)
                 if numYErrors < 6:
                     self.logService.log('query', 'yFinance json-decode-error', 'info')
                     numYErrors += 1
