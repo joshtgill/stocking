@@ -33,13 +33,13 @@ class QueryInterface:
                                                                       start=localQueryStart,
                                                                       end=localQueryEnd)
                 numYErrors = 0
-            except (ValueError, requests.exceptions.SSLError):  # Weird json-decode-error with yfinance, try again (up to 5 times)
+            except Exception:  # Any error with yfinance, try again (up to 5 times)
                 if numYErrors < 6:
-                    self.logService.log('query', 'yFinance json-decode-error', 'info')
+                    self.logService.log('query', 'yFinance error', 'info')
                     numYErrors += 1
                     continue
                 else:
-                    self.logService.log('query', 'Max yFinance json-decode-errors', 'error')
+                    self.logService.log('query', 'Max yFinance errors reached', 'error')
                     return
 
             dateTimes = yStockHistory.index.values
