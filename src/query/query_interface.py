@@ -32,19 +32,18 @@ class QueryInterface:
                 yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval,
                                                                       start=localQueryStart,
                                                                       end=localQueryEnd)
-                numYErrors = 0
             except Exception:  # Any error with yfinance, try again (up to 5 times)
-                if numYErrors < 6:
-                    self.logService.log('query', 'yFinance error', 'info')
-                    numYErrors += 1
-                    continue
+                numYErrors += 1
+                if numYErrors == 6:
+                    break
                 else:
-                    self.logService.log('query', 'Max yFinance errors reached', 'error')
-                    return
+                    continue
 
-            dateTimes = yStockHistory.index.values
+            # Reset yFinance error counter following success
+            numYErrors = 0
 
             # Store stock data
+            dateTimes = yStockHistory.index.values
             for rowIndex in range(len(yStockHistory)):
                 if not numpy.isnan(yStockHistory.iloc[rowIndex, 0]):
                     historyDate = pandas.to_datetime((dateTimes[rowIndex])).strftime(dateTimeFormat)
@@ -54,5 +53,11 @@ class QueryInterface:
             # Increment start and end
             localQueryStart = localQueryEnd
             localQueryEnd = localQueryEnd + timedelta(days=7)
+
+        # Report yFinance errors
+        if numYErrors:
+            self.logService.log('query',
+                                'yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
+                                'error')
 
         return stock
