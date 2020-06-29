@@ -1,8 +1,10 @@
 {
     "process": {
-        "analyze": {
+        "1d": {
             "symbols": ["TSLA"],
-            "intervals": ["1d"]
+            "start": "2020-04-06",
+            "end": "2020-06-28",
+            "modules": ["analyze"]
         }
     }
 }
