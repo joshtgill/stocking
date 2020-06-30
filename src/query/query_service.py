@@ -14,21 +14,20 @@ class QueryService:
 
 
     def initStockDataInterfaces(self):
-        stockDataInterfaces = {}  # {interval: interface}
-        for queryConfig in self.configInterface.get('queries'):
-            stockDataInterfaces.update({queryConfig.get('interval'):
-                                        StockDataInterface(queryConfig.get('interval'))})
+        stockDataInterfaces = {}  # {interval: StockDataInterface}
+        for interval in self.configInterface.get('queries'):
+            stockDataInterfaces.update({interval: StockDataInterface(interval)})
 
         return stockDataInterfaces
 
 
     def buildQueries(self):
-        queries = {}  # {interval: list of queries}
-        for queryConfig in self.configInterface.get('queries'):
-            queries.update({queryConfig.get('interval'): []})
-            for symbol in queryConfig.get('symbols'):
-                start, end = self.determineQueryPeriod(symbol, queryConfig.get('interval'))
-                queries.get(queryConfig.get('interval')).append(Query(symbol, queryConfig.get('interval'), start, end))
+        queries = {}  # {interval: list of Querys}
+        for interval in self.configInterface.get('queries'):
+            queries.update({interval: []})
+            for symbol in self.configInterface.get('queries/{}'.format(interval)):
+                start, end = self.determineQueryPeriod(symbol, interval)
+                queries.get(interval).append(Query(symbol, interval, start, end))
 
         return queries
 

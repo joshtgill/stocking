@@ -56,8 +56,8 @@ class Stocking:
 
         # Body containts services initiated
         initiatedServices = []
-        for queryConfig in self.configInterface.get('query/queries', []):
-            initiatedServices.append('Query {}'.format(queryConfig.get('interval')))
+        for interval in self.configInterface.get('query/queries', []):
+            initiatedServices.append('Query {}'.format(interval))
         if self.configInterface.get('analyze'):
             initiatedServices.append('Analyze')
         emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'

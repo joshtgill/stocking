@@ -1,14 +1,8 @@
 {
     "query": {
-        "queries": [
-            {
-                "symbols": "ALL_SYMBOLS",
-                "interval": "1d"
-            },
-            {
-                "symbols": "ALL_SYMBOLS",
-                "interval": "1m"
-            }
-        ]
+        "queries": {
+            "1d": "ALL_SYMBOLS",
+            "1m": "ALL_SYMBOLS"
+        }
     }
 }
