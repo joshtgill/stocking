@@ -4,7 +4,7 @@ from datetime import datetime
 class LogService:
 
     def __init__(self, fileInterface):
-        self.logPath = 'out/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
+        self.logPath = 'out/logs/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
         self.fileInterface = fileInterface
         self.serviceStartDateTimes = {}
         self.errorOccurred = False
