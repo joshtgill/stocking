@@ -8,20 +8,16 @@ class DataInterface:
         self.cursor =  self.database.cursor()
 
 
-    def insert(self, tableName, tableHeader, data):
-        self.createTable(tableName, tableHeader, 0)
+    def insert(self, tableName, data):
+        self.createTable(tableName)
 
-        self.cursor.executemany("INSERT OR REPLACE INTO '{}' {} VALUES (?, ?, ?, ?, ?)".format(tableName, tableHeader), data)
+        self.cursor.executemany("INSERT OR REPLACE INTO '{}' (timestamp, open, high, low, close) VALUES (?, ?, ?, ?, ?)".format(tableName), data)
 
         self.database.commit()
 
 
-    def createTable(self, name, header, uniqueIndex=-1):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS '{}' {}".format(name, header))
-
-        if uniqueIndex != -1:
-            uniqueIndexName = header[1 : -1].replace(' ', '').split(',')[uniqueIndex]
-            self.cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_{} on '{}' ({})".format(uniqueIndexName, name, uniqueIndexName))
+    def createTable(self, name):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS '{}' (timestamp, open, high, low, close, UNIQUE(timestamp))".format(name))
 
 
     def tableExists(self, name):
