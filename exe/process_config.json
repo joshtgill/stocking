@@ -2,8 +2,8 @@
     "process": {
         "1d": {
             "symbols": ["TSLA"],
-            "start": "2020-04-06",
-            "end": "2020-06-28",
+            "start": "2000-01-01",
+            "end": "2020-07-01",
             "modules": ["analyze"]
         }
     }

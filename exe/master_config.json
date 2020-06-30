@@ -1,0 +1,18 @@
+{
+    "query": {
+        "queries": [
+            {
+                "symbols": ["TSLA"],
+                "interval": "1d"
+            }
+        ]
+    },
+    "process": {
+        "1d": {
+            "symbols": ["TSLA"],
+            "start": "2000-01-01",
+            "end": "2021-01-01",
+            "modules": ["analyze"]
+        }
+    }
+}
