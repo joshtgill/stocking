@@ -1,4 +1,6 @@
 import json
+from datetime import datetime, timedelta
+import re
 
 
 class ConfigInterface:
@@ -11,21 +13,27 @@ class ConfigInterface:
 
 
     def loadVariables(self, config):
-        variables = {'ALL_SYMBOLS': 'exe/symbols/all_symbols.json'}
-
         if type(config) is not dict:
             return
 
         for key in config:
-            if type(config.get(key)) is dict:
-                self.loadVariables(config.get(key))
-            elif type(config.get(key)) is list:
-                for itemValue in config.get(key):
+            value = config.get(key)
+            if type(value) is dict:
+                self.loadVariables(value)
+            elif type(value) is list:
+                for itemValue in value:
                     self.loadVariables(itemValue)
             else:
-                if config.get(key) in variables.keys():
-                    variableData = json.loads(self.fileInterface.read(variables.get(config.get(key))))
-                    config.update({key: variableData})
+                config.update({key: self.determineVariableData(value)})
+
+
+    def determineVariableData(self, variable):
+        if variable == 'ALL_SYMBOLS':
+            return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
+        elif variable == 'NOW':
+            return datetime.now().strftime('%Y-%m-%d')
+        else:
+            return variable
 
 
     def get(self, path='', defaultData=None):
