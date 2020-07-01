@@ -3,9 +3,8 @@ from datetime import datetime
 
 class LogService:
 
-    def __init__(self, fileInterface):
-        self.logPath = 'out/logs/{}.log'.format(datetime.strftime(datetime.now(), '%Y%m%d%H%M%S'))
-        self.fileInterface = fileInterface
+    def __init__(self):
+        self.logContent = ''
         self.serviceStartDateTimes = {}
         self.errorOccurred = False
 
@@ -21,7 +20,7 @@ class LogService:
 
 
     def log(self, service, message, logType='info'):
-        self.fileInterface.write(self.logPath, '[{}] ({}::{}): {}\n'.format(datetime.now(), logType.upper(), service.upper(), message))
+        self.logContent += '[{}] ({}::{}): {}\n'.format(datetime.now(), logType.upper(), service.upper(), message)
 
         if logType == 'error':
             self.errorOccurred = True

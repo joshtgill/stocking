@@ -10,8 +10,8 @@ from utility.email_interface import EmailInterface
 class Stocking:
 
     def __init__(self, configPath):
+        self.logService = LogService()
         self.fileInterface = FileInterface()
-        self.logService = LogService(self.fileInterface)
         self.configInterface = ConfigInterface(configPath, self.fileInterface)
 
 
@@ -63,6 +63,6 @@ class Stocking:
         emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
 
         # Body contains log text
-        emailBody += 'Log:\n' + self.fileInterface.read(self.logService.logPath)
+        emailBody += 'Log:\n' + self.logService.logContent
 
         EmailInterface(self.fileInterface).buildEmail(emailSubject, emailBody)
