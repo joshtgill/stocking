@@ -15,14 +15,14 @@ class Stocking:
         self.configInterface = ConfigInterface(configPath, self.fileInterface)
 
 
-    def start(self):
-        self.logService.start('stocking')
+    def go(self):
+        self.logService.register('stocking')
 
         serviceDirectory = {'query': self.query, 'process': self.process}
 
         try:
             for service in self.configInterface.get():
-                self.logService.start(service)
+                self.logService.register(service)
 
                 # Set to service's config
                 self.configInterface.setConfig(service)
@@ -33,21 +33,21 @@ class Stocking:
                 # Revert config to root config
                 self.configInterface.resetConfig()
 
-                self.logService.stop(service)
+                self.logService.unregister(service)
         except Exception:
             self.logService.log('stocking', traceback.format_exc(), 'error')
 
-        self.logService.stop('stocking')
+        self.logService.unregister('stocking')
 
         self.email()
 
 
     def query(self):
-        QueryService(self.configInterface, self.logService).start()
+        QueryService(self.configInterface, self.logService).go()
 
 
     def process(self):
-        ProcessService(self.configInterface, self.logService).start()
+        ProcessService(self.configInterface, self.logService).go()
 
 
     def email(self):

@@ -11,17 +11,21 @@ class DataInterface:
     def insert(self, tableName, data):
         self.createTable(tableName)
 
-        self.cursor.executemany("INSERT OR REPLACE INTO '{}' (timestamp, open, high, low, close) VALUES (?, ?, ?, ?, ?)".format(tableName), data)
+        self.cursor.executemany('''INSERT OR REPLACE INTO '{}'
+                                   (timestamp, open, high, low, close)
+                                   VALUES (?, ?, ?, ?, ?)'''.format(tableName), data)
 
         self.database.commit()
 
 
     def createTable(self, name):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS '{}' (timestamp, open, high, low, close, UNIQUE(timestamp))".format(name))
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS '{}'
+                               (timestamp, open, high, low, close, UNIQUE(timestamp))'''.format(name))
 
 
     def tableExists(self, name):
-        self.cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}'".format(name))
+        self.cursor.execute('''SELECT count(name) FROM sqlite_master
+                               WHERE type='table' AND name='{}' '''.format(name))
 
         return self.cursor.fetchone()[0] != 0
 
@@ -31,12 +35,14 @@ class DataInterface:
             return []
 
         if not start and not end:  # No start or end provided, get all data
-            self.cursor.execute("SELECT * FROM '{}'".format(tableName))
+            self.cursor.execute('''SELECT * FROM '{}' '''.format(tableName))
         elif not end:  # Just start provided, get last start entries
             self.cursor.execute('''SELECT * FROM
-                                   (SELECT * FROM '{}' ORDER BY timestamp DESC LIMIT {})
+                                   (SELECT * FROM '{}'
+                                   ORDER BY timestamp DESC LIMIT {})
                                    ORDER BY timestamp ASC'''.format(tableName, start))
         else:  # Start and end provided, get entries between
-            self.cursor.execute("SELECT * FROM '{}' WHERE timestamp BETWEEN '{}' AND '{}'".format(tableName, start, end))
+            self.cursor.execute('''SELECT * FROM '{}'
+                                   WHERE timestamp BETWEEN '{}' AND '{}' '''.format(tableName, start, end))
 
         return self.cursor.fetchall()

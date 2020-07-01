@@ -10,6 +10,6 @@ class AnalyzeService:
         self.end = end
 
 
-    def startt(self):
+    def go(self):
         for symbol in self.symbols:
             print(self.stockDataInterface.load(symbol, self.start, self.end))

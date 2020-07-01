@@ -10,12 +10,12 @@ class LogService:
         self.errorOccurred = False
 
 
-    def start(self, service):
+    def register(self, service):
         self.serviceStartDateTimes.update({service: datetime.now()})
         self.log(service, 'Started', 'info')
 
 
-    def stop(self, service):
+    def unregister(self, service):
         startDateTime = self.serviceStartDateTimes.get(service)
         self.log(service, 'Completed in {}'.format(datetime.now() - startDateTime), 'stat')
 

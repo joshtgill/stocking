@@ -8,14 +8,13 @@ class ProcessService():
         self.logService = logService
 
 
-    def start(self):
+    def go(self):
         for interval in self.configInterface.get():
             symbols = self.configInterface.get('{}/symbols'.format(interval))
-            startt = self.configInterface.get('{}/start'.format(interval))
+            start = self.configInterface.get('{}/start'.format(interval))
             end = self.configInterface.get('{}/end'.format(interval))
             for module in self.configInterface.get('{}/modules'.format(interval)):
-                self.logService.start(module)
+                self.logService.register(module)
                 self.logService.log(module, 'Analyzing {}'.format(interval), 'info')
-                analyzeService = AnalyzeService(interval, symbols, startt, end)
-                analyzeService.startt()
-                self.logService.stop(module)
+                AnalyzeService(interval, symbols, start, end).go()
+                self.logService.unregister(module)

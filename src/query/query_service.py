@@ -51,7 +51,7 @@ class QueryService:
         return start.date(), end.date()
 
 
-    def start(self):
+    def go(self):
         queryInterface = QueryInterface(self.logService)
 
         for interval in self.queries:
