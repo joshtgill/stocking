@@ -7,7 +7,7 @@ class EmailInterface:
 
     def buildEmail(self, subject, body):
         # Clear email.txt of existing data
-        self.fileInterface.clearFile(self.emailPath)
+        self.fileInterface.wipe(self.emailPath)
 
         # Build email in sendmail format
         emailFileText = 'Subject: {}'.format(subject)

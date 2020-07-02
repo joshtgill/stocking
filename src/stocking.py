@@ -11,8 +11,8 @@ from datetime import datetime
 class Stocking:
 
     def __init__(self, configPath):
-        self.logService = LogService()
         self.fileInterface = FileInterface()
+        self.logService = LogService(self.fileInterface)
         self.configInterface = ConfigInterface(configPath, self.fileInterface)
 
 
@@ -52,8 +52,10 @@ class Stocking:
 
 
     def email(self):
-        # Subject is based on whether an error occurred, with total run time
-        totalRunTime = datetime.strptime(self.logService.logContent.split()[-1], '%H:%M:%S.%f')
+        logText = self.fileInterface.read('out/stocking.log')
+
+        # Subject contains completion station and total run time
+        totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
         emailSubject = 'Stocking COMPLETE in' if not self.logService.errorOccurred else 'Stocking FAILED in'
         if totalRunTime.hour:
             emailSubject += '{} hours'.format(totalRunTime.hour)
@@ -68,6 +70,6 @@ class Stocking:
         emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
 
         # Body contains log text
-        emailBody += 'Log:\n' + self.logService.logContent
+        emailBody += 'Log:\n' + logText
 
         EmailInterface(self.fileInterface).buildEmail(emailSubject, emailBody)

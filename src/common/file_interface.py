@@ -23,7 +23,7 @@ class FileInterface:
         return ''
 
 
-    def clearFile(self, path):
+    def wipe(self, path):
         try:
             with open(path, 'w') as filee:
                 pass
