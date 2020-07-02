@@ -5,6 +5,7 @@ from query.query_service import QueryService
 from process.process_service import ProcessService
 import traceback
 from utility.email_interface import EmailInterface
+from datetime import datetime
 
 
 class Stocking:
@@ -51,8 +52,12 @@ class Stocking:
 
 
     def email(self):
-        # Subject is based on whether an error occurred
-        emailSubject = 'Stocking COMPLETE' if not self.logService.errorOccurred else 'Stocking FAILED'
+        # Subject is based on whether an error occurred, with total run time
+        totalRunTime = datetime.strptime(self.logService.logContent.split()[-1], '%H:%M:%S.%f')
+        emailSubject = 'Stocking COMPLETE in' if not self.logService.errorOccurred else 'Stocking FAILED in'
+        if totalRunTime.hour:
+            emailSubject += '{} hours'.format(totalRunTime.hour)
+        emailSubject += ' {} minutes'.format(totalRunTime.minute)
 
         # Body containts services initiated
         initiatedServices = []
