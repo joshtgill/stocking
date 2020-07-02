@@ -24,14 +24,17 @@ class ConfigInterface:
                 for itemValue in value:
                     self.loadVariables(itemValue)
             else:
-                config.update({key: self.determineVariableData(value)})
+                config.update({key: self.translateVariable(value)})
 
 
-    def determineVariableData(self, variable):
+    def translateVariable(self, variable):
         if variable == 'ALL_SYMBOLS':
             return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
         elif variable == 'NOW':
             return datetime.now().strftime('%Y-%m-%d')
+        elif 'NOW' in variable:
+            entriesBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')))
+            return (datetime.now().date() - timedelta(days=entriesBack)).strftime('%Y-%m-%d')
         else:
             return variable
 
