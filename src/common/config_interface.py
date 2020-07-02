@@ -30,6 +30,8 @@ class ConfigInterface:
     def translateVariable(self, variable):
         if variable == 'ALL_SYMBOLS':
             return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
+        elif variable == 'GOOD_SYMBOLS':
+            return json.loads(self.fileInterface.read('exe/symbols/good_symbols.json'))
         elif variable == 'NOW':
             return datetime.now().strftime('%Y-%m-%d')
         elif 'NOW' in variable:
