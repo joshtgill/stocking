@@ -43,10 +43,10 @@ class QueryService:
             start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
-        stockHistory = self.stockDataInterfaces.get(interval).load(symbol, 1)
+        stockHistory = self.stockDataInterfaces.get(interval).load(symbol, numLastRows=1)
         if stockHistory:
-            lastHistoryEntry = stockHistory[0][0]
-            start = datetime.strptime(lastHistoryEntry, '%Y-%m-%d' if interval == '1d' else '%Y-%m-%d %H:%M:%S')
+            lastHistoryRow = stockHistory[0][0]
+            start = datetime.strptime(lastHistoryRow, '%Y-%m-%d' if interval == '1d' else '%Y-%m-%d %H:%M:%S')
 
         return start.date(), end.date()
 

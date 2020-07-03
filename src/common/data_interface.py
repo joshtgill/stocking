@@ -30,19 +30,32 @@ class DataInterface:
         return self.cursor.fetchone()[0] != 0
 
 
-    def select(self, tableName, start='', end=''):
+    def select(self, tableName, executeStr):
         if not self.tableExists(tableName):
             return []
 
-        if not start and not end:  # No start or end provided, get all data
-            self.cursor.execute('''SELECT * FROM '{}' '''.format(tableName))
-        elif not end:  # Just start provided, get last start entries
-            self.cursor.execute('''SELECT * FROM
-                                   (SELECT * FROM '{}'
-                                   ORDER BY timestamp DESC LIMIT {})
-                                   ORDER BY timestamp ASC'''.format(tableName, start))
-        else:  # Start and end provided, get entries between
-            self.cursor.execute('''SELECT * FROM '{}'
-                                   WHERE timestamp BETWEEN '{}' AND '{}' '''.format(tableName, start, end))
+        self.cursor.execute(executeStr)
 
         return self.cursor.fetchall()
+
+
+    def selectAll(self, tableName):
+        executeStr = '''SELECT * FROM '{}' '''.format(tableName)
+
+        return self.select(tableName, executeStr)
+
+
+    def selectPeriod(self, tableName, start, end):
+        executeStr = '''SELECT * FROM '{}'
+                        WHERE timestamp BETWEEN '{}' AND '{}' '''.format(tableName, start, end)
+
+        return self.select(tableName, executeStr)
+
+
+    def selectLastRows(self, tableName, numLastRows):
+        executeStr = '''SELECT * FROM
+                        (SELECT * FROM '{}'
+                        ORDER BY timestamp DESC LIMIT {})
+                        ORDER BY timestamp ASC'''.format(tableName, numLastRows)
+
+        return self.select(tableName, executeStr)

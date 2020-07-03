@@ -2,7 +2,7 @@
     "process": {
         "1d": {
             "symbols": ["TSLA"],
-            "start": "NOW - 6",
+            "start": "NOW - 7",
             "end": "NOW",
             "modules": ["analyze"]
         }

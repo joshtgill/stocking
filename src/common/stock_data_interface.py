@@ -15,5 +15,12 @@ class StockDataInterface(DataInterface):
         self.insert(stock.symbol, stock.history)
 
 
-    def load(self, symbol, start='', end=''):
-        return self.select(symbol, start, end)
+    def load(self, symbol, start='', end='', numLastRows=0):
+        if start and end and not numLastRows:
+            return self.selectPeriod(symbol, start, end)
+        elif not start and not end and numLastRows:
+            return self.selectLastRows(symbol, numLastRows)
+        elif not start and not end and not numLastRows:
+            return self.selectAll(symbol)
+        else:
+            return []
