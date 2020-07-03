@@ -32,11 +32,6 @@ class ConfigInterface:
             return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
         elif variable == 'GOOD_SYMBOLS':
             return json.loads(self.fileInterface.read('exe/symbols/good_symbols.json'))
-        elif variable == 'NOW':
-            return datetime.now().strftime('%Y-%m-%d')
-        elif 'NOW' in variable:
-            entriesBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')))
-            return (datetime.now().date() - timedelta(days=entriesBack)).strftime('%Y-%m-%d')
         else:
             return variable
 
