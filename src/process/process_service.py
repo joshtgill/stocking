@@ -12,8 +12,8 @@ class ProcessService():
     def go(self):
         for interval in self.configInterface.configGet():
             symbols = self.configInterface.configGet('{}/symbols'.format(interval))
-            start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)))
-            end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)))
+            start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)), interval)
+            end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)), interval)
             for module in self.configInterface.configGet('{}/modules'.format(interval)):
                 self.logService.register(module)
                 self.logService.log(module, 'Analyzing {}'.format(interval), 'info')
@@ -21,12 +21,12 @@ class ProcessService():
                 self.logService.unregister(module)
 
 
-    def translateVariable(self, variable):
+    def translateVariable(self, variable, interval):
         if variable == 'NOW':
-            return datetime.now().strftime('%Y-%m-%d')
+            return datetime.now().strftime(self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
         elif 'NOW' in variable:
-            marketDaysBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')))
-            return self.determineDate(marketDaysBack).strftime('%Y-%m-%d')
+            marketDaysBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')).replace('d', ''))
+            return self.determineDate(marketDaysBack).strftime(self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
         else:
             return variable
 
