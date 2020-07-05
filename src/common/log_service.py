@@ -6,26 +6,21 @@ class LogService:
     def __init__(self, fileInterface, configInterface):
         self.fileInterface = fileInterface
         self.configInterface = configInterface
-        self.serviceStartDateTimes = {}
-        self.errorOccurred = False
+        self.serviceDir = []  # [(name, start datetime)]
 
         self.fileInterface.wipe(self.configInterface.settingsGet('stockingLogPath'))
 
 
     def register(self, service):
-        self.serviceStartDateTimes.update({service: datetime.now()})
-        self.log(service, 'Started', 'info')
+        self.serviceDir.append((service, datetime.now()))
+        self.log('Started', 'INFO')
 
 
     def unregister(self, service):
-        startDateTime = self.serviceStartDateTimes.get(service)
-        self.log(service, 'Completed in {}'.format(datetime.now() - startDateTime), 'stat')
+        self.log('Completed in {}'.format(datetime.now() - self.serviceDir[-1][1]), 'STAT')
+        del self.serviceDir[-1]
 
 
-    def log(self, service, message, logType='info'):
+    def log(self, message, logType='INFO'):
         self.fileInterface.write(self.configInterface.settingsGet('stockingLogPath'),
-                                 '[{}] ({}::{}): {}\n'.format(datetime.now(), logType.upper(),
-                                                              service.upper(), message))
-
-        if logType == 'error':
-            self.errorOccurred = True
+                                 '[{}] ({}::{}): {}\n'.format(datetime.now(), logType, self.serviceDir[-1][0], message))

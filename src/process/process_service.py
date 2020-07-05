@@ -7,6 +7,11 @@ class ProcessService():
     def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
+        self.logService.register('PROCESS')
+
+
+    def __del__(self):
+        self.logService.unregister('PROCESS')
 
 
     def go(self):
@@ -15,10 +20,8 @@ class ProcessService():
             start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)), interval)
             end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)), interval)
             for module in self.configInterface.configGet('{}/modules'.format(interval)):
-                self.logService.register(module)
-                self.logService.log(module, 'Analyzing {}'.format(interval), 'info')
+                pass
                 # AnalyzeService(interval, symbols, start, end).go()
-                self.logService.unregister(module)
 
 
     def translateVariable(self, variable, interval):

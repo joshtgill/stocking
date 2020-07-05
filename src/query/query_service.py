@@ -9,8 +9,13 @@ class QueryService:
     def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
+        self.logService.register('QUERY')
         self.stockDataInterfaces = self.initStockDataInterfaces()
         self.queries = self.buildQueries()
+
+
+    def __del__(self):
+        self.logService.unregister('QUERY')
 
 
     def initStockDataInterfaces(self):
@@ -56,7 +61,7 @@ class QueryService:
         queryInterface = QueryInterface(self.configInterface, self.logService)
 
         for interval in self.queries:
-            self.logService.log('Query', 'Performing {} queries'.format(interval))
+            self.logService.log('Performing {} queries'.format(interval))
             for query in self.queries.get(interval):
                 stock = queryInterface.performQuery(query)
                 self.stockDataInterfaces.get(interval).save(stock)

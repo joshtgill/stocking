@@ -14,17 +14,18 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.configInterface)
+        self.logService.register('STOCKING')
+
+
+    def __del__(self):
+        self.logService.unregister('STOCKING')
 
 
     def go(self):
-        self.logService.register('stocking')
-
         serviceDirectory = {'query': self.query, 'process': self.process}
 
         try:
             for service in self.configInterface.configGet():
-                self.logService.register(service)
-
                 # Set to service's config
                 self.configInterface.setConfig(service)
 
@@ -33,12 +34,8 @@ class Stocking:
 
                 # Revert config to root config
                 self.configInterface.resetConfig()
-
-                self.logService.unregister(service)
         except Exception:
-            self.logService.log('stocking', traceback.format_exc(), 'error')
-
-        self.logService.unregister('stocking')
+            self.logService.log(traceback.format_exc(), 'error')
 
         self.email()
 
@@ -56,7 +53,7 @@ class Stocking:
 
         # Subject contains completion station and total run time
         totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
-        emailSubject = 'Stocking COMPLETE in' if not self.logService.errorOccurred else 'Stocking FAILED in'
+        emailSubject = 'Stocking COMPLETE in' if 'ERROR' not in logText else 'Stocking FAILED in'
         if totalRunTime.hour:
             emailSubject += '{} hours'.format(totalRunTime.hour)
         emailSubject += ' {} minutes'.format(totalRunTime.minute)

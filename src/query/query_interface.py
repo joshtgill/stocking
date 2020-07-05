@@ -58,8 +58,7 @@ class QueryInterface:
 
         # Report yFinance errors
         if numYErrors:
-            self.logService.log('query',
-                                'yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
-                                'error')
+            self.logService.log('yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
+                                'ERROR')
 
         return stock
