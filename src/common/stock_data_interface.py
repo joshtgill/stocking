@@ -3,8 +3,8 @@ from common.data_interface import DataInterface
 
 class StockDataInterface(DataInterface):
 
-    def __init__(self, interval):
-        super().__init__('data/stocks_{}.db'.format(interval))
+    def __init__(self, dataPath):
+        super().__init__(dataPath)
 
 
     def __del__(self):

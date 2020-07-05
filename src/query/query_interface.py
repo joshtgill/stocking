@@ -7,14 +7,16 @@ import numpy
 
 class QueryInterface:
 
-    def __init__(self, logService):
+    def __init__(self, configInterface, logService):
+        self.configInterface = configInterface
         self.logService = logService
 
 
     def performQuery(self, query):
         stock = Stock(query.symbol, query.interval)
 
-        dateTimeFormat = '%Y-%m-%d' if query.interval == '1d' else '%Y-%m-%d %H:%M:%S'
+        dateTimeFormat = (self.configInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == '1d'
+                          else self.configInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)))
 
         # Track number of consecutive yFinance errors
         numYErrors = 0

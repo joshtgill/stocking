@@ -1,0 +1,12 @@
+{
+    "1m": {
+        "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
+        "stockDataPath": "data/stocks_1m.db"
+    },
+    "1d": {
+        "dateTimeFormat": "%Y-%m-%d",
+        "stockDataPath": "data/stocks_1d.db"
+    },
+    "stockingLogPath": "out/stocking.log",
+    "stockingEmailPath": "out/email.txt"
+}

@@ -10,10 +10,10 @@ from datetime import datetime
 
 class Stocking:
 
-    def __init__(self, configPath):
+    def __init__(self, configPath, settingsPath):
         self.fileInterface = FileInterface()
-        self.logService = LogService(self.fileInterface)
-        self.configInterface = ConfigInterface(configPath, self.fileInterface)
+        self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
+        self.logService = LogService(self.fileInterface, self.configInterface)
 
 
     def go(self):
@@ -22,7 +22,7 @@ class Stocking:
         serviceDirectory = {'query': self.query, 'process': self.process}
 
         try:
-            for service in self.configInterface.get():
+            for service in self.configInterface.configGet():
                 self.logService.register(service)
 
                 # Set to service's config
@@ -52,7 +52,7 @@ class Stocking:
 
 
     def email(self):
-        logText = self.fileInterface.read('out/stocking.log')
+        logText = self.fileInterface.read(self.configInterface.settingsGet('stockingLogPath'))
 
         # Subject contains completion station and total run time
         totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
@@ -63,13 +63,13 @@ class Stocking:
 
         # Body containts services initiated
         initiatedServices = []
-        for interval in self.configInterface.get('query/queries', []):
+        for interval in self.configInterface.configGet('query/queries', []):
             initiatedServices.append('Query {}'.format(interval))
-        if self.configInterface.get('analyze'):
+        if self.configInterface.configGet('analyze'):
             initiatedServices.append('Analyze')
         emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
 
         # Body contains log text
         emailBody += 'Log:\n' + logText
 
-        EmailInterface(self.fileInterface).buildEmail(emailSubject, emailBody)
+        EmailInterface(self.fileInterface, self.configInterface).buildEmail(emailSubject, emailBody)

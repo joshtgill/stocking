@@ -15,17 +15,17 @@ class QueryService:
 
     def initStockDataInterfaces(self):
         stockDataInterfaces = {}  # {interval: StockDataInterface}
-        for interval in self.configInterface.get('queries'):
-            stockDataInterfaces.update({interval: StockDataInterface(interval)})
+        for interval in self.configInterface.configGet('queries'):
+            stockDataInterfaces.update({interval: StockDataInterface(self.configInterface.settingsGet('{}/stockDataPath'.format(interval)))})
 
         return stockDataInterfaces
 
 
     def buildQueries(self):
         queries = {}  # {interval: list of Querys}
-        for interval in self.configInterface.get('queries'):
+        for interval in self.configInterface.configGet('queries'):
             queries.update({interval: []})
-            for symbol in self.configInterface.get('queries/{}'.format(interval)):
+            for symbol in self.configInterface.configGet('queries/{}'.format(interval)):
                 start, end = self.determineQueryPeriod(symbol, interval)
                 queries.get(interval).append(Query(symbol, interval, start, end))
 
@@ -46,13 +46,14 @@ class QueryService:
         stockHistory = self.stockDataInterfaces.get(interval).load(symbol, numLastRows=1)
         if stockHistory:
             lastHistoryRow = stockHistory[0][0]
-            start = datetime.strptime(lastHistoryRow, '%Y-%m-%d' if interval == '1d' else '%Y-%m-%d %H:%M:%S')
+            start = datetime.strptime(lastHistoryRow, self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
+                                                      else self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         return start.date(), end.date()
 
 
     def go(self):
-        queryInterface = QueryInterface(self.logService)
+        queryInterface = QueryInterface(self.configInterface, self.logService)
 
         for interval in self.queries:
             self.logService.log('Query', 'Performing {} queries'.format(interval))

@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import re
-from process.analyze.analyze_service import AnalyzeService
 
 
 class ProcessService():
@@ -11,14 +10,14 @@ class ProcessService():
 
 
     def go(self):
-        for interval in self.configInterface.get():
-            symbols = self.configInterface.get('{}/symbols'.format(interval))
-            start = self.translateVariable(self.configInterface.get('{}/start'.format(interval)))
-            end = self.translateVariable(self.configInterface.get('{}/end'.format(interval)))
-            for module in self.configInterface.get('{}/modules'.format(interval)):
+        for interval in self.configInterface.configGet():
+            symbols = self.configInterface.configGet('{}/symbols'.format(interval))
+            start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)))
+            end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)))
+            for module in self.configInterface.configGet('{}/modules'.format(interval)):
                 self.logService.register(module)
                 self.logService.log(module, 'Analyzing {}'.format(interval), 'info')
-                AnalyzeService(interval, symbols, start, end).go()
+                # AnalyzeService(interval, symbols, start, end).go()
                 self.logService.unregister(module)
 
 

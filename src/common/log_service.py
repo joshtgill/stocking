@@ -3,12 +3,13 @@ from datetime import datetime
 
 class LogService:
 
-    def __init__(self, fileInterface):
+    def __init__(self, fileInterface, configInterface):
         self.fileInterface = fileInterface
+        self.configInterface = configInterface
         self.serviceStartDateTimes = {}
         self.errorOccurred = False
 
-        self.fileInterface.wipe('out/stocking.log')
+        self.fileInterface.wipe(self.configInterface.settingsGet('stockingLogPath'))
 
 
     def register(self, service):
@@ -22,10 +23,9 @@ class LogService:
 
 
     def log(self, service, message, logType='info'):
-        self.fileInterface.write('out/stocking.log', '[{}] ({}::{}): {}\n'.format(datetime.now(),
-                                                                                  logType.upper(),
-                                                                                  service.upper(),
-                                                                                  message))
+        self.fileInterface.write(self.configInterface.settingsGet('stockingLogPath'),
+                                 '[{}] ({}::{}): {}\n'.format(datetime.now(), logType.upper(),
+                                                              service.upper(), message))
 
         if logType == 'error':
             self.errorOccurred = True

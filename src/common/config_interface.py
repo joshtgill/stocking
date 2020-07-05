@@ -5,29 +5,30 @@ import re
 
 class ConfigInterface:
 
-    def __init__(self, configPath, fileInterface):
+    def __init__(self, fileInterface, configPath, settingsPath):
         self.fileInterface = fileInterface
         self.config = json.loads(self.fileInterface.read(configPath))
-        self.loadVariables(self.config)
+        self.settings = json.loads(self.fileInterface.read(settingsPath))
+        self.loadConfigVariables(self.config)
         self.rootConfig = self.config
 
 
-    def loadVariables(self, config):
+    def loadConfigVariables(self, config):
         if type(config) is not dict:
             return
 
         for key in config:
             value = config.get(key)
             if type(value) is dict:
-                self.loadVariables(value)
+                self.loadConfigVariables(value)
             elif type(value) is list:
                 for itemValue in value:
-                    self.loadVariables(itemValue)
+                    self.loadConfigVariables(itemValue)
             else:
-                config.update({key: self.translateVariable(value)})
+                config.update({key: self.translateConfigVariable(value)})
 
 
-    def translateVariable(self, variable):
+    def translateConfigVariable(self, variable):
         if variable == 'ALL_SYMBOLS':
             return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
         elif variable == 'GOOD_SYMBOLS':
@@ -36,13 +37,23 @@ class ConfigInterface:
             return variable
 
 
-    def get(self, path='', defaultData=None):
+    def configGet(self, path='', defaultData=None):
+        return self.get('CONFIG', path, defaultData)
+
+
+    def settingsGet(self, path='', defaultData=None):
+        return self.get('SETTINGS', path, defaultData)
+
+
+    def get(self, sourceName, path, defaultData):
+        source = self.config if sourceName == 'CONFIG' else self.settings
+
         if not path:
-            return self.config
+            return source
 
         pathList = path.strip().strip('/').split('/')
 
-        configRunner = self.config
+        configRunner = source
         try:
             for key in pathList:
                 if '[' in key:
@@ -58,7 +69,7 @@ class ConfigInterface:
 
 
     def setConfig(self, path):
-        self.config = self.get(path)
+        self.config = self.configGet(path)
 
 
     def resetConfig(self):
