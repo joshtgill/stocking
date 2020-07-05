@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import re
-from process.analyze.day_analyze_service import DayAnalyzeService
 
 
 class ProcessService():
@@ -21,7 +20,8 @@ class ProcessService():
             start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)), interval)
             end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)), interval)
             for module in self.configInterface.configGet('{}/modules'.format(interval)):
-                DayAnalyzeService(symbols, start, end).go()
+                pass
+                # AnalyzeService(interval, symbols, start, end).go()
 
 
     def translateVariable(self, variable, interval):
