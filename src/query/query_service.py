@@ -9,8 +9,7 @@ class QueryService:
     def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
-        self.stockDataInterfaces = self.initStockDataInterfaces()
-        self.queries = self.buildQueries()
+        self.initStockDataInterfaces()
 
 
     def __del__(self):
@@ -18,11 +17,24 @@ class QueryService:
 
 
     def initStockDataInterfaces(self):
-        stockDataInterfaces = {}  # {interval: StockDataInterface}
+        self.stockDataInterfaces = {}  # {interval: StockDataInterface}
         for interval in self.configInterface.configGet('queries'):
-            stockDataInterfaces.update({interval: StockDataInterface(self.configInterface.settingsGet('{}/stockDataPath'.format(interval)))})
+            self.stockDataInterfaces.update({interval:
+                                             StockDataInterface(self.configInterface.settingsGet('{}/stockDataPath'.format(interval)))})
 
-        return stockDataInterfaces
+
+    def go(self):
+        self.logService.register('QUERY')
+
+        queryInterface = QueryInterface(self.configInterface, self.logService)
+
+        queries = self.buildQueries()
+
+        for interval in queries:
+            self.logService.log('Performing {} queries'.format(interval))
+            for query in queries.get(interval):
+                stock = queryInterface.performQuery(query)
+                self.stockDataInterfaces.get(interval).save(stock)
 
 
     def buildQueries(self):
@@ -54,15 +66,3 @@ class QueryService:
                                                       else self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         return start.date(), end.date()
-
-
-    def go(self):
-        self.logService.register('QUERY')
-
-        queryInterface = QueryInterface(self.configInterface, self.logService)
-
-        for interval in self.queries:
-            self.logService.log('Performing {} queries'.format(interval))
-            for query in self.queries.get(interval):
-                stock = queryInterface.performQuery(query)
-                self.stockDataInterfaces.get(interval).save(stock)
