@@ -5,6 +5,7 @@ from query.query_service import QueryService
 from process.process_service import ProcessService
 from trade.trade_service import TradeService
 import traceback
+import time
 from utility.email_interface import EmailInterface
 from datetime import datetime
 
@@ -15,10 +16,7 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.configInterface)
-
-
-    def __del__(self):
-        self.logService.unregister('STOCKING')
+        self.tradeService = TradeService(self.configInterface, self.logService, self.fileInterface)
 
 
     def go(self):
@@ -39,6 +37,9 @@ class Stocking:
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
+        self.logService.unregister('TRADE')
+        self.logService.unregister('STOCKING')
+
         self.email()
 
 
@@ -47,11 +48,11 @@ class Stocking:
 
 
     def process(self):
-        ProcessService(self.configInterface, self.logService).go()
+        ProcessService(self.configInterface, self.logService, self.tradeService).go()
 
 
     def trade(self):
-        TradeService(self.configInterface, self.logService, self.fileInterface).go()
+        self.tradeService.go()
 
 
     def email(self):

@@ -6,9 +6,10 @@ import re
 
 class ProcessService():
 
-    def __init__(self, configInterface, logService):
+    def __init__(self, configInterface, logService, tradeService):
         self.configInterface = configInterface
         self.logService = logService
+        self.tradeService = tradeService
 
 
     def __del__(self):
@@ -28,7 +29,6 @@ class ProcessService():
                     MacroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
                 elif interval == '1m':
                     MicroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
-
 
 
     def translateVariable(self, variable, interval):
