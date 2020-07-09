@@ -3,6 +3,7 @@ from common.config_interface import ConfigInterface
 from common.log_service import LogService
 from query.query_service import QueryService
 from process.process_service import ProcessService
+from trade.trade_service import TradeService
 import traceback
 from utility.email_interface import EmailInterface
 from datetime import datetime
@@ -22,7 +23,7 @@ class Stocking:
 
 
     def go(self):
-        serviceDirectory = {'query': self.query, 'process': self.process}
+        serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
 
         try:
             for service in self.configInterface.configGet():
@@ -46,6 +47,10 @@ class Stocking:
 
     def process(self):
         ProcessService(self.configInterface, self.logService).go()
+
+
+    def trade(self):
+        TradeService(self.configInterface, self.logService, self.fileInterface).go()
 
 
     def email(self):

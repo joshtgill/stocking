@@ -25,6 +25,9 @@ class MicroAnalyzeService():
     def findGrowth(self, symbol, steps, minimumPercentIncrease, maximumPercentIncrease):
         stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
 
+        if not stockHistory:
+            return
+
         startStockPrice = stockHistory[0][1]
         i = steps
         while i < len(stockHistory):

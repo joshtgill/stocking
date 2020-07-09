@@ -8,12 +8,12 @@
             "modules": ["analyze"]
         },
         {
-            "interval": "1d",
+            "interval": "1m",
             "symbols": ["TSLA", "AAPL"],
             "start": "NOW - 30",
             "end": "NOW",
             "modules": ["analyze"]
         }
     ],
-    "jtrade": true
+    "trade": true
 }
