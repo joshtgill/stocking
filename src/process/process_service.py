@@ -1,3 +1,5 @@
+from process.analyze.macro_analyze_service import MacroAnalyzeService
+from process.analyze.micro_analyze_service import MicroAnalyzeService
 from datetime import datetime, timedelta
 import re
 
@@ -20,8 +22,11 @@ class ProcessService():
             start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)), interval)
             end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)), interval)
             for module in self.configInterface.configGet('{}/modules'.format(interval)):
-                pass
-                # AnalyzeService(interval, symbols, start, end).go()
+                if interval == '1d':
+                    MacroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
+                elif interval == '1m':
+                    MicroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
+
 
 
     def translateVariable(self, variable, interval):
