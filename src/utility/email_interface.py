@@ -1,8 +1,8 @@
 class EmailInterface:
 
-    def __init__(self, fileInterface, configInterface):
-        self.fileInterface = fileInterface
+    def __init__(self, configInterface, fileInterface):
         self.configInterface = configInterface
+        self.fileInterface = fileInterface
 
 
     def buildEmail(self, subject, body):

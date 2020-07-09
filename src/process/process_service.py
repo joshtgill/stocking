@@ -9,7 +9,6 @@ class ProcessService():
     def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
-        self.logService.register('PROCESS')
 
 
     def __del__(self):
@@ -17,6 +16,8 @@ class ProcessService():
 
 
     def go(self):
+        self.logService.register('PROCESS')
+
         for processConfigItem in self.configInterface.configGet():
             interval = processConfigItem.get('interval')
             symbols = processConfigItem.get('symbols')

@@ -6,7 +6,6 @@ class MicroAnalyzeService():
     def __init__(self, configInterface, logService, symbols, start, end):
         self.configInterface = configInterface
         self.logService = logService
-        self.logService.register('MICRO ANALYZE')
         self.symbols = symbols
         self.start = start
         self.end = end
@@ -18,6 +17,8 @@ class MicroAnalyzeService():
 
 
     def go(self):
+        self.logService.register('MICRO ANALYZE')
+
         for symbol in self.symbols:
             self.findGrowth(symbol, 30, 1, 3)
 

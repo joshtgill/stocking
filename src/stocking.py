@@ -15,7 +15,6 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.configInterface)
-        self.logService.register('STOCKING')
 
 
     def __del__(self):
@@ -23,6 +22,8 @@ class Stocking:
 
 
     def go(self):
+        self.logService.register('STOCKING')
+
         serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
 
         try:
@@ -74,4 +75,4 @@ class Stocking:
         # Body contains log text
         emailBody += 'Log:\n' + logText
 
-        EmailInterface(self.fileInterface, self.configInterface).buildEmail(emailSubject, emailBody)
+        EmailInterface(self.configInterface, self.fileInterface).buildEmail(emailSubject, emailBody)

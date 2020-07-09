@@ -9,7 +9,6 @@ class QueryService:
     def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
-        self.logService.register('QUERY')
         self.stockDataInterfaces = self.initStockDataInterfaces()
         self.queries = self.buildQueries()
 
@@ -58,6 +57,8 @@ class QueryService:
 
 
     def go(self):
+        self.logService.register('QUERY')
+
         queryInterface = QueryInterface(self.configInterface, self.logService)
 
         for interval in self.queries:

@@ -7,7 +7,6 @@ class MacroAnalyzeService:
     def __init__(self, configInterface, logService, symbols, start, end):
         self.configInterface = configInterface
         self.logService = logService
-        self.logService.register('MACRO ANALYZE')
         self.symbols = symbols
         self.start = start
         self.end = end
@@ -19,6 +18,8 @@ class MacroAnalyzeService:
 
 
     def go(self):
+        self.logService.register('MACRO ANALYZE')
+
         averageGrowthDir = {}
         for symbol in self.symbols:
             averageGrowth = self.calculateAverageGrowth(symbol)
