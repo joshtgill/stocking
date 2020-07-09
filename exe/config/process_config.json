@@ -1,16 +1,18 @@
 {
-    "process": {
-        "1d": {
+    "process": [
+        {
+            "interval": "1d",
             "symbols": ["UONE"],
             "start": "NOW - 60",
             "end": "NOW",
             "modules": ["analyze"]
         },
-        "1m": {
+        {
+            "interval": "1d",
             "symbols": ["TSLA", "AAPL"],
             "start": "NOW - 30",
             "end": "NOW",
             "modules": ["analyze"]
         }
-    }
+    ]
 }

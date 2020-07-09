@@ -17,11 +17,12 @@ class ProcessService():
 
 
     def go(self):
-        for interval in self.configInterface.configGet():
-            symbols = self.configInterface.configGet('{}/symbols'.format(interval))
-            start = self.translateVariable(self.configInterface.configGet('{}/start'.format(interval)), interval)
-            end = self.translateVariable(self.configInterface.configGet('{}/end'.format(interval)), interval)
-            for module in self.configInterface.configGet('{}/modules'.format(interval)):
+        for processConfigItem in self.configInterface.configGet():
+            interval = processConfigItem.get('interval')
+            symbols = processConfigItem.get('symbols')
+            start = processConfigItem.get('start')
+            end = processConfigItem.get('end')
+            for module in processConfigItem.get('modules'):
                 if interval == '1d':
                     MacroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
                 elif interval == '1m':
