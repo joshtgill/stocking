@@ -55,7 +55,7 @@ class Stocking:
         totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
         emailSubject = 'Stocking COMPLETE in' if 'ERROR' not in logText else 'Stocking FAILED in'
         if totalRunTime.hour:
-            emailSubject += '{} hours'.format(totalRunTime.hour)
+            emailSubject += ' {} hours'.format(totalRunTime.hour)
         emailSubject += ' {} minutes'.format(totalRunTime.minute)
 
         # Body containts services initiated
