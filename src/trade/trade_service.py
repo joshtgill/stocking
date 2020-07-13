@@ -10,7 +10,9 @@ class TradeService:
         self.fileInterface = fileInterface
 
 
+    def __del__(self):
+        self.logService.unregister('TRADE')
+
+
     def go(self):
         self.logService.register('TRADE')
-
-        print('Josh is the name, trade is the game')

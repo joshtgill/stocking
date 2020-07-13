@@ -5,7 +5,6 @@ from query.query_service import QueryService
 from process.process_service import ProcessService
 from trade.trade_service import TradeService
 import traceback
-import time
 from utility.email_interface import EmailInterface
 from datetime import datetime
 
@@ -37,7 +36,7 @@ class Stocking:
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
-        self.logService.unregister('TRADE')
+        del self.tradeService  # Temporary work around until log service register/unregister is more advanced
         self.logService.unregister('STOCKING')
 
         self.email()
