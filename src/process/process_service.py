@@ -22,8 +22,8 @@ class ProcessService():
         for processConfigItem in self.configInterface.configGet():
             interval = processConfigItem.get('interval')
             symbols = processConfigItem.get('symbols')
-            start = processConfigItem.get('start')
-            end = processConfigItem.get('end')
+            start = self.translateVariable(processConfigItem.get('start'), interval)
+            end = self.translateVariable(processConfigItem.get('end'), interval)
             for module in processConfigItem.get('modules'):
                 if interval == '1d':
                     MacroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()

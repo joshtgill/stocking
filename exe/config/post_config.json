@@ -2,7 +2,7 @@
     "process": [
         {
             "interval": "1d",
-            "symbols": ["UONE"],
+            "symbols": ["TSLA"],
             "start": "NOW - 60",
             "end": "NOW",
             "modules": ["analyze"]
