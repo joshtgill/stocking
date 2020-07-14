@@ -13,11 +13,11 @@ class ProcessService():
 
 
     def __del__(self):
-        self.logService.unregister('PROCESS')
+        self.logService.untrack('PROCESS')
 
 
     def go(self):
-        self.logService.register('PROCESS')
+        self.logService.track('PROCESS')
 
         for processConfigItem in self.configInterface.configGet():
             interval = processConfigItem.get('interval')

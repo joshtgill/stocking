@@ -13,7 +13,7 @@ class QueryService:
 
 
     def __del__(self):
-        self.logService.unregister('QUERY')
+        self.logService.untrack('QUERY')
 
 
     def initStockDataInterfaces(self):
@@ -24,7 +24,7 @@ class QueryService:
 
 
     def go(self):
-        self.logService.register('QUERY')
+        self.logService.track('QUERY')
 
         queryInterface = QueryInterface(self.configInterface, self.logService)
 

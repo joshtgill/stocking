@@ -11,12 +11,12 @@ class LogService:
         self.fileInterface.wipe(self.configInterface.settingsGet('stockingLogPath'))
 
 
-    def register(self, service):
+    def track(self, service):
         self.serviceDir.append((service, datetime.now()))
         self.log('Started', 'INFO')
 
 
-    def unregister(self, service):
+    def untrack(self, service):
         self.log('Completed in {}'.format(datetime.now() - self.serviceDir[-1][1]), 'STAT')
         del self.serviceDir[-1]
 

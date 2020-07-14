@@ -14,11 +14,11 @@ class MacroAnalyzeService:
 
 
     def __del__(self):
-        self.logService.unregister('MACRO ANALYZE')
+        self.logService.untrack('MACRO ANALYZE')
 
 
     def go(self):
-        self.logService.register('MACRO ANALYZE')
+        self.logService.track('MACRO ANALYZE')
 
         averageGrowthDir = {}
         for symbol in self.symbols:

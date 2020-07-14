@@ -11,8 +11,8 @@ class TradeService:
 
 
     def __del__(self):
-        self.logService.unregister('TRADE')
+        self.logService.untrack('TRADE')
 
 
     def go(self):
-        self.logService.register('TRADE')
+        self.logService.track('TRADE')

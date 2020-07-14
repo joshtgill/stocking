@@ -19,7 +19,7 @@ class Stocking:
 
 
     def go(self):
-        self.logService.register('STOCKING')
+        self.logService.track('STOCKING')
 
         serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
 
@@ -36,8 +36,8 @@ class Stocking:
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
-        del self.tradeService  # Temporary work around until log service register/unregister is more advanced
-        self.logService.unregister('STOCKING')
+        del self.tradeService  # Temporary work around until log service track/untrack is more advanced
+        self.logService.untrack('STOCKING')
 
         self.email()
 

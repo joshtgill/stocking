@@ -13,11 +13,11 @@ class MicroAnalyzeService():
 
 
     def __del__(self):
-        self.logService.unregister('MICRO ANALYZE')
+        self.logService.untrack('MICRO ANALYZE')
 
 
     def go(self):
-        self.logService.register('MICRO ANALYZE')
+        self.logService.track('MICRO ANALYZE')
 
         for symbol in self.symbols:
             self.findGrowth(symbol, 30, 1, 3)
