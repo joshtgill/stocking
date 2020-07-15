@@ -36,7 +36,7 @@ class Stocking:
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
-        del self.tradeService  # Temporary work around until log service track/untrack is more advanced
+        self.tradeService.go()  # Temporary work around until log service track/untrack is more advanced
         self.logService.untrack('STOCKING')
 
         self.email()
