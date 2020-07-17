@@ -2,7 +2,7 @@ from common.stock_data_interface import StockDataInterface
 import statistics
 
 
-class MacroAnalyzeService:
+class DayAnalyzeService:
 
     def __init__(self, configInterface, logService, symbols, start, end):
         self.configInterface = configInterface
@@ -14,11 +14,11 @@ class MacroAnalyzeService:
 
 
     def __del__(self):
-        self.logService.untrack('MACRO ANALYZE')
+        self.logService.untrack('DAY ANALYZE')
 
 
     def go(self):
-        self.logService.track('MACRO ANALYZE')
+        self.logService.track('DAY ANALYZE')
 
         growthDir = {}
         for symbol in self.symbols:

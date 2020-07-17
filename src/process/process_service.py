@@ -1,5 +1,4 @@
-from process.analyze.macro_analyze_service import MacroAnalyzeService
-from process.analyze.micro_analyze_service import MicroAnalyzeService
+from process.analyze.day_analyze_service import DayAnalyzeService
 from datetime import datetime, timedelta
 import re
 
@@ -26,9 +25,7 @@ class ProcessService():
             end = self.translateVariable(processConfigItem.get('end'), interval)
             for module in processConfigItem.get('modules'):
                 if interval == '1d':
-                    MacroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
-                elif interval == '1m':
-                    MicroAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
+                    DayAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
 
 
     def translateVariable(self, variable, interval):
