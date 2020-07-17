@@ -20,17 +20,51 @@ class MacroAnalyzeService:
     def go(self):
         self.logService.track('MACRO ANALYZE')
 
-        averageGrowthDir = {}
+        growthDir = {}
         for symbol in self.symbols:
-            averageGrowth = self.calculateAverageGrowth(symbol)
-            averageGrowthDir.update({symbol: averageGrowth})
+            increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
+            if increasePercent < 60:
+                continue
 
-        averageGrowthDir = {k: v for k, v in sorted(averageGrowthDir.items(), key=lambda item: item[1], reverse=True)}
-        # for key, value in averageGrowthDir.items():
-        #    print(key, value)
+            averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
+            if averageGrowthPercent < 0.5:
+                continue
+
+            score = self.calculateScore(decreasePercent, averageGrowthPercent)
+            growthDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
 
 
-    def calculateAverageGrowth(self, symbol):
+        growthDir = {k: v for k, v in sorted(growthDir.items(), key=lambda item: item[1][3], reverse=True)}
+        for key, value in growthDir.items():
+            print(key, value)
+
+
+    def calculateIncreaseAndDecreasePercent(self, symbol):
+        stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
+
+        if not stockHistory:
+            return 0
+
+        numIncreases = 0
+        numDecreases = 0
+        lastStockPrice = stockHistory[0][4]
+        i = 1
+        while i < len(stockHistory):
+            stockPrice = stockHistory[i][4]
+
+            if stockPrice > lastStockPrice:
+                numIncreases += 1
+            elif stockPrice < lastStockPrice:
+                numDecreases += 1
+
+            lastStockPrice = stockPrice
+
+            i += 1
+
+        return round(numIncreases / (i - 1) * 100, 2), round(numDecreases / (i - 1) * 100, 2)
+
+
+    def calculateAverageGrowthPercent(self, symbol):
         stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
 
         if not stockHistory:
@@ -40,14 +74,16 @@ class MacroAnalyzeService:
         lastStockPrice = stockHistory[0][4]
         i = 1
         while i < len(stockHistory):
-            currentStockPrice = stockHistory[i][4]
+            stockPrice = stockHistory[i][4]
 
-            percentIncrease = ((currentStockPrice - lastStockPrice) / lastStockPrice) * 100
+            cumulativeGrowth += ((stockPrice - lastStockPrice) / lastStockPrice) * 100
 
-            cumulativeGrowth += percentIncrease
-
-            lastStockPrice = currentStockPrice
+            lastStockPrice = stockPrice
 
             i += 1
 
-        return cumulativeGrowth / (len(stockHistory) - 1)
+        return round(cumulativeGrowth / (i - 1), 2)
+
+
+    def calculateScore(self, decreasePercent, averageGrowthPercent):
+        return averageGrowthPercent / decreasePercent * 100

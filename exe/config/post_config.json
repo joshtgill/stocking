@@ -2,15 +2,8 @@
     "process": [
         {
             "interval": "1d",
-            "symbols": ["TSLA"],
-            "start": "NOW - 60",
-            "end": "NOW",
-            "modules": ["analyze"]
-        },
-        {
-            "interval": "1m",
-            "symbols": ["TSLA", "AAPL"],
-            "start": "NOW - 30",
+            "symbols": "GOOD_SYMBOLS",
+            "start": "2020-04-01",
             "end": "NOW",
             "modules": ["analyze"]
         }

@@ -37,7 +37,8 @@ class Stocking:
             self.logService.log(traceback.format_exc(), 'error')
 
         # Temporary work around until log service track/untrack is more advanced
-        self.tradeService.go()
+        if 'query' in self.configInterface.configGet():
+            self.tradeService.go()
         del self.tradeService
 
         self.logService.untrack('STOCKING')
