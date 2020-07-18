@@ -23,3 +23,6 @@ class TradeService:
     def buyStocks(self):
         for symbol in self.stocksToTrade:
             self.tradeInterface.buy(symbol, 5)
+
+        self.dataInterface.trades.update({'JOSH': 'GILLETTE'})
+        self.dataInterface.tradesSave()

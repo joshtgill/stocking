@@ -12,7 +12,21 @@ class DataInterface:
         self.rootConfig = self.config
         self.activePathList = []
         self.settings = json.loads(self.fileInterface.read(settingsPath))
+        self.trades = json.loads(self.fileInterface.read(self.settings.get('tradesPath'), '{}'))
+        self.bank = json.loads(self.fileInterface.read(self.settings.get('bankPath'), '{}'))
 
+
+    def incrementConfig(self, path):
+        self.activePathList.extend(self.pathToList(path))
+        self.config = self.configGet(path)
+
+
+    def decrementConfig(self, numDecrements=1):
+        for i in range(numDecrements):
+            self.activePathList.pop()
+
+        self.config = self.rootConfig
+        self.config = self.configGet('/'.join(self.activePathList))
 
 
     def loadConfigVariables(self, config):
@@ -47,11 +61,17 @@ class DataInterface:
         return self.get('SETTINGS', path, defaultData)
 
 
-    def get(self, sourceName, path, defaultData):
-        source = self.config if sourceName == 'CONFIG' else self.settings
+    def tradesGet(self, path='', defaultData=None):
+        return self.get('TRADES', path, defaultData)
 
-        if not path:
-            return source
+
+    def bankGet(self, path='', defaultData=None):
+        return self.get('BANK', path, defaultData)
+
+
+    def get(self, sourceName, path, defaultData):
+        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'TRADES': self.trades, 'BANK': self.bank}
+        source = sourceDir.get(sourceName)
 
         pathList = self.pathToList(path)
 
@@ -73,18 +93,20 @@ class DataInterface:
         return configRunner
 
 
-    def incrementConfig(self, path):
-        self.activePathList.extend(self.pathToList(path))
-        self.config = self.configGet(path)
-
-
-    def decrementConfig(self, numDecrements=1):
-        for i in range(numDecrements):
-            self.activePathList.pop()
-
-        self.config = self.rootConfig
-        self.config = self.configGet('/'.join(self.activePathList))
-
-
     def pathToList(self, path):
+        if path == '':
+            return []
+
         return path.strip().strip('/').split('/')
+
+
+    # Termporary until a set() method is created
+    def tradesSave(self):
+        self.fileInterface.wipe(self.settingsGet('tradesPath'))
+        self.fileInterface.write(self.settingsGet('tradesPath'), json.dumps(self.trades))
+
+
+    # Termporary until a set() method is created
+    def bankSave(self):
+        self.fileInterface.wipe(self.settingsGet('bankPath'))
+        self.fileInterface.write(self.settingsGet('bankPath'), json.dumps(self.bank))
