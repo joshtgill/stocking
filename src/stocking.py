@@ -33,7 +33,7 @@ class Stocking:
                 # Revert config to root config
                 self.dataInterface.decrementConfig()
         except Exception:
-            self.logService.log(traceback.format_exc(), 'error')
+            self.logService.log(traceback.format_exc(), 'ERROR')
 
         self.logService.untrack('STOCKING')
 

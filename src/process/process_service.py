@@ -17,14 +17,20 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        for processConfigItem in self.dataInterface.configGet():
+        for i in range(len(self.dataInterface.configGet())):
+            processConfigItem = self.dataInterface.configGet('[{}]'.format(i))
+
             interval = processConfigItem.get('interval')
             symbols = processConfigItem.get('symbols')
             start = self.translateVariable(processConfigItem.get('start'), interval)
             end = self.translateVariable(processConfigItem.get('end'), interval)
             for module in processConfigItem.get('modules'):
-                if interval == '1d' and module == 'analyze':
+                if module == 'analyze':
+                    self.dataInterface.incrementConfig('[{}]/modules/{}'.format(i, module))
+
                     DayAnalyzeService(self.dataInterface, self.logService, symbols, start, end).go()
+
+                    self.dataInterface.decrementConfig(3)  # Decrement from analyze->modules->[x]
 
 
     def translateVariable(self, variable, interval):

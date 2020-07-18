@@ -23,16 +23,15 @@ class DayAnalyzeService:
         growthDir = {}
         for symbol in self.symbols:
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
-            if increasePercent < 60:
+            if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
                 continue
 
             averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
-            if averageGrowthPercent < 0.5:
+            if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
                 continue
 
             score = self.calculateScore(decreasePercent, averageGrowthPercent)
             growthDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
-
 
         growthDir = {k: v for k, v in sorted(growthDir.items(), key=lambda item: item[1][3], reverse=True)}
         for key, value in growthDir.items():
@@ -43,7 +42,7 @@ class DayAnalyzeService:
         stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
 
         if not stockHistory:
-            return 0
+            return 0, 0
 
         numIncreases = 0
         numDecreases = 0
