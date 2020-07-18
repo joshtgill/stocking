@@ -15,7 +15,6 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.configInterface)
-        self.tradeService = TradeService(self.configInterface, self.logService, self.fileInterface)
 
 
     def go(self):
@@ -36,11 +35,6 @@ class Stocking:
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
-        # Temporary work around until log service track/untrack is more advanced
-        if 'query' in self.configInterface.configGet():
-            self.tradeService.go()
-        del self.tradeService
-
         self.logService.untrack('STOCKING')
 
         self.email()
@@ -51,11 +45,11 @@ class Stocking:
 
 
     def process(self):
-        ProcessService(self.configInterface, self.logService, self.tradeService).go()
+        ProcessService(self.configInterface, self.logService).go()
 
 
     def trade(self):
-        self.tradeService.go()
+        TradeService(self.configInterface, self.logService, self.fileInterface).go()
 
 
     def email(self):

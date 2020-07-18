@@ -5,10 +5,9 @@ import re
 
 class ProcessService():
 
-    def __init__(self, configInterface, logService, tradeService):
+    def __init__(self, configInterface, logService):
         self.configInterface = configInterface
         self.logService = logService
-        self.tradeService = tradeService
 
 
     def __del__(self):
