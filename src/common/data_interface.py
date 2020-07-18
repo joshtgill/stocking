@@ -10,7 +10,7 @@ class DataInterface:
         self.config = json.loads(self.fileInterface.read(configPath))
         self.loadConfigVariables(self.config)
         self.rootConfig = self.config
-        self.configPosition = []
+        self.activePathList = []
         self.settings = json.loads(self.fileInterface.read(settingsPath))
 
 
@@ -53,7 +53,7 @@ class DataInterface:
         if not path:
             return source
 
-        pathList = path.strip().strip('/').split('/')
+        pathList = self.pathToList(path)
 
         configRunner = source
         try:
@@ -61,7 +61,10 @@ class DataInterface:
                 if '[' in key:
                     keyIndex = int(key[key.index('[') + 1 : key.index(']')])
                     key = key[0: key.index('[')]
-                    configRunner = configRunner.get(key)[keyIndex]
+                    if key:
+                        configRunner = configRunner.get(key)[keyIndex]
+                    else:
+                        configRunner = configRunner[keyIndex]
                 else:
                     configRunner = configRunner.get(key)
         except AttributeError:
@@ -71,11 +74,17 @@ class DataInterface:
 
 
     def incrementConfig(self, path):
-        self.configPosition.append(path)
+        self.activePathList.extend(self.pathToList(path))
         self.config = self.configGet(path)
 
 
-    def decrementConfig(self):
-        self.configPosition.pop()
+    def decrementConfig(self, numDecrements=1):
+        for i in range(numDecrements):
+            self.activePathList.pop()
+
         self.config = self.rootConfig
-        self.config = self.configGet('/'.join(self.configPosition))
+        self.config = self.configGet('/'.join(self.activePathList))
+
+
+    def pathToList(self, path):
+        return path.strip().strip('/').split('/')
