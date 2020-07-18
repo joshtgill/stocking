@@ -32,9 +32,11 @@ class QueryService:
 
         for interval in queries:
             self.logService.track('QUERY {}'.format(interval))
+
             for query in queries.get(interval):
                 stock = queryInterface.performQuery(query)
                 self.stockDataInterfaces.get(interval).save(stock)
+
             self.logService.untrack('QUERY {}'.format(interval))
 
 
