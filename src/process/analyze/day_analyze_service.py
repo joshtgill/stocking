@@ -18,13 +18,11 @@ class DayAnalyzeService:
 
         passedStockDir = self.determinePassedStocks()
 
-        tradeStockDir = self.selectTradeStocks(passedStockDir)
-
-        for key, value in tradeStockDir.items():
-            print(key, value)
-
+        recommendedStocks = self.selectRecommendedStocks(passedStockDir)
 
         self.logService.untrack('DAY ANALYZE')
+
+        return recommendedStocks
 
 
     def determinePassedStocks(self):
@@ -46,17 +44,8 @@ class DayAnalyzeService:
         return growthDir
 
 
-    def selectTradeStocks(self, passedStockDir):
-        i = 0
-        tradeStockDir = {}
-        for key, value in passedStockDir.items():
-            tradeStockDir.update({key: value})
-
-            i += 1
-            if i == 3:
-                break
-
-        return tradeStockDir
+    def selectRecommendedStocks(self, passedStockDir):
+        return list(passedStockDir.keys())[: 3]
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
