@@ -23,7 +23,7 @@ class ProcessService():
             start = self.translateVariable(processConfigItem.get('start'), interval)
             end = self.translateVariable(processConfigItem.get('end'), interval)
             for module in processConfigItem.get('modules'):
-                if interval == '1d':
+                if interval == '1d' and module == 'analyze':
                     DayAnalyzeService(self.dataInterface, self.logService, symbols, start, end).go()
 
 
