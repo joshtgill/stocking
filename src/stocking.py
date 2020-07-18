@@ -15,6 +15,7 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.dataInterface)
+        self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface)
 
 
     def go(self):
@@ -45,11 +46,11 @@ class Stocking:
 
 
     def process(self):
-        ProcessService(self.dataInterface, self.logService).go()
+        ProcessService(self.dataInterface, self.logService, self.tradeService).go()
 
 
     def trade(self):
-        TradeService(self.dataInterface, self.logService, self.fileInterface).go()
+        self.tradeService.go()
 
 
     def email(self):

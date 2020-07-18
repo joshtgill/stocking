@@ -5,9 +5,10 @@ import re
 
 class ProcessService():
 
-    def __init__(self, dataInterface, logService):
+    def __init__(self, dataInterface, logService, tradeService):
         self.dataInterface = dataInterface
         self.logService = logService
+        self.tradeService = tradeService
 
 
     def go(self):
