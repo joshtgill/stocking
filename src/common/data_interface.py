@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import re
 
 
-class ConfigInterface:
+class DataInterface:
 
     def __init__(self, fileInterface, configPath, settingsPath):
         self.fileInterface = fileInterface

@@ -4,13 +4,13 @@ import statistics
 
 class DayAnalyzeService:
 
-    def __init__(self, configInterface, logService, symbols, start, end):
-        self.configInterface = configInterface
+    def __init__(self, dataInterface, logService, symbols, start, end):
+        self.dataInterface = dataInterface
         self.logService = logService
         self.symbols = symbols
         self.start = start
         self.end = end
-        self.stockDataInterface = StockDataInterface(self.configInterface.settingsGet('1d/stockDataPath'))
+        self.stockDataInterface = StockDataInterface(self.dataInterface.settingsGet('1d/stockDataPath'))
 
 
     def __del__(self):

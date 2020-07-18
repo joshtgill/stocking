@@ -5,8 +5,8 @@ import re
 
 class ProcessService():
 
-    def __init__(self, configInterface, logService):
-        self.configInterface = configInterface
+    def __init__(self, dataInterface, logService):
+        self.dataInterface = dataInterface
         self.logService = logService
 
 
@@ -17,22 +17,22 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        for processConfigItem in self.configInterface.configGet():
+        for processConfigItem in self.dataInterface.configGet():
             interval = processConfigItem.get('interval')
             symbols = processConfigItem.get('symbols')
             start = self.translateVariable(processConfigItem.get('start'), interval)
             end = self.translateVariable(processConfigItem.get('end'), interval)
             for module in processConfigItem.get('modules'):
                 if interval == '1d':
-                    DayAnalyzeService(self.configInterface, self.logService, symbols, start, end).go()
+                    DayAnalyzeService(self.dataInterface, self.logService, symbols, start, end).go()
 
 
     def translateVariable(self, variable, interval):
         if variable == 'NOW':
-            return datetime.now().strftime(self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
+            return datetime.now().strftime(self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
         elif 'NOW' in variable:
             marketDaysBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')).replace('d', ''))
-            return self.determineDate(marketDaysBack).strftime(self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
+            return self.determineDate(marketDaysBack).strftime(self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
         else:
             return variable
 

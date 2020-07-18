@@ -6,8 +6,8 @@ from query.query_interface import QueryInterface
 
 class QueryService:
 
-    def __init__(self, configInterface, logService):
-        self.configInterface = configInterface
+    def __init__(self, dataInterface, logService):
+        self.dataInterface = dataInterface
         self.logService = logService
         self.initStockDataInterfaces()
 
@@ -18,15 +18,15 @@ class QueryService:
 
     def initStockDataInterfaces(self):
         self.stockDataInterfaces = {}  # {interval: StockDataInterface}
-        for interval in self.configInterface.configGet('queries'):
+        for interval in self.dataInterface.configGet('queries'):
             self.stockDataInterfaces.update({interval:
-                                             StockDataInterface(self.configInterface.settingsGet('{}/stockDataPath'.format(interval)))})
+                                             StockDataInterface(self.dataInterface.settingsGet('{}/stockDataPath'.format(interval)))})
 
 
     def go(self):
         self.logService.track('QUERY')
 
-        queryInterface = QueryInterface(self.configInterface, self.logService)
+        queryInterface = QueryInterface(self.dataInterface, self.logService)
 
         queries = self.buildQueries()
 
@@ -42,9 +42,9 @@ class QueryService:
 
     def buildQueries(self):
         queries = {}  # {interval: list of Querys}
-        for interval in self.configInterface.configGet('queries'):
+        for interval in self.dataInterface.configGet('queries'):
             queries.update({interval: []})
-            for symbol in self.configInterface.configGet('queries/{}'.format(interval)):
+            for symbol in self.dataInterface.configGet('queries/{}'.format(interval)):
                 start, end = self.determineQueryPeriod(symbol, interval)
                 queries.get(interval).append(Query(symbol, interval, start, end))
 
@@ -65,7 +65,7 @@ class QueryService:
         stockHistory = self.stockDataInterfaces.get(interval).load(symbol, numLastRows=1)
         if stockHistory:
             lastHistoryRow = stockHistory[0][0]
-            start = datetime.strptime(lastHistoryRow, self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
-                                                      else self.configInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
+            start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
+                                                      else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         return start.date(), end.date()

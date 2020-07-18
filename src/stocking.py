@@ -1,5 +1,5 @@
 from common.file_interface import FileInterface
-from common.config_interface import ConfigInterface
+from common.data_interface import DataInterface
 from common.log_service import LogService
 from query.query_service import QueryService
 from process.process_service import ProcessService
@@ -13,8 +13,8 @@ class Stocking:
 
     def __init__(self, configPath, settingsPath):
         self.fileInterface = FileInterface()
-        self.configInterface = ConfigInterface(self.fileInterface, configPath, settingsPath)
-        self.logService = LogService(self.fileInterface, self.configInterface)
+        self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
+        self.logService = LogService(self.fileInterface, self.dataInterface)
 
 
     def go(self):
@@ -23,15 +23,15 @@ class Stocking:
         serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
 
         try:
-            for service in self.configInterface.configGet():
+            for service in self.dataInterface.configGet():
                 # Set to service's config
-                self.configInterface.setConfig(service)
+                self.dataInterface.setConfig(service)
 
                 # Start corresponding service
                 serviceDirectory.get(service)()
 
                 # Revert config to root config
-                self.configInterface.resetConfig()
+                self.dataInterface.resetConfig()
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
@@ -41,19 +41,19 @@ class Stocking:
 
 
     def query(self):
-        QueryService(self.configInterface, self.logService).go()
+        QueryService(self.dataInterface, self.logService).go()
 
 
     def process(self):
-        ProcessService(self.configInterface, self.logService).go()
+        ProcessService(self.dataInterface, self.logService).go()
 
 
     def trade(self):
-        TradeService(self.configInterface, self.logService, self.fileInterface).go()
+        TradeService(self.dataInterface, self.logService, self.fileInterface).go()
 
 
     def email(self):
-        logText = self.fileInterface.read(self.configInterface.settingsGet('stockingLogPath'))
+        logText = self.fileInterface.read(self.dataInterface.settingsGet('stockingLogPath'))
 
         # Subject contains completion station and total run time
         totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
@@ -64,13 +64,13 @@ class Stocking:
 
         # Body containts services initiated
         initiatedServices = []
-        for interval in self.configInterface.configGet('query/queries', []):
+        for interval in self.dataInterface.configGet('query/queries', []):
             initiatedServices.append('Query {}'.format(interval))
-        if self.configInterface.configGet('analyze'):
+        if self.dataInterface.configGet('analyze'):
             initiatedServices.append('Analyze')
         emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
 
         # Body contains log text
         emailBody += 'Log:\n' + logText
 
-        EmailInterface(self.configInterface, self.fileInterface).buildEmail(emailSubject, emailBody)
+        EmailInterface(self.dataInterface, self.fileInterface).buildEmail(emailSubject, emailBody)
