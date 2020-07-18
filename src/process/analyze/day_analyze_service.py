@@ -13,10 +13,6 @@ class DayAnalyzeService:
         self.stockDataInterface = StockDataInterface(self.dataInterface.settingsGet('1d/stockDataPath'))
 
 
-    def __del__(self):
-        self.logService.untrack('DAY ANALYZE')
-
-
     def go(self):
         self.logService.track('DAY ANALYZE')
 
@@ -26,6 +22,9 @@ class DayAnalyzeService:
 
         for key, value in tradeStockDir.items():
             print(key, value)
+
+
+        self.logService.untrack('DAY ANALYZE')
 
 
     def determinePassedStocks(self):

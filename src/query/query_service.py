@@ -12,10 +12,6 @@ class QueryService:
         self.initStockDataInterfaces()
 
 
-    def __del__(self):
-        self.logService.untrack('QUERY')
-
-
     def initStockDataInterfaces(self):
         self.stockDataInterfaces = {}  # {interval: StockDataInterface}
         for interval in self.dataInterface.configGet('queries'):
@@ -38,6 +34,8 @@ class QueryService:
                 self.stockDataInterfaces.get(interval).save(stock)
 
             self.logService.untrack('QUERY {}'.format(interval))
+
+        self.logService.untrack('QUERY')
 
 
     def buildQueries(self):

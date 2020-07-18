@@ -10,9 +10,8 @@ class TradeService:
         self.fileInterface = fileInterface
 
 
-    def __del__(self):
-        self.logService.untrack('TRADE')
-
-
     def go(self):
         self.logService.track('TRADE')
+
+        self.logService.untrack('TRADE')
+

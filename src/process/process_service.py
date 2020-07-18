@@ -10,10 +10,6 @@ class ProcessService():
         self.logService = logService
 
 
-    def __del__(self):
-        self.logService.untrack('PROCESS')
-
-
     def go(self):
         self.logService.track('PROCESS')
 
@@ -31,6 +27,8 @@ class ProcessService():
                     DayAnalyzeService(self.dataInterface, self.logService, symbols, start, end).go()
 
                     self.dataInterface.decrementConfig(3)  # Decrement from analyze->modules->[x]
+
+        self.logService.untrack('PROCESS')
 
 
     def translateVariable(self, variable, interval):
