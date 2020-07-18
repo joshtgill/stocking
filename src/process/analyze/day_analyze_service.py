@@ -20,6 +20,15 @@ class DayAnalyzeService:
     def go(self):
         self.logService.track('DAY ANALYZE')
 
+        passedStockDir = self.determinePassedStocks()
+
+        tradeStockDir = self.selectTradeStocks(passedStockDir)
+
+        for key, value in tradeStockDir.items():
+            print(key, value)
+
+
+    def determinePassedStocks(self):
         growthDir = {}
         for symbol in self.symbols:
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
@@ -34,8 +43,21 @@ class DayAnalyzeService:
             growthDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
 
         growthDir = {k: v for k, v in sorted(growthDir.items(), key=lambda item: item[1][3], reverse=True)}
-        for key, value in growthDir.items():
-            print(key, value)
+
+        return growthDir
+
+
+    def selectTradeStocks(self, passedStockDir):
+        i = 0
+        tradeStockDir = {}
+        for key, value in passedStockDir.items():
+            tradeStockDir.update({key: value})
+
+            i += 1
+            if i == 3:
+                break
+
+        return tradeStockDir
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
