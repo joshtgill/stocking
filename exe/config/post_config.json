@@ -5,7 +5,12 @@
             "symbols": "GOOD_SYMBOLS",
             "start": "2020-04-01",
             "end": "NOW",
-            "modules": ["analyze"]
+            "modules": {
+                "analyze": {
+                    "minimumIncreasePercent": 60,
+                    "minimumAverageGrowthPercent": 0.5
+                }
+            }
         }
     ],
     "trade": true

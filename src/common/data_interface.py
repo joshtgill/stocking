@@ -8,9 +8,11 @@ class DataInterface:
     def __init__(self, fileInterface, configPath, settingsPath):
         self.fileInterface = fileInterface
         self.config = json.loads(self.fileInterface.read(configPath))
-        self.settings = json.loads(self.fileInterface.read(settingsPath))
         self.loadConfigVariables(self.config)
         self.rootConfig = self.config
+        self.configPosition = []
+        self.settings = json.loads(self.fileInterface.read(settingsPath))
+
 
 
     def loadConfigVariables(self, config):
@@ -68,9 +70,12 @@ class DataInterface:
         return configRunner
 
 
-    def setConfig(self, path):
+    def incrementConfig(self, path):
+        self.configPosition.append(path)
         self.config = self.configGet(path)
 
 
-    def resetConfig(self):
+    def decrementConfig(self):
+        self.configPosition.pop()
         self.config = self.rootConfig
+        self.config = self.configGet('/'.join(self.configPosition))

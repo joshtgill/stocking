@@ -25,13 +25,13 @@ class Stocking:
         try:
             for service in self.dataInterface.configGet():
                 # Set to service's config
-                self.dataInterface.setConfig(service)
+                self.dataInterface.incrementConfig(service)
 
                 # Start corresponding service
                 serviceDirectory.get(service)()
 
                 # Revert config to root config
-                self.dataInterface.resetConfig()
+                self.dataInterface.decrementConfig()
         except Exception:
             self.logService.log(traceback.format_exc(), 'error')
 
