@@ -16,11 +16,12 @@ class FileInterface:
             filee.write(data)
 
 
-    def read(self, path):
-        with open(path, 'r') as filee:
-            return filee.read()
-
-        return ''
+    def read(self, path, defaultData=None):
+        try:
+            with open(path, 'r') as filee:
+                return filee.read()
+        except FileNotFoundError:
+            return defaultData
 
 
     def wipe(self, path):
