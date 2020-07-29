@@ -3,14 +3,14 @@ from common.stock_data_interface import StockDataInterface
 
 class FakeTradeInterface:
 
-    def __init__(self, dataInterface, logService):
+    def __init__(self, dataInterface, logService, stockDataInterface):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.stockDataInterface = StockDataInterface(self.dataInterface.settingsGet('1d/stockDataPath'))
+        self.stockDataInterface = stockDataInterface
 
 
     def buy(self, symbol, numShares):
-        lastClosePrice = self.stockDataInterface.load(symbol, numLastRows=1)[0][4]
+        lastClosePrice = self.stockDataInterface.load('1d', symbol, numLastRows=1)[0][4]
 
         numOwnedShares = 0
         if symbol in self.dataInterface.bank:

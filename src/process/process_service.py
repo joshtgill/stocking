@@ -5,9 +5,10 @@ import re
 
 class ProcessService():
 
-    def __init__(self, dataInterface, logService, tradeService):
+    def __init__(self, dataInterface, logService, stockDataInterface, tradeService):
         self.dataInterface = dataInterface
         self.logService = logService
+        self.stockDataInterface = stockDataInterface
         self.tradeService = tradeService
 
 
@@ -35,7 +36,7 @@ class ProcessService():
                 if module == 'analyze':
                     self.dataInterface.incrementConfig('[{}]/modules/{}'.format(i, module))
 
-                    analyzeRecommendedStocks = DayAnalyzeService(self.dataInterface, self.logService, symbols, start, end).go()
+                    analyzeRecommendedStocks = DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
                     recommendedStocks.extend(analyzeRecommendedStocks)
 
                     self.dataInterface.decrementConfig(3)  # Decrement from analyze->modules->[x]

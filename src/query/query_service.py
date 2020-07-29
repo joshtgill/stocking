@@ -6,17 +6,10 @@ from query.query_interface import QueryInterface
 
 class QueryService:
 
-    def __init__(self, dataInterface, logService):
+    def __init__(self, dataInterface, logService, stockDataInterface):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.initStockDataInterfaces()
-
-
-    def initStockDataInterfaces(self):
-        self.stockDataInterfaces = {}  # {interval: StockDataInterface}
-        for interval in self.dataInterface.configGet('queries'):
-            self.stockDataInterfaces.update({interval:
-                                             StockDataInterface(self.dataInterface.settingsGet('{}/stockDataPath'.format(interval)))})
+        self.stockDataInterface = stockDataInterface
 
 
     def go(self):
@@ -31,7 +24,7 @@ class QueryService:
 
             for query in queries.get(interval):
                 stock = queryInterface.performQuery(query)
-                self.stockDataInterfaces.get(interval).save(stock)
+                self.stockDataInterface.save(stock)
 
             self.logService.untrack('QUERY {}'.format(interval))
 
@@ -60,7 +53,7 @@ class QueryService:
             start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
-        stockHistory = self.stockDataInterfaces.get(interval).load(symbol, numLastRows=1)
+        stockHistory = self.stockDataInterface.load(interval, symbol, numLastRows=1)
         if stockHistory:
             lastHistoryRow = stockHistory[0][0]
             start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'

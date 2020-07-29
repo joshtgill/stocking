@@ -1,6 +1,7 @@
 from common.file_interface import FileInterface
 from common.data_interface import DataInterface
 from common.log_service import LogService
+from common.stock_data_interface import StockDataInterface
 from query.query_service import QueryService
 from process.process_service import ProcessService
 from trade.trade_service import TradeService
@@ -15,7 +16,9 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.dataInterface)
-        self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface)
+        self.stockDataInterface = StockDataInterface({'1m': self.dataInterface.settingsGet('1m/stockDataPath'),
+                                                      '1d': self.dataInterface.settingsGet('1d/stockDataPath')})
+        self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface, self.stockDataInterface)
 
 
     def go(self):
@@ -42,11 +45,11 @@ class Stocking:
 
 
     def query(self):
-        QueryService(self.dataInterface, self.logService).go()
+        QueryService(self.dataInterface, self.logService, self.stockDataInterface).go()
 
 
     def process(self):
-        ProcessService(self.dataInterface, self.logService, self.tradeService).go()
+        ProcessService(self.dataInterface, self.logService, self.stockDataInterface, self.tradeService).go()
 
 
     def trade(self):

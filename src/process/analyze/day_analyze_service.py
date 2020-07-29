@@ -4,13 +4,13 @@ import statistics
 
 class DayAnalyzeService:
 
-    def __init__(self, dataInterface, logService, symbols, start, end):
+    def __init__(self, dataInterface, logService, stockDataInterface, symbols, start, end):
         self.dataInterface = dataInterface
         self.logService = logService
+        self.stockDataInterface = stockDataInterface
         self.symbols = symbols
         self.start = start
         self.end = end
-        self.stockDataInterface = StockDataInterface(self.dataInterface.settingsGet('1d/stockDataPath'))
 
 
     def go(self):
@@ -49,7 +49,7 @@ class DayAnalyzeService:
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
-        stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
+        stockHistory = self.stockDataInterface.load('1d', symbol, self.start, self.end)
 
         if not stockHistory:
             return 0, 0
@@ -74,7 +74,7 @@ class DayAnalyzeService:
 
 
     def calculateAverageGrowthPercent(self, symbol):
-        stockHistory = self.stockDataInterface.load(symbol, self.start, self.end)
+        stockHistory = self.stockDataInterface.load('1d', symbol, self.start, self.end)
 
         if not stockHistory:
             return 0

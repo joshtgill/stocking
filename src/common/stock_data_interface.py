@@ -1,26 +1,32 @@
 from common.database_interface import DatabaseInterface
 
 
-class StockDataInterface(DatabaseInterface):
+class StockDataInterface:
 
-    def __init__(self, dataPath):
-        super().__init__(dataPath)
+    def __init__(self, databasePathDir):
+        self.databaseDir = self.initDatabases(databasePathDir)
 
 
-    def __del__(self):
-        self.database.close()
+    def initDatabases(self, databasePathDir):
+        databaseDir = {}
+        for key, value in databasePathDir.items():
+            databaseDir.update({key: DatabaseInterface(value)})
+
+        return databaseDir
 
 
     def save(self, stock):
-        self.insert(stock.symbol, stock.history)
+        self.databaseDir.get(stock.interval).insert(stock.symbol, stock.history)
 
 
-    def load(self, symbol, start='', end='', numLastRows=0):
+    def load(self, interval, symbol, start='', end='', numLastRows=0):
+        database = self.databaseDir.get(interval)
+
         if start and end and not numLastRows:
-            return self.selectPeriod(symbol, start, end)
+            return database.selectPeriod(symbol, start, end)
         elif not start and not end and numLastRows:
-            return self.selectLastRows(symbol, numLastRows)
+            return database.selectLastRows(symbol, numLastRows)
         elif not start and not end and not numLastRows:
-            return self.selectAll(symbol)
+            return database.selectAll(symbol)
         else:
             return []

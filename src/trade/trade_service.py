@@ -4,11 +4,11 @@ from trade.fake_trade_interface import FakeTradeInterface
 
 class TradeService:
 
-    def __init__(self, dataInterface, logService, fileInterface):
+    def __init__(self, dataInterface, logService, fileInterface, stockDataInterface):
         self.dataInterface = dataInterface
         self.logService = logService
         self.fileInterface = fileInterface
-        self.tradeInterface = FakeTradeInterface(dataInterface, logService)
+        self.tradeInterface = FakeTradeInterface(dataInterface, logService, stockDataInterface)
         self.stocksToTrade = []
 
 
