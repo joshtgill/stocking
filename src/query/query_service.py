@@ -1,4 +1,3 @@
-from common.stock_data_interface import StockDataInterface
 from query.query import Query
 from datetime import datetime, timedelta
 from query.query_interface import QueryInterface

@@ -4,8 +4,8 @@
 # Python pycache
 __pycache__/
 
-# SQLite database files
-*.db
+# All data files
+data/
 
 # Logs, output, email file
 out/

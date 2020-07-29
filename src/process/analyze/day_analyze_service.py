@@ -1,4 +1,3 @@
-from common.stock_data_interface import StockDataInterface
 import statistics
 
 

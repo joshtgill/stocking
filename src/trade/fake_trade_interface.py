@@ -1,6 +1,3 @@
-from common.stock_data_interface import StockDataInterface
-
-
 class FakeTradeInterface:
 
     def __init__(self, dataInterface, logService, stockDataInterface):
