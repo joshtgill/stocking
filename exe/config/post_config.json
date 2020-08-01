@@ -1,5 +1,6 @@
 {
     "process": {
+        "statistics": {},
         "minuteAnalyze": {
             "interval": "1m",
             "symbols": "GOOD_SYMBOLS",

@@ -1,3 +1,4 @@
+from process.statistics.statistics_service import StatisticsService
 from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from datetime import datetime, timedelta
@@ -16,7 +17,7 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        serviceDirectory = {'minuteAnalyze': self.minuteAnalyze, 'dayAnalyze': self.dayAnalyze}
+        serviceDirectory = {'statistics': self.statistics, 'minuteAnalyze': self.minuteAnalyze, 'dayAnalyze': self.dayAnalyze}
 
         for service in self.dataInterface.configGet():
             self.dataInterface.incrementConfig(service)
@@ -26,6 +27,10 @@ class ProcessService():
             self.dataInterface.decrementConfig()
 
         self.logService.untrack('PROCESS')
+
+
+    def statistics(self):
+        StatisticsService(self.logService, self.stockDataInterface).go()
 
 
     def minuteAnalyze(self):
