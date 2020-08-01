@@ -1,26 +1,19 @@
 {
-    "process": [
-        {
+    "process": {
+        "minuteAnalyze": {
+            "interval": "1m",
+            "symbols": "GOOD_SYMBOLS",
+            "start": "2020-04-01",
+            "end": "NOW"
+        },
+        "dayAnalyze": {
             "interval": "1d",
             "symbols": "GOOD_SYMBOLS",
             "start": "2020-04-01",
             "end": "NOW",
-            "modules": {
-                "analyze": {
-                    "minimumIncreasePercent": 60,
-                    "minimumAverageGrowthPercent": 0.5
-                }
-            }
-        },
-        {
-            "interval": "1m",
-            "symbols": "GOOD_SYMBOLS",
-            "start": "2020-04-01",
-            "end": "NOW",
-            "modules": {
-                "analyze": {}
-            }
+            "minimumIncreasePercent": 60,
+            "minimumAverageGrowthPercent": 0.5
         }
-    ],
+    },
     "trade": true
 }
