@@ -15,16 +15,12 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        recommendedStocks = self.runModules()
-
-        self.tradeService.stocksToTrade.extend(recommendedStocks)
+        self.runModules()
 
         self.logService.untrack('PROCESS')
 
 
     def runModules(self):
-        recommendedStocks = []
-
         for i in range(len(self.dataInterface.configGet())):
             processConfigItem = self.dataInterface.configGet('[{}]'.format(i))
 
@@ -36,12 +32,9 @@ class ProcessService():
                 if module == 'analyze':
                     self.dataInterface.incrementConfig('[{}]/modules/{}'.format(i, module))
 
-                    analyzeRecommendedStocks = DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
-                    recommendedStocks.extend(analyzeRecommendedStocks)
+                    DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
                     self.dataInterface.decrementConfig(3)  # Decrement from analyze->modules->[x]
-
-        return recommendedStocks
 
 
     def translateVariable(self, variable, interval):

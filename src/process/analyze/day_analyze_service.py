@@ -15,17 +15,13 @@ class DayAnalyzeService:
     def go(self):
         self.logService.track('DAY ANALYZE')
 
-        passedStockDir = self.determinePassedStocks()
-
-        recommendedStocks = self.selectRecommendedStocks(passedStockDir)
+        acceptedStockDir = self.determineAcceptedStocks()
 
         self.logService.untrack('DAY ANALYZE')
 
-        return recommendedStocks
 
-
-    def determinePassedStocks(self):
-        growthDir = {}
+    def determineAcceptedStocks(self):
+        acceptedStockDir = {}
         for symbol in self.symbols:
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
             if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
@@ -35,16 +31,13 @@ class DayAnalyzeService:
             if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
                 continue
 
+            # If here, calculate score and accept the stock
             score = self.calculateScore(decreasePercent, averageGrowthPercent)
-            growthDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
+            acceptedStockDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
 
-        growthDir = {k: v for k, v in sorted(growthDir.items(), key=lambda item: item[1][3], reverse=True)}
+        acceptedStockDir = {k: v for k, v in sorted(acceptedStockDir.items(), key=lambda item: item[1][3], reverse=True)}
 
-        return growthDir
-
-
-    def selectRecommendedStocks(self, passedStockDir):
-        return list(passedStockDir.keys())[: 3]
+        return acceptedStockDir
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
