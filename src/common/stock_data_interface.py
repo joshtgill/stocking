@@ -5,6 +5,8 @@ class StockDataInterface:
 
     def __init__(self, databasePathDir):
         self.databaseDir = self.initDatabases(databasePathDir)
+        self.data = []
+        self.dataIndex = 0
 
 
     def initDatabases(self, databasePathDir):
@@ -20,13 +22,31 @@ class StockDataInterface:
 
 
     def load(self, interval, symbol, start='', end='', numLastRows=0):
+        self.data = []
+        self.dataIndex = 0
+
         database = self.databaseDir.get(interval)
 
         if start and end and not numLastRows:
-            return database.selectPeriod(symbol, start, end)
+            self.data = database.selectPeriod(symbol, start, end)
         elif not start and not end and numLastRows:
-            return database.selectLastRows(symbol, numLastRows)
+            self.data = database.selectLastRows(symbol, numLastRows)
         elif not start and not end and not numLastRows:
-            return database.selectAll(symbol)
-        else:
-            return []
+            self.data = database.selectAll(symbol)
+
+
+    def size(self):
+        return len(self.data)
+
+
+    def peek(self):
+        try:
+            return self.data[self.dataIndex]
+        except IndexError:
+            return None
+
+
+    def next(self):
+        self.dataIndex += 1
+
+        return self.peek()

@@ -41,17 +41,17 @@ class DayAnalyzeService:
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
-        stockHistory = self.stockDataInterface.load('1d', symbol, self.start, self.end)
+        self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
 
-        if not stockHistory:
+        if not self.stockDataInterface.peek():
             return 0, 0
 
         numIncreases = 0
         numDecreases = 0
-        lastStockPrice = stockHistory[0][4]
+        lastStockPrice = self.stockDataInterface.peek()[4]
         i = 1
-        while i < len(stockHistory):
-            stockPrice = stockHistory[i][4]
+        while self.stockDataInterface.next():
+            stockPrice = self.stockDataInterface.peek()[4]
 
             if stockPrice > lastStockPrice:
                 numIncreases += 1
@@ -59,31 +59,28 @@ class DayAnalyzeService:
                 numDecreases += 1
 
             lastStockPrice = stockPrice
-
             i += 1
 
-        return round(numIncreases / (i - 1) * 100, 2), round(numDecreases / (i - 1) * 100, 2)
+        return (round(numIncreases / (self.stockDataInterface.size() - 1) * 100, 2),
+                round(numDecreases / (self.stockDataInterface.size() - 1) * 100, 2))
 
 
     def calculateAverageGrowthPercent(self, symbol):
-        stockHistory = self.stockDataInterface.load('1d', symbol, self.start, self.end)
+        self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
 
-        if not stockHistory:
+        if not self.stockDataInterface.peek():
             return 0
 
         cumulativeGrowth = 0
-        lastStockPrice = stockHistory[0][4]
-        i = 1
-        while i < len(stockHistory):
-            stockPrice = stockHistory[i][4]
+        lastStockPrice = self.stockDataInterface.peek()[4]
+        while self.stockDataInterface.next():
+            stockPrice = self.stockDataInterface.peek()[4]
 
             cumulativeGrowth += ((stockPrice - lastStockPrice) / lastStockPrice) * 100
 
             lastStockPrice = stockPrice
 
-            i += 1
-
-        return round(cumulativeGrowth / (i - 1), 2)
+        return round(cumulativeGrowth / (self.stockDataInterface.size() - 1), 2)
 
 
     def calculateScore(self, decreasePercent, averageGrowthPercent):

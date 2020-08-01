@@ -7,7 +7,8 @@ class FakeTradeInterface:
 
 
     def buy(self, symbol, numShares):
-        lastClosePrice = self.stockDataInterface.load('1d', symbol, numLastRows=1)[0][4]
+        self.stockDataInterface.load('1d', symbol, numLastRows=1)
+        lastClosePrice = self.stockDataInterface.peek()[0][4]
 
         numOwnedShares = 0
         if symbol in self.dataInterface.bank:
