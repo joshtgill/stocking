@@ -1,8 +1,6 @@
 {
     "process": {
-        "statistics": {},
-        "minuteAnalyze": {
-            "interval": "1m",
+        "statistics": {
             "symbols": "GOOD_SYMBOLS",
             "start": "2020-04-01",
             "end": "NOW"
@@ -14,6 +12,12 @@
             "end": "NOW",
             "minimumIncreasePercent": 60,
             "minimumAverageGrowthPercent": 0.5
+        },
+        "minuteAnalyze": {
+            "interval": "1m",
+            "symbols": "GOOD_SYMBOLS",
+            "start": "2020-04-01",
+            "end": "NOW"
         }
     },
     "trade": true

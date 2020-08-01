@@ -30,7 +30,11 @@ class ProcessService():
 
 
     def statistics(self):
-        StatisticsService(self.logService, self.stockDataInterface).go()
+        symbols = self.dataInterface.configGet('symbols')
+        start = self.translateVariable(self.dataInterface.configGet('start'), '1m')
+        end = self.translateVariable(self.dataInterface.configGet('end'), '1m')
+
+        StatisticsService(self.logService, self.stockDataInterface, symbols, start, end).go()
 
 
     def minuteAnalyze(self):
