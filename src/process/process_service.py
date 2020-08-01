@@ -1,3 +1,4 @@
+from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from datetime import datetime, timedelta
 import re
@@ -32,7 +33,10 @@ class ProcessService():
                 if module == 'analyze':
                     self.dataInterface.incrementConfig('[{}]/modules/{}'.format(i, module))
 
-                    DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
+                    if interval == '1m':
+                        MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
+                    else:
+                        DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
                     self.dataInterface.decrementConfig(3)  # Decrement from analyze->modules->[x]
 
