@@ -1,6 +1,3 @@
-import statistics
-
-
 class DayAnalyzeService:
 
     def __init__(self, dataInterface, logService, stockDataInterface, symbols, start, end):
@@ -15,29 +12,29 @@ class DayAnalyzeService:
     def go(self):
         self.logService.track('DAY ANALYZE')
 
-        acceptedStockDir = self.determineAcceptedStocks()
+        self.serviceDirectory = {'vetStock': self.vetStock}
+
+        acceptedStocks = []
+        for symbol in self.symbols:
+            if self.vetStock(symbol):
+                acceptedStocks.append(symbol)
 
         self.logService.untrack('DAY ANALYZE')
 
+        return acceptedStocks
 
-    def determineAcceptedStocks(self):
-        acceptedStockDir = {}
-        for symbol in self.symbols:
-            increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
-            if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
-                continue
 
-            averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
-            if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
-                continue
+    def vetStock(self, symbol):
+        increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
+        if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
+            return False
 
-            # If here, calculate score and accept the stock
-            score = self.calculateScore(decreasePercent, averageGrowthPercent)
-            acceptedStockDir.update({symbol: (increasePercent, decreasePercent, averageGrowthPercent, score)})
+        averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
+        if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
+            return False
 
-        acceptedStockDir = {k: v for k, v in sorted(acceptedStockDir.items(), key=lambda item: item[1][3], reverse=True)}
-
-        return acceptedStockDir
+        # If here, return the accepted stock
+        return True
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):

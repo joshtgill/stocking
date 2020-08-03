@@ -1,22 +1,22 @@
 {
     "process": {
-        "statistics": {
-            "symbols": "GOOD_SYMBOLS",
-            "start": "2020-04-01",
-            "end": "NOW"
-        },
         "dayAnalyze": {
             "interval": "1d",
             "symbols": "GOOD_SYMBOLS",
-            "start": "2020-04-01",
-            "end": "NOW",
+            "start": "NOW - 60",
+            "end": "NOW - 5",
             "minimumIncreasePercent": 60,
             "minimumAverageGrowthPercent": 0.5
         },
         "minuteAnalyze": {
             "interval": "1m",
             "symbols": "GOOD_SYMBOLS",
-            "start": "2020-04-01",
+            "start": "NOW - 60",
+            "end": "NOW"
+        },
+        "statistics": {
+            "symbols": "GOOD_SYMBOLS",
+            "start": "NOW - 5",
             "end": "NOW"
         }
     },

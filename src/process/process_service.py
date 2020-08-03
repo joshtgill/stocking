@@ -12,45 +12,42 @@ class ProcessService():
         self.logService = logService
         self.stockDataInterface = stockDataInterface
         self.tradeService = tradeService
+        self.acceptedDayStocks = []
 
 
     def go(self):
         self.logService.track('PROCESS')
 
-        serviceDirectory = {'statistics': self.statistics, 'minuteAnalyze': self.minuteAnalyze, 'dayAnalyze': self.dayAnalyze}
+        serviceDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze, 'statistics': self.statistics}
 
+        resultSymbols = [] # This is hacky
         for service in self.dataInterface.configGet():
             self.dataInterface.incrementConfig(service)
 
-            serviceDirectory.get(service)()
+            if not resultSymbols:
+                symbols = self.dataInterface.configGet('symbols')
+            else:
+                symbols = resultSymbols
+            start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
+            end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
+
+            resultSymbols = serviceDirectory.get(service)(symbols, start, end)
 
             self.dataInterface.decrementConfig()
 
         self.logService.untrack('PROCESS')
 
 
-    def statistics(self):
-        symbols = self.dataInterface.configGet('symbols')
-        start = self.translateVariable(self.dataInterface.configGet('start'), '1m')
-        end = self.translateVariable(self.dataInterface.configGet('end'), '1m')
-
-        StatisticsService(self.logService, self.stockDataInterface, symbols, start, end).go()
+    def dayAnalyze(self, symbols, start, end):
+        return DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
 
-    def minuteAnalyze(self):
-        symbols = self.dataInterface.configGet('symbols')
-        start = self.translateVariable(self.dataInterface.configGet('start'), '1m')
-        end = self.translateVariable(self.dataInterface.configGet('end'), '1m')
-
+    def minuteAnalyze(self, symbols, start, end):
         MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
 
-    def dayAnalyze(self):
-        symbols = self.dataInterface.configGet('symbols')
-        start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
-        end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
-
-        DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
+    def statistics(self, symbols, start, end):
+        StatisticsService(self.logService, self.stockDataInterface, self.acceptedDayStocks, start, end).go()
 
 
     def translateVariable(self, variable, interval):
