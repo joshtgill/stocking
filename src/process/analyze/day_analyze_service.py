@@ -12,29 +12,26 @@ class DayAnalyzeService:
     def go(self):
         self.logService.track('DAY ANALYZE')
 
-        self.serviceDirectory = {'vetStock': self.vetStock}
-
-        acceptedStocks = []
-        for symbol in self.symbols:
-            if self.vetStock(symbol):
-                acceptedStocks.append(symbol)
+        passedStocks = self.inspect()
 
         self.logService.untrack('DAY ANALYZE')
 
-        return acceptedStocks
 
+    def inspect(self):
+        passedStocks = []
+        for symbol in self.symbols:
+            increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
+            if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
+                continue
 
-    def vetStock(self, symbol):
-        increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
-        if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
-            return False
+            averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
+            if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
+                continue
 
-        averageGrowthPercent = self.calculateAverageGrowthPercent(symbol)
-        if averageGrowthPercent < self.dataInterface.configGet('minimumAverageGrowthPercent'):
-            return False
+            # If here, accept the stock
+            passedStocks.append(symbol)
 
-        # If here, return the accepted stock
-        return True
+        return passedStocks
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
