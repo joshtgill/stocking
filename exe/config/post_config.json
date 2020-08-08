@@ -13,11 +13,6 @@
             "symbols": "GOOD_SYMBOLS",
             "start": "NOW - 60",
             "end": "NOW"
-        },
-        "statistics": {
-            "symbols": "GOOD_SYMBOLS",
-            "start": "NOW - 5",
-            "end": "NOW"
         }
     },
     "trade": true

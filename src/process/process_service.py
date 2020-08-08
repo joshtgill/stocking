@@ -1,4 +1,3 @@
-from process.statistics.statistics_service import StatisticsService
 from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from datetime import datetime, timedelta
@@ -18,7 +17,7 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        serviceDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze, 'statistics': self.statistics}
+        serviceDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze}
 
         resultSymbols = [] # This is hacky
         for service in self.dataInterface.configGet():
@@ -44,10 +43,6 @@ class ProcessService():
 
     def minuteAnalyze(self, symbols, start, end):
         MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
-
-
-    def statistics(self, symbols, start, end):
-        StatisticsService(self.logService, self.stockDataInterface, self.acceptedDayStocks, start, end).go()
 
 
     def translateVariable(self, variable, interval):
