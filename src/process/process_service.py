@@ -19,18 +19,16 @@ class ProcessService():
 
         serviceDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze}
 
-        resultSymbols = [] # This is hacky
+        symbols = self.dataInterface.configGet('symbols')
+        start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
+        end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
+
+        self.dataInterface.incrementConfig('processes')
+
         for service in self.dataInterface.configGet():
             self.dataInterface.incrementConfig(service)
 
-            if not resultSymbols:
-                symbols = self.dataInterface.configGet('symbols')
-            else:
-                symbols = resultSymbols
-            start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
-            end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
-
-            resultSymbols = serviceDirectory.get(service)(symbols, start, end)
+            serviceDirectory.get(service)(symbols, start, end)
 
             self.dataInterface.decrementConfig()
 
@@ -38,7 +36,7 @@ class ProcessService():
 
 
     def dayAnalyze(self, symbols, start, end):
-        return DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
+        DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
 
     def minuteAnalyze(self, symbols, start, end):
