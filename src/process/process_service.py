@@ -19,17 +19,12 @@ class ProcessService():
 
         serviceDirectory = {'1d': self.dayAnalyze, '1m': self.minuteAnalyze}
 
-        for i in range(len(self.dataInterface.configGet())):
-            self.dataInterface.incrementConfig('[{}]'.format(i))
+        interval = self.dataInterface.configGet('interval')
+        symbols = self.dataInterface.configGet('symbols')
+        start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
+        end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
 
-            interval = self.dataInterface.configGet('interval')
-            symbols = self.dataInterface.configGet('symbols')
-            start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
-            end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
-
-            serviceDirectory.get(interval)(symbols, start, end)
-
-            self.dataInterface.decrementConfig()
+        serviceDirectory.get(interval)(symbols, start, end)
 
         self.logService.untrack('PROCESS')
 

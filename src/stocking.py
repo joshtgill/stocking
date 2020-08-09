@@ -27,9 +27,11 @@ class Stocking:
         serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
 
         try:
-            for service in self.dataInterface.configGet():
+            for i in range(len(self.dataInterface.configGet())):
+                service = self.dataInterface.configGet('[{}]/service'.format(i))
+
                 # Set to service's config
-                self.dataInterface.incrementConfig(service)
+                self.dataInterface.incrementConfig('[{}]'.format(i))
 
                 # Start corresponding service
                 serviceDirectory.get(service)()

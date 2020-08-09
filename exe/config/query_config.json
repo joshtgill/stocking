@@ -1,6 +1,8 @@
-{
-    "query": {
+[
+    {
+        "service": "query",
+
         "1d": "GOOD_SYMBOLS",
         "1m": "GOOD_SYMBOLS"
     }
-}
+]
