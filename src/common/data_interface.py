@@ -13,7 +13,6 @@ class DataInterface:
         self.activePathList = []
         self.settings = json.loads(self.fileInterface.read(settingsPath))
         self.trades = json.loads(self.fileInterface.read(self.settings.get('tradesPath'), '{}'))
-        self.bank = json.loads(self.fileInterface.read(self.settings.get('bankPath'), '{}'))
 
 
     def incrementConfig(self, path):
@@ -66,12 +65,8 @@ class DataInterface:
         return self.get('TRADES', path, defaultData)
 
 
-    def bankGet(self, path='', defaultData=None):
-        return self.get('BANK', path, defaultData)
-
-
     def get(self, sourceName, path, defaultData):
-        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'TRADES': self.trades, 'BANK': self.bank}
+        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'TRADES': self.trades}
         source = sourceDir.get(sourceName)
 
         pathList = self.pathToList(path)
@@ -105,9 +100,3 @@ class DataInterface:
     def tradesSave(self):
         self.fileInterface.wipe(self.settingsGet('tradesPath'))
         self.fileInterface.write(self.settingsGet('tradesPath'), json.dumps(self.trades))
-
-
-    # Termporary until a set() method is created
-    def bankSave(self):
-        self.fileInterface.wipe(self.settingsGet('bankPath'))
-        self.fileInterface.write(self.settingsGet('bankPath'), json.dumps(self.bank))

@@ -9,6 +9,5 @@
     },
     "stockingLogPath": "out/stocking.log",
     "stockingEmailPath": "out/email.txt",
-    "tradesPath": "data/trades.json",
-    "bankPath": "data/bank.json"
+    "tradesPath": "data/trades.json"
 }
