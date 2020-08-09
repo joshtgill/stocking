@@ -1,18 +1,15 @@
 {
     "process": {
-        "symbols": "GOOD_SYMBOLS",
-        "start": "NOW - 60",
-        "end": "NOW - 5",
-        "processes": {
-            "dayAnalyze": {
+        "processes": [
+            {
                 "interval": "1d",
+                "symbols": "GOOD_SYMBOLS",
+                "start": "2020-04-01",
+                "end": "2020-07-08",
                 "minimumIncreasePercent": 60,
                 "minimumAverageGrowthPercent": 0.5
-            },
-            "minuteAnalyze": {
-                "interval": "1m"
             }
-        }
+        ]
     },
     "trade": true
 }

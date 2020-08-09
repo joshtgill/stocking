@@ -13,12 +13,14 @@ class DayAnalyzeService:
         self.logService.track('DAY ANALYZE')
 
         passedStocks = self.inspect()
+        for key, value in passedStocks.items():
+            print(key, value)
 
         self.logService.untrack('DAY ANALYZE')
 
 
     def inspect(self):
-        passedStocks = []
+        passedStocks = {}
         for symbol in self.symbols:
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
             if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
@@ -29,7 +31,9 @@ class DayAnalyzeService:
                 continue
 
             # If here, accept the stock
-            passedStocks.append(symbol)
+            passedStocks.update({symbol: averageGrowthPercent})
+
+        passedStocks = {k: v for k, v in sorted(passedStocks.items(), key=lambda item: item[1], reverse=True)}
 
         return passedStocks
 

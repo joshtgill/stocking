@@ -17,18 +17,19 @@ class ProcessService():
     def go(self):
         self.logService.track('PROCESS')
 
-        serviceDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze}
-
-        symbols = self.dataInterface.configGet('symbols')
-        start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
-        end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
+        serviceDirectory = {'1d': self.dayAnalyze, '1m': self.minuteAnalyze}
 
         self.dataInterface.incrementConfig('processes')
 
-        for service in self.dataInterface.configGet():
-            self.dataInterface.incrementConfig(service)
+        for i in range(len(self.dataInterface.configGet())):
+            self.dataInterface.incrementConfig('[{}]'.format(i))
 
-            serviceDirectory.get(service)(symbols, start, end)
+            interval = self.dataInterface.configGet('interval')
+            symbols = self.dataInterface.configGet('symbols')
+            start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
+            end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
+
+            serviceDirectory.get(interval)(symbols, start, end)
 
             self.dataInterface.decrementConfig()
 
