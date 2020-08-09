@@ -27,7 +27,9 @@ class StockDataInterface:
 
         database = self.databaseDir.get(interval)
 
-        if start and end and not numLastRows:
+        if start and not end and not numLastRows:
+            self.data = database.selectPeriod(symbol, start, start)
+        elif start and end and not numLastRows:
             self.data = database.selectPeriod(symbol, start, end)
         elif not start and not end and numLastRows:
             self.data = database.selectLastRows(symbol, numLastRows)
