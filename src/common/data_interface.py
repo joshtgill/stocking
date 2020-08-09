@@ -30,18 +30,19 @@ class DataInterface:
 
 
     def loadConfigVariables(self, config):
-        if type(config) is not dict:
-            return
-
-        for key in config:
-            value = config.get(key)
-            if type(value) is dict:
-                self.loadConfigVariables(value)
-            elif type(value) is list:
-                for itemValue in value:
-                    self.loadConfigVariables(itemValue)
-            else:
-                config.update({key: self.translateConfigVariable(value)})
+        if type(config) is dict:
+            for key in config:
+                value = config.get(key)
+                if type(value) is dict:
+                    self.loadConfigVariables(value)
+                elif type(value) is list:
+                    for itemValue in value:
+                        self.loadConfigVariables(itemValue)
+                else:
+                    config.update({key: self.translateConfigVariable(value)})
+        elif type(config) is list:
+            for item in config:
+                self.loadConfigVariables(item)
 
 
     def translateConfigVariable(self, variable):
