@@ -1,8 +1,6 @@
 {
     "query": {
-        "queries": {
-            "1d": "GOOD_SYMBOLS",
-            "1m": "GOOD_SYMBOLS"
-        }
+        "1d": "GOOD_SYMBOLS",
+        "1m": "GOOD_SYMBOLS"
     }
 }

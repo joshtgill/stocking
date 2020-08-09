@@ -1,15 +1,13 @@
 {
-    "process": {
-        "processes": [
-            {
-                "interval": "1d",
-                "symbols": "GOOD_SYMBOLS",
-                "start": "2020-04-01",
-                "end": "2020-07-08",
-                "minimumIncreasePercent": 60,
-                "minimumAverageGrowthPercent": 0.5
-            }
-        ]
-    },
+    "process": [
+        {
+            "interval": "1d",
+            "symbols": "GOOD_SYMBOLS",
+            "start": "2020-04-01",
+            "end": "2020-07-08",
+            "minimumIncreasePercent": 60,
+            "minimumAverageGrowthPercent": 0.5
+        }
+    ],
     "trade": true
 }

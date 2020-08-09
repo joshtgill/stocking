@@ -19,8 +19,6 @@ class ProcessService():
 
         serviceDirectory = {'1d': self.dayAnalyze, '1m': self.minuteAnalyze}
 
-        self.dataInterface.incrementConfig('processes')
-
         for i in range(len(self.dataInterface.configGet())):
             self.dataInterface.incrementConfig('[{}]'.format(i))
 
