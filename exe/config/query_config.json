@@ -2,7 +2,13 @@
     {
         "service": "query",
 
-        "1d": "GOOD_SYMBOLS",
-        "1m": "GOOD_SYMBOLS"
+        "interval": "1d",
+        "symbols": "GOOD_SYMBOLS"
+    },
+    {
+        "service": "query",
+
+        "interval": "1m",
+        "symbols": "GOOD_SYMBOLS"
     }
 ]

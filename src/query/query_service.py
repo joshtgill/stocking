@@ -12,33 +12,26 @@ class QueryService:
 
 
     def go(self):
-        self.logService.track('QUERY')
+        interval = self.dataInterface.configGet('interval')
+
+        self.logService.track('QUERY {}'.format(interval))
 
         queryInterface = QueryInterface(self.dataInterface, self.logService)
 
-        allQueries = self.buildQueries()
+        for query in self.buildQueries(interval):
+            stock = queryInterface.performQuery(query)
+            self.stockDataInterface.save(stock)
 
-        for interval, queries in allQueries.items():
-            self.logService.track('QUERY {}'.format(interval))
-
-            for query in queries:
-                stock = queryInterface.performQuery(query)
-                self.stockDataInterface.save(stock)
-
-            self.logService.untrack('QUERY {}'.format(interval))
-
-        self.logService.untrack('QUERY')
+        self.logService.untrack('QUERY {}'.format(interval))
 
 
-    def buildQueries(self):
-        allQueries = {}  # {interval: list of Querys}
-        for interval, symbols in self.dataInterface.configGet().items():
-            allQueries.update({interval: []})
-            for symbol in symbols:
-                start, end = self.determineQueryPeriod(symbol, interval)
-                allQueries.get(interval).append(Query(symbol, interval, start, end))
+    def buildQueries(self, interval):
+        queries = []
+        for symbol in self.dataInterface.configGet('symbols'):
+            start, end = self.determineQueryPeriod(symbol, interval)
+            queries.append(Query(symbol, interval, start, end))
 
-        return allQueries
+        return queries
 
 
     def determineQueryPeriod(self, symbol, interval):
