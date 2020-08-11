@@ -11,7 +11,6 @@ class ProcessService():
         self.logService = logService
         self.stockDataInterface = stockDataInterface
         self.tradeService = tradeService
-        self.acceptedDayStocks = []
 
 
     def go(self):
@@ -21,16 +20,20 @@ class ProcessService():
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.dataInterface.configGet('symbols')
-        start = self.translateVariable(self.dataInterface.configGet('start'), '1d')
-        end = self.translateVariable(self.dataInterface.configGet('end'), '1d')
+        start = self.translateVariable(self.dataInterface.configGet('start'), interval)
+        end = self.translateVariable(self.dataInterface.configGet('end'), interval)
 
-        serviceDirectory.get(interval)(symbols, start, end)
+        # TODO: Store passedSymbols as class member, dependency inject everything
+        # and request passedSymbols from ProcessService
+        passedSymbols = serviceDirectory.get(interval)(symbols, start, end)
+
+        self.tradeService.buyStocks(passedSymbols, end)
 
         self.logService.untrack('PROCESS')
 
 
     def dayAnalyze(self, symbols, start, end):
-        DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
+        return DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, symbols, start, end).go()
 
 
     def minuteAnalyze(self, symbols, start, end):

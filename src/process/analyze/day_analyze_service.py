@@ -12,15 +12,15 @@ class DayAnalyzeService:
     def go(self):
         self.logService.track('DAY ANALYZE')
 
-        passedStocks = self.inspect()
-        for key, value in passedStocks.items():
-            print(key, value)
+        passedStocksDirectory = self.inspect()
 
         self.logService.untrack('DAY ANALYZE')
 
+        return passedStocksDirectory.keys()
+
 
     def inspect(self):
-        passedStocks = {}
+        passedStocksDirectory = {}
         for symbol in self.symbols:
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
             if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
@@ -31,18 +31,18 @@ class DayAnalyzeService:
                 continue
 
             # If here, accept the stock
-            passedStocks.update({symbol: averageGrowthPercent})
+            passedStocksDirectory.update({symbol: averageGrowthPercent})
 
-        passedStocks = {k: v for k, v in sorted(passedStocks.items(), key=lambda item: item[1], reverse=True)}
+        passedStocksDirectory = {k: v for k, v in sorted(passedStocksDirectory.items(), key=lambda item: item[1], reverse=True)}
 
-        return passedStocks
+        return passedStocksDirectory
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
         self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
 
         if not self.stockDataInterface.peek():
-            return 0, 0
+            return 0, 100
 
         numIncreases = 0
         numDecreases = 0
@@ -58,6 +58,9 @@ class DayAnalyzeService:
 
             lastStockPrice = stockPrice
             i += 1
+
+        if self.stockDataInterface.size() <= 1:
+            return 0, 100
 
         return (round(numIncreases / (self.stockDataInterface.size() - 1) * 100, 2),
                 round(numDecreases / (self.stockDataInterface.size() - 1) * 100, 2))

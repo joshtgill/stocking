@@ -4,12 +4,14 @@
 
         "interval": "1d",
         "symbols": "GOOD_SYMBOLS",
-        "start": "2020-04-01",
-        "end": "2020-07-08",
-        "minimumIncreasePercent": 60,
-        "minimumAverageGrowthPercent": 0.5
+        "start": "2018-01-02",
+        "end": "2019-01-02",
+        "minimumIncreasePercent": 50,
+        "minimumAverageGrowthPercent": 0.1
     },
     {
-        "service": "trade"
+        "service": "trade",
+
+        "date": "2020-01-02"
     }
 ]
