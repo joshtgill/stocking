@@ -52,3 +52,7 @@ class StockDataInterface:
         self.dataIndex += 1
 
         return self.peek()
+
+
+    def reset(self):
+        self.dataIndex = 0

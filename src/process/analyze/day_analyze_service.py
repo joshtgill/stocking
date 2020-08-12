@@ -22,6 +22,11 @@ class DayAnalyzeService:
     def inspect(self):
         passedStocksDirectory = {}
         for symbol in self.symbols:
+            # Check that stock history exists
+            self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
+            if self.stockDataInterface.size() < 2:
+                continue
+
             increasePercent, decreasePercent = self.calculateIncreaseAndDecreasePercent(symbol)
             if increasePercent < self.dataInterface.configGet('minimumIncreasePercent'):
                 continue
@@ -39,10 +44,7 @@ class DayAnalyzeService:
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
-        self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
-
-        if not self.stockDataInterface.peek():
-            return 0, 100
+        self.stockDataInterface.reset()
 
         numIncreases = 0
         numDecreases = 0
@@ -59,18 +61,12 @@ class DayAnalyzeService:
             lastStockPrice = stockPrice
             i += 1
 
-        if self.stockDataInterface.size() <= 1:
-            return 0, 100
-
         return (round(numIncreases / (self.stockDataInterface.size() - 1) * 100, 2),
                 round(numDecreases / (self.stockDataInterface.size() - 1) * 100, 2))
 
 
     def calculateAverageGrowthPercent(self, symbol):
-        self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
-
-        if not self.stockDataInterface.peek():
-            return 0
+        self.stockDataInterface.reset()
 
         cumulativeGrowth = 0
         lastStockPrice = self.stockDataInterface.peek()[4]

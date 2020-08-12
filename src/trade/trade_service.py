@@ -25,6 +25,8 @@ class TradeService:
         self.logService.track('TRADE')
 
         tradeReport = self.sellStocks()
+
+        self.fileInterface.wipe(self.dataInterface.settingsGet('tradeReportPath'))
         self.fileInterface.write(self.dataInterface.settingsGet('tradeReportPath'), tradeReport.serialize())
 
         self.logService.untrack('TRADE')
@@ -37,6 +39,7 @@ class TradeService:
         redStocks = 0
         for symbol, boughtPrice in self.dataInterface.tradesGet().items():
             self.stockDataInterface.load('1d', symbol, date)
+
             sellPrice = self.stockDataInterface.peek()[4]
             averagePercentGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
             if sellPrice <= boughtPrice:
