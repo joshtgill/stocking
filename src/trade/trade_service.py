@@ -30,6 +30,7 @@ class TradeService:
 
         self.fileInterface.wipe(self.dataInterface.settingsGet('tradeReportPath'))
         self.fileInterface.write(self.dataInterface.settingsGet('tradeReportPath'), tradeReport.serialize())
+        self.logService.log('Trade report created')
 
         self.logService.untrack('TRADE')
 
@@ -37,16 +38,16 @@ class TradeService:
     def sellStocks(self):
         date = self.dataInterface.configGet('date')
 
-        averagePercentGrowth = 0
-        redStocks = 0
+        averageGrowth = 0
+        redCount = 0
         for symbol, boughtPrice in self.dataInterface.tradesGet().items():
             self.stockDataInterface.load('1d', symbol, date)
 
             sellPrice = self.stockDataInterface.peek()[4]
-            averagePercentGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
+            averageGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
             if sellPrice <= boughtPrice:
-                redStocks += 1
+                redCount += 1
 
 
-        return TradeReport(averagePercentGrowth / len(self.dataInterface.trades),
-                           redStocks / len(self.dataInterface.trades) * 100)
+        return TradeReport(averageGrowth / len(self.dataInterface.trades),
+                           redCount / len(self.dataInterface.trades) * 100)
