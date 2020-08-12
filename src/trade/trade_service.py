@@ -11,6 +11,8 @@ class TradeService:
 
 
     def buyStocks(self, symbols, date):
+        self.dataInterface.trades = {}
+
         for symbol in symbols:
             self.stockDataInterface.load('1d', symbol, date)
             if not self.stockDataInterface.peek():
