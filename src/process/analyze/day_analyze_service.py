@@ -1,29 +1,18 @@
 class DayAnalyzeService:
 
-    def __init__(self, dataInterface, logService, stockDataInterface, symbols, start, end):
+    def __init__(self, dataInterface, logService, stockDataInterface):
         self.dataInterface = dataInterface
         self.logService = logService
         self.stockDataInterface = stockDataInterface
-        self.symbols = symbols
-        self.start = start
-        self.end = end
 
 
-    def go(self):
+    def go(self, symbols, start, end):
         self.logService.track('DAY ANALYZE')
 
-        passedStocksDirectory = self.inspect()
-
-        self.logService.untrack('DAY ANALYZE')
-
-        return passedStocksDirectory.keys()
-
-
-    def inspect(self):
         passedStocksDirectory = {}
-        for symbol in self.symbols:
+        for symbol in symbols:
             # Check that stock history exists
-            self.stockDataInterface.load('1d', symbol, start=self.start, end=self.end)
+            self.stockDataInterface.load('1d', symbol, start=start, end=end)
             if self.stockDataInterface.size() < 2:
                 continue
 
@@ -40,7 +29,9 @@ class DayAnalyzeService:
 
         passedStocksDirectory = {k: v for k, v in sorted(passedStocksDirectory.items(), key=lambda item: item[1], reverse=True)}
 
-        return passedStocksDirectory
+        self.logService.untrack('DAY ANALYZE')
+
+        return passedStocksDirectory.keys()
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):

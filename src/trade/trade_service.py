@@ -3,17 +3,18 @@ from trade.trade_report import TradeReport
 
 class TradeService:
 
-    def __init__(self, dataInterface, logService, fileInterface, stockDataInterface):
+    def __init__(self, dataInterface, logService, fileInterface, stockDataInterface, processService):
         self.dataInterface = dataInterface
         self.logService = logService
         self.fileInterface = fileInterface
         self.stockDataInterface = stockDataInterface
+        self.processService = processService
 
 
-    def buyStocks(self, symbols, date):
+    def buyStocks(self, date):
         self.dataInterface.trades = {}
 
-        for symbol in symbols:
+        for symbol in self.processService.passedSymbols:
             self.stockDataInterface.load('1d', symbol, date)
             if not self.stockDataInterface.peek():
                 continue
@@ -26,11 +27,15 @@ class TradeService:
     def go(self):
         self.logService.track('TRADE')
 
-        tradeReport = self.sellStocks()
+        date = self.dataInterface.configGet('date')
+        if self.dataInterface.configGet('action') == 'buy':
+            self.buyStocks(date)
+        else:
+            tradeReport = self.sellStocks()
 
-        self.fileInterface.wipe(self.dataInterface.settingsGet('tradeReportPath'))
-        self.fileInterface.write(self.dataInterface.settingsGet('tradeReportPath'), tradeReport.serialize())
-        self.logService.log('Trade report created')
+            self.fileInterface.wipe(self.dataInterface.settingsGet('tradeReportPath'))
+            self.fileInterface.write(self.dataInterface.settingsGet('tradeReportPath'), tradeReport.serialize())
+            self.logService.log('Trade report created')
 
         self.logService.untrack('TRADE')
 
