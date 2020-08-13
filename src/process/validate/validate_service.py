@@ -17,13 +17,15 @@ class ValidateService:
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.dataInterface.configGet('symbols')
+        minimumYear = self.dataInterface.configGet('minimumYear')
+
         for symbol in symbols:
-            self.validateStockData(symbol, interval)
+            self.validateStockData(symbol, interval, minimumYear)
 
         self.logService.untrack('VALIDATE')
 
 
-    def validateStockData(self, symbol, interval):
+    def validateStockData(self, symbol, interval, minimumYear):
         self.stockDataInterface.load(interval, symbol)
 
         activeDateTime = datetime.strptime(self.stockDataInterface.next()[0],
@@ -46,14 +48,18 @@ class ValidateService:
                                              self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d' else
                                              self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
-            # If there is a discrepancy, attribute it to a holiday. If no more holidays, report error
+            # If there is a discrepancy that is after minimumYear, attribute it to a holiday.
+            # If no remaining holidays, report an error
             if nextDateTime != nextExpectedDateTime:
+                if nextExpectedDateTime.year < minimumYear:
+                    continue
+
                 holidayCount = monthHolidayCountDirectory.get(nextExpectedDateTime.month)
 
                 if holidayCount and holidayCount > 0:
                     monthHolidayCountDirectory.update({nextExpectedDateTime.month: holidayCount - 1})
                 elif holidayCount and holidayCount <= 0:
-                    self.logService.log('Missing data for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime))
+                    self.logService.log('Missing data for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARNING')
 
             activeDateTime = nextDateTime
 

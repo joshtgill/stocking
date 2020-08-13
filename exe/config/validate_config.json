@@ -3,6 +3,7 @@
         "service": "validate",
 
         "interval": "1d",
-        "symbols": "GOOD_SYMBOLS"
+        "symbols": "GOOD_SYMBOLS",
+        "minimumYear": 2000
     }
 ]
