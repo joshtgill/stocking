@@ -46,7 +46,7 @@ class QueryService:
 
         # If stock history already exists, determine query start
         self.stockDataInterface.load(interval, symbol, numLastRows=1)
-        if self.stockDataInterface.peek():
+        if self.stockDataInterface.next():
             lastHistoryRow = self.stockDataInterface.peek()[0]
             start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
                                                       else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))

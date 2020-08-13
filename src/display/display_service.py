@@ -21,6 +21,5 @@ class DisplayService:
     def displayStockData(self, symbol, interval):
         self.stockDataInterface.load(interval, symbol)
 
-        print(self.stockDataInterface.peek())
         while self.stockDataInterface.next():
             print(self.stockDataInterface.peek())

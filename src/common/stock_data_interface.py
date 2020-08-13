@@ -5,8 +5,7 @@ class StockDataInterface:
 
     def __init__(self, databasePathDir):
         self.databaseDir = self.initDatabases(databasePathDir)
-        self.data = []
-        self.dataIndex = 0
+        self.reset(True)
 
 
     def initDatabases(self, databasePathDir):
@@ -22,8 +21,7 @@ class StockDataInterface:
 
 
     def load(self, interval, symbol, start='', end='', numLastRows=0):
-        self.data = []
-        self.dataIndex = 0
+        self.reset(True)
 
         database = self.databaseDir.get(interval)
 
@@ -54,5 +52,8 @@ class StockDataInterface:
         return self.peek()
 
 
-    def reset(self):
-        self.dataIndex = 0
+    def reset(self, hard=False):
+        self.dataIndex = -1
+
+        if hard:
+            self.data = []

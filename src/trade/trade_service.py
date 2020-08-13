@@ -16,7 +16,7 @@ class TradeService:
 
         for symbol in self.processService.passedSymbols:
             self.stockDataInterface.load('1d', symbol, date)
-            if not self.stockDataInterface.peek():
+            if not self.stockDataInterface.next():
                 continue
             closePrice = self.stockDataInterface.peek()[4]
             self.dataInterface.trades.update({symbol: closePrice})
@@ -47,7 +47,8 @@ class TradeService:
         redCount = 0
         for symbol, boughtPrice in self.dataInterface.tradesGet().items():
             self.stockDataInterface.load('1d', symbol, date)
-
+            if not self.stockDataInterface.next():
+                continue
             sellPrice = self.stockDataInterface.peek()[4]
             averageGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
             if sellPrice <= boughtPrice:

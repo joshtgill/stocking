@@ -26,7 +26,7 @@ class ValidateService:
     def validateStockData(self, symbol, interval):
         self.stockDataInterface.load(interval, symbol)
 
-        activeDateTime = datetime.strptime(self.stockDataInterface.peek()[0],
+        activeDateTime = datetime.strptime(self.stockDataInterface.next()[0],
                                            self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d' else
                                            self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 

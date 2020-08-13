@@ -39,7 +39,7 @@ class DayAnalyzeService:
 
         numIncreases = 0
         numDecreases = 0
-        lastStockPrice = self.stockDataInterface.peek()[4]
+        lastStockPrice = self.stockDataInterface.next()[4]
         i = 1
         while self.stockDataInterface.next():
             stockPrice = self.stockDataInterface.peek()[4]
@@ -60,7 +60,7 @@ class DayAnalyzeService:
         self.stockDataInterface.reset()
 
         cumulativeGrowth = 0
-        lastStockPrice = self.stockDataInterface.peek()[4]
+        lastStockPrice = self.stockDataInterface.next()[4]
         while self.stockDataInterface.next():
             stockPrice = self.stockDataInterface.peek()[4]
 
