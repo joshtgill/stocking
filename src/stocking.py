@@ -3,6 +3,7 @@ from common.data_interface import DataInterface
 from common.log_service import LogService
 from common.stock_data_interface import StockDataInterface
 from query.query_service import QueryService
+from process.validate.validate_service import ValidateService
 from process.process_service import ProcessService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from process.analyze.minute_analyze_service import MinuteAnalyzeService
@@ -21,6 +22,7 @@ class Stocking:
         self.stockDataInterface = StockDataInterface({'1m': self.dataInterface.settingsGet('1m/stockDataPath'),
                                                       '1d': self.dataInterface.settingsGet('1d/stockDataPath')})
         self.queryService = QueryService(self.dataInterface, self.logService, self.stockDataInterface)
+        self.validateService = ValidateService(self.dataInterface, self.logService, self.stockDataInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
         self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
         self.processService = ProcessService(self.dataInterface, self.logService, self.stockDataInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
@@ -30,7 +32,7 @@ class Stocking:
     def go(self):
         self.logService.track('STOCKING')
 
-        serviceDirectory = {'query': self.query, 'process': self.process, 'trade': self.trade}
+        serviceDirectory = {'query': self.query, 'validate': self.validate, 'process': self.process, 'trade': self.trade}
 
         try:
             for i in range(len(self.dataInterface.configGet())):
@@ -54,6 +56,10 @@ class Stocking:
 
     def query(self):
         self.queryService.go()
+
+
+    def validate(self):
+        self.validateService.go()
 
 
     def process(self):
