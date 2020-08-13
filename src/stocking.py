@@ -8,6 +8,7 @@ from process.process_service import ProcessService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from trade.trade_service import TradeService
+from display.display_service import DisplayService
 import traceback
 from utility.email_interface import EmailInterface
 from datetime import datetime
@@ -27,12 +28,13 @@ class Stocking:
         self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
         self.processService = ProcessService(self.dataInterface, self.logService, self.stockDataInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
         self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface, self.stockDataInterface, self.processService)
+        self.displayService = DisplayService(self.dataInterface, self.logService, self.stockDataInterface)
 
 
     def go(self):
         self.logService.track('STOCKING')
 
-        serviceDirectory = {'query': self.query, 'validate': self.validate, 'process': self.process, 'trade': self.trade}
+        serviceDirectory = {'query': self.query, 'validate': self.validate, 'process': self.process, 'trade': self.trade, 'display': self.display}
 
         try:
             for i in range(len(self.dataInterface.configGet())):
@@ -68,6 +70,10 @@ class Stocking:
 
     def trade(self):
         self.tradeService.go()
+
+
+    def display(self):
+        self.displayService.go()
 
 
     def email(self):
