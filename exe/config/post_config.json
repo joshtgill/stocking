@@ -4,8 +4,8 @@
 
         "interval": "1d",
         "symbols": "GOOD_SYMBOLS",
-        "start": "2020-04-01",
-        "end": "2020-07-01",
+        "start": "NOW - 132",
+        "end": "NOW",
         "minimumIncreasePercent": 50,
         "minimumAverageGrowthPercent": 0.1
     },
@@ -13,12 +13,12 @@
         "service": "trade",
 
         "action": "buy",
-        "date": "2020-07-01"
+        "date": "NOW - 27"
     },
     {
         "service": "trade",
 
         "action": "sell",
-        "date": "2020-08-10"
+        "date": "NOW - 2"
     }
 ]

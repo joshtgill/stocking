@@ -31,7 +31,7 @@ class DayAnalyzeService:
 
         self.logService.untrack('DAY ANALYZE')
 
-        return passedStocksDirectory.keys()
+        return list(passedStocksDirectory.keys())
 
 
     def calculateIncreaseAndDecreasePercent(self, symbol):
