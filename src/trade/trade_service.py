@@ -12,16 +12,16 @@ class TradeService:
 
 
     def buyStocks(self, date):
-        self.dataInterface.trades = {}
+        self.dataInterface.porfolio = {}
 
         for symbol in self.processService.passedSymbols:
             self.stockDataInterface.load('1d', symbol, date)
             if not self.stockDataInterface.next():
                 continue
             closePrice = self.stockDataInterface.peek()[4]
-            self.dataInterface.trades.update({symbol: closePrice})
+            self.dataInterface.porfolio.update({symbol: closePrice})
 
-        self.dataInterface.tradesSave()
+        self.dataInterface.porfolioSave()
 
 
     def go(self):
@@ -45,7 +45,7 @@ class TradeService:
 
         averageGrowth = 0
         redCount = 0
-        for symbol, boughtPrice in self.dataInterface.tradesGet().items():
+        for symbol, boughtPrice in self.dataInterface.porfolioGet().items():
             self.stockDataInterface.load('1d', symbol, date)
             if not self.stockDataInterface.next():
                 continue
@@ -55,5 +55,5 @@ class TradeService:
                 redCount += 1
 
 
-        return TradeReport(averageGrowth / len(self.dataInterface.trades),
-                           redCount / len(self.dataInterface.trades) * 100)
+        return TradeReport(averageGrowth / len(self.dataInterface.porfolio),
+                           redCount / len(self.dataInterface.porfolio) * 100)

@@ -7,7 +7,7 @@
         "start": "NOW - 132",
         "end": "NOW",
         "minimumIncreasePercent": 50,
-        "minimumAverageGrowthPercent": 0.1
+        "minimumAverageGrowthPercent": 0.5
     },
     {
         "service": "trade",
@@ -19,6 +19,6 @@
         "service": "trade",
 
         "action": "sell",
-        "date": "NOW - 2"
+        "date": "NOW - 4"
     }
 ]

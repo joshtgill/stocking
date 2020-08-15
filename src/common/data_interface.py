@@ -9,7 +9,7 @@ class DataInterface:
         self.fileInterface = fileInterface
         self.config = json.loads(self.fileInterface.read(configPath))
         self.settings = json.loads(self.fileInterface.read(settingsPath))
-        self.trades = json.loads(self.fileInterface.read(self.settings.get('tradesPath'), '{}'))
+        self.porfolio = json.loads(self.fileInterface.read(self.settings.get('porfolioPath'), '{}'))
         self.loadConfigVariables(self.config)
         self.rootConfig = self.config
         self.activePathList = []
@@ -89,12 +89,12 @@ class DataInterface:
         return self.get('SETTINGS', path, defaultData)
 
 
-    def tradesGet(self, path='', defaultData=None):
-        return self.get('TRADES', path, defaultData)
+    def porfolioGet(self, path='', defaultData=None):
+        return self.get('PORFOLIO', path, defaultData)
 
 
     def get(self, sourceName, path, defaultData):
-        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'TRADES': self.trades}
+        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'PORFOLIO': self.porfolio}
         source = sourceDir.get(sourceName)
 
         pathList = self.pathToList(path)
@@ -125,6 +125,6 @@ class DataInterface:
 
 
     # Termporary until a set() method is created
-    def tradesSave(self):
-        self.fileInterface.wipe(self.settingsGet('tradesPath'))
-        self.fileInterface.write(self.settingsGet('tradesPath'), json.dumps(self.trades))
+    def porfolioSave(self):
+        self.fileInterface.wipe(self.settingsGet('porfolioPath'))
+        self.fileInterface.write(self.settingsGet('porfolioPath'), json.dumps(self.porfolio))
