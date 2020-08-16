@@ -12,13 +12,13 @@
     {
         "service": "trade",
 
-        "action": "buy",
+        "module": "update",
         "date": "NOW - 27"
     },
     {
         "service": "trade",
 
-        "action": "sell",
-        "date": "NOW - 4"
+        "module": "sell",
+        "date": "NOW - 2"
     }
 ]

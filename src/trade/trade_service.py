@@ -11,49 +11,67 @@ class TradeService:
         self.processService = processService
 
 
-    def buyStocks(self, date):
-        self.dataInterface.porfolio = {}
-
-        for symbol in self.processService.passedSymbols:
-            self.stockDataInterface.load('1d', symbol, date)
-            if not self.stockDataInterface.next():
-                continue
-            closePrice = self.stockDataInterface.peek()[4]
-            self.dataInterface.porfolio.update({symbol: closePrice})
-
-        self.dataInterface.porfolioSave()
-
-
     def go(self):
         self.logService.track('TRADE')
 
         date = self.dataInterface.configGet('date')
-        if self.dataInterface.configGet('action') == 'buy':
-            self.buyStocks(date)
-        else:
-            tradeReport = self.sellStocks()
+        module = self.dataInterface.configGet('module')
 
-            self.fileInterface.wipe(self.dataInterface.settingsGet('tradeReportPath'))
-            self.fileInterface.write(self.dataInterface.settingsGet('tradeReportPath'), tradeReport.serialize())
-            self.logService.log('Trade report created')
+        if module == 'update':
+            self.updatePorfolio(date)
+        elif module == 'sell':
+            self.updatePorfolio(date, True)
 
         self.logService.untrack('TRADE')
 
 
-    def sellStocks(self):
-        date = self.dataInterface.configGet('date')
+    def updatePorfolio(self, date, sellAll=False):
+        grossPercentGrowth = 0
+        grossProfit = 0
 
-        averageGrowth = 0
-        redCount = 0
-        for symbol, boughtPrice in self.dataInterface.porfolioGet().items():
-            self.stockDataInterface.load('1d', symbol, date)
-            if not self.stockDataInterface.next():
-                continue
-            sellPrice = self.stockDataInterface.peek()[4]
-            averageGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
-            if sellPrice <= boughtPrice:
-                redCount += 1
+        existingSymbols = list(self.dataInterface.porfolioGet().keys())
+        passedSymbols = self.processService.passedSymbols if not sellAll else []
+
+        # If an existing symbol in porfolio is no longer passing,
+        # remove it from porfolio
+        cumulativePercentGrowth = 0
+        sellStockCount = 0
+        for symbol in existingSymbols:
+            if symbol not in passedSymbols:
+                boughtPrice, sellPrice = self.sellStock(symbol, date)
+                self.logService.log('Sold {} at ${}'.format(symbol, sellPrice))
+
+                cumulativePercentGrowth += ((sellPrice - boughtPrice) / boughtPrice) * 100
+                sellStockCount += 1
+
+        if sellStockCount:
+            grossPercentGrowth = cumulativePercentGrowth / sellStockCount
+            print('g: ', grossPercentGrowth)
+
+        # Get symbols from updated porfolio
+        existingSymbols = list(self.dataInterface.porfolioGet().keys())
+
+        # If a passed symbol is not an existing symbol in porfolio,
+        # add it to porfolio
+        for symbol in passedSymbols:
+            if symbol not in existingSymbols:
+                buyPrice = self.buyStock(symbol, date)
+                self.logService.log('Bought {} at ${}'.format(symbol, buyPrice))
 
 
-        return TradeReport(averageGrowth / len(self.dataInterface.porfolio),
-                           redCount / len(self.dataInterface.porfolio) * 100)
+    def sellStock(self, symbol, date):
+        boughtPrice = self.dataInterface.porfolio.pop(symbol)
+
+        self.stockDataInterface.load('1d', symbol, date)
+        sellPrice = self.stockDataInterface.next()[4]
+
+        return round(boughtPrice, 2), round(sellPrice, 2)
+
+
+    def buyStock(self, symbol, date):
+        self.stockDataInterface.load('1d', symbol, date)
+        buyPrice = self.stockDataInterface.next()[4]
+
+        self.dataInterface.porfolio.update({symbol: buyPrice})
+
+        return round(buyPrice, 2)
