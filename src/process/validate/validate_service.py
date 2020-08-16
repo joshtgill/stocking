@@ -7,6 +7,7 @@ class ValidateService:
         self.dataInterface = dataInterface
         self.logService = logService
         self.stockDataInterface = stockDataInterface
+        self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29)]
         # Directory where the key represents a month, and the value represents the number of
         # holidays, or days without stock data, during that month
         self.monthHolidayCountDirectory = {1: 2, 2: 1, 3: 0.5, 4: 0.5, 5: 1, 7: 1, 9: 1, 11: 1, 12: 1}
@@ -51,14 +52,14 @@ class ValidateService:
             # If there is a discrepancy that is after minimumYear, attribute it to a holiday.
             # If no remaining holidays, report an error
             if nextDateTime != nextExpectedDateTime:
-                if nextExpectedDateTime.year < minimumYear:
+                if nextExpectedDateTime.year < minimumYear or nextExpectedDateTime in self.marketCloseExceptions:
                     continue
 
                 holidayCount = monthHolidayCountDirectory.get(nextExpectedDateTime.month)
 
                 if holidayCount and holidayCount > 0:
                     monthHolidayCountDirectory.update({nextExpectedDateTime.month: holidayCount - 1})
-                elif holidayCount and holidayCount <= 0:
+                else:
                     self.logService.log('Missing data for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARNING')
 
             activeDateTime = nextDateTime
