@@ -54,7 +54,7 @@ class TradeService:
             print('Gross profit:',  grossProfit)
 
         # Get symbols from updated porfolio
-        existingSymbols = list(self.dataInterface.porfolioGet().keys())
+        existingSymbols = list(self.dataInterface.porfolioGet('stocks', {}).keys())
 
         # If a passed symbol is not an existing symbol in porfolio,
         # add it to porfolio

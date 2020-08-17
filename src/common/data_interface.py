@@ -97,20 +97,21 @@ class DataInterface:
         pathList = self.pathToList(path)
 
         try:
+            sourceRunner = source
             for key in pathList:
                 if '[' in key:
                     keyIndex = int(key[key.index('[') + 1 : key.index(']')])
                     key = key[0: key.index('[')]
                     if key:
-                        source = source.get(key)[keyIndex]
+                        sourceRunner = sourceRunner.get(key)[keyIndex]
                     else:
-                        source = source[keyIndex]
+                        sourceRunner = sourceRunner[keyIndex]
                 else:
-                    source = source.get(key)
+                    sourceRunner = sourceRunner.get(key)
         except AttributeError:
             return defaultData
 
-        return source if source != None else defaultData
+        return sourceRunner if sourceRunner != None else defaultData
 
 
     def porfolioSet(self, path, value):
@@ -121,16 +122,17 @@ class DataInterface:
         pathList = self.pathToList(path)
         lastKey = pathList.pop()
 
+        sourceRunner = source
         for key in pathList:
-            if key not in source:
-                source.update({key: {}})
-            source = source.get(key)
+            if key not in sourceRunner:
+                sourceRunner.update({key: {}})
+            sourceRunner = sourceRunner.get(key)
 
         # If value is None then delete the existing key
         if value:
-            source.update({lastKey: value})
+            sourceRunner.update({lastKey: value})
         else:
-            value = source.pop(lastKey)
+            value = sourceRunner.pop(lastKey)
 
         self.fileInterface.wipe(filePath)
         self.fileInterface.write(filePath, json.dumps(source))
@@ -144,9 +146,3 @@ class DataInterface:
             return []
 
         return path.strip().strip('/').split('/')
-
-
-    # Termporary until a set() method is created
-    def porfolioSave(self):
-        self.fileInterface.wipe(self.settingsGet('porfolioPath'))
-        self.fileInterface.write(self.settingsGet('porfolioPath'), json.dumps(self.porfolio))
