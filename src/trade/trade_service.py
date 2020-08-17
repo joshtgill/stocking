@@ -41,7 +41,7 @@ class TradeService:
             if symbol not in passedSymbols:
                 buyPrice, sellPrice = self.sellStock(symbol, date)
                 if not buyPrice and not sellPrice:
-                    self.logService.log('Failed to sell {}',format(symbol))
+                    self.logService.log('Failed to sell {}'.format(symbol))
                     continue
 
                 grossProfit += sellPrice - buyPrice
