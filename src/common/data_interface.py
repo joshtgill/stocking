@@ -82,39 +82,61 @@ class DataInterface:
 
 
     def configGet(self, path='', defaultData=None):
-        return self.get('CONFIG', path, defaultData)
+        return self.get(self.config, path, defaultData)
 
 
     def settingsGet(self, path='', defaultData=None):
-        return self.get('SETTINGS', path, defaultData)
+        return self.get(self.settings, path, defaultData)
 
 
     def porfolioGet(self, path='', defaultData=None):
-        return self.get('PORFOLIO', path, defaultData)
+        return self.get(self.porfolio, path, defaultData)
 
 
-    def get(self, sourceName, path, defaultData):
-        sourceDir = {'CONFIG': self.config, 'SETTINGS': self.settings, 'PORFOLIO': self.porfolio}
-        source = sourceDir.get(sourceName)
-
+    def get(self, source, path, defaultData):
         pathList = self.pathToList(path)
 
-        configRunner = source
         try:
             for key in pathList:
                 if '[' in key:
                     keyIndex = int(key[key.index('[') + 1 : key.index(']')])
                     key = key[0: key.index('[')]
                     if key:
-                        configRunner = configRunner.get(key)[keyIndex]
+                        source = source.get(key)[keyIndex]
                     else:
-                        configRunner = configRunner[keyIndex]
+                        source = source[keyIndex]
                 else:
-                    configRunner = configRunner.get(key)
+                    source = source.get(key)
         except AttributeError:
             return defaultData
 
-        return configRunner
+        return source if source != None else defaultData
+
+
+    def porfolioSet(self, path, value):
+        return self.sett(self.porfolio, path, value, self.settingsGet('porfolioPath'))
+
+
+    def sett(self, source, path, value, filePath):
+        pathList = self.pathToList(path)
+        lastKey = pathList.pop()
+
+        for key in pathList:
+            if key not in source:
+                source.update({key: {}})
+            source = source.get(key)
+
+        # If value is None then delete the existing key
+        if value:
+            source.update({lastKey: value})
+        else:
+            value = source.pop(lastKey)
+
+        self.fileInterface.wipe(filePath)
+        self.fileInterface.write(filePath, json.dumps(source))
+        source = json.loads(self.fileInterface.read(filePath))
+
+        return value
 
 
     def pathToList(self, path):
