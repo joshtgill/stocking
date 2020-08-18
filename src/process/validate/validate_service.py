@@ -7,7 +7,7 @@ class ValidateService:
         self.dataInterface = dataInterface
         self.logService = logService
         self.stockDataInterface = stockDataInterface
-        self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29)]
+        self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29), datetime(2004, 6, 11), datetime(2001, 9, 11)]
         # Directory where the key represents a month, and the value represents the number of
         # holidays, or days without stock data, during that month
         self.monthHolidayCountDirectory = {1: 2, 2: 1, 3: 0.5, 4: 0.5, 5: 1, 7: 1, 9: 1, 11: 1, 12: 1}
