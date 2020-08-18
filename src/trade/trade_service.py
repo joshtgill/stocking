@@ -34,7 +34,7 @@ class TradeService:
 
         # If an existing symbol in porfolio is no longer passing,
         # remove it from porfolio
-        sellStockCount = 0
+        sellCount = 0
         cumulativePercentGrowth = 0
         grossProfit = 0
         for symbol in existingSymbols:
@@ -46,11 +46,11 @@ class TradeService:
 
                 grossProfit += sellPrice - buyPrice
                 cumulativePercentGrowth += ((sellPrice - buyPrice) / buyPrice) * 100
-                sellStockCount += 1
+                sellCount += 1
 
-        if sellStockCount:
-            self.logService.log('Sold {} stocks'.format(sellStockCount))
-            grossPercentGrowth = cumulativePercentGrowth / sellStockCount
+        if sellCount:
+            self.logService.log('Sold {} stocks'.format(sellCount))
+            grossPercentGrowth = cumulativePercentGrowth / sellCount
             print('Gross percent growth:', grossPercentGrowth)
             print('Gross profit:',  grossProfit)
 
