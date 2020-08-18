@@ -16,7 +16,7 @@ class ProcessService():
 
 
     def go(self):
-        self.logService.track('PROCESS')
+        self.logService.start('PROCESS')
 
         serviceDirectory = {'1d': self.dayAnalyze, '1m': self.minuteAnalyze}
 
@@ -27,7 +27,7 @@ class ProcessService():
 
         self.passedSymbols = serviceDirectory.get(interval)(symbols, start, end)
 
-        self.logService.untrack('PROCESS')
+        self.logService.stop('PROCESS')
 
 
     def dayAnalyze(self, symbols, start, end):

@@ -12,7 +12,7 @@ class TradeService:
 
 
     def go(self):
-        self.logService.track('TRADE')
+        self.logService.start('TRADE')
 
         date = self.dataInterface.configGet('date')
         module = self.dataInterface.configGet('module')
@@ -22,7 +22,7 @@ class TradeService:
         elif module == 'sell':
             self.updatePorfolio(date, True)
 
-        self.logService.untrack('TRADE')
+        self.logService.stop('TRADE')
 
 
     def updatePorfolio(self, date, sellAll=False):
@@ -41,7 +41,7 @@ class TradeService:
             if symbol not in passedSymbols:
                 buyPrice, sellPrice = self.sellStock(symbol, date)
                 if not buyPrice and not sellPrice:
-                    self.logService.log('Failed to sell {}'.format(symbol))
+                    self.logService.log('Failed to sell {}'.format(symbol), 'WARN')
                     continue
 
                 grossProfit += sellPrice - buyPrice
@@ -49,6 +49,7 @@ class TradeService:
                 sellStockCount += 1
 
         if sellStockCount:
+            self.logService.log('Sold {} stocks'.format(sellStockCount))
             grossPercentGrowth = cumulativePercentGrowth / sellStockCount
             print('Gross percent growth:', grossPercentGrowth)
             print('Gross profit:',  grossProfit)
@@ -58,9 +59,14 @@ class TradeService:
 
         # If a passed symbol is not an existing symbol in porfolio,
         # add it to porfolio
+        buyCount = 0
         for symbol in passedSymbols:
             if symbol not in existingSymbols:
                 buyPrice = self.buyStock(symbol, date)
+                buyCount += 1
+
+        if buyCount:
+            self.logService.log('Bought {} stocks'.format(buyCount))
 
 
     def sellStock(self, symbol, date):
@@ -72,8 +78,6 @@ class TradeService:
 
         buyPrice = self.dataInterface.porfolioSet('stocks/{}'.format(symbol), None)
 
-        self.logService.log('Sold {} at ${}'.format(symbol, sellPrice))
-
         return round(buyPrice, 2), round(sellPrice, 2)
 
 
@@ -82,7 +86,5 @@ class TradeService:
         buyPrice = self.stockDataInterface.next()[4]
 
         self.dataInterface.porfolioSet('stocks/{}'.format(symbol), buyPrice)
-
-        self.logService.log('Bought {} at ${}'.format(symbol, buyPrice))
 
         return round(buyPrice, 2)

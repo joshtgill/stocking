@@ -7,7 +7,7 @@ class DayAnalyzeService:
 
 
     def go(self, symbols, start, end):
-        self.logService.track('DAY ANALYZE')
+        self.logService.start('DAY ANALYZE')
 
         passedStocksDirectory = {}
         for symbol in symbols:
@@ -29,7 +29,7 @@ class DayAnalyzeService:
 
         passedStocksDirectory = {k: v for k, v in sorted(passedStocksDirectory.items(), key=lambda item: item[1], reverse=True)}
 
-        self.logService.untrack('DAY ANALYZE')
+        self.logService.stop('DAY ANALYZE')
 
         return list(passedStocksDirectory.keys())
 

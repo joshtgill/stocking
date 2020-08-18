@@ -7,7 +7,7 @@ class DisplayService:
 
 
     def go(self):
-        self.logService.track('DISPLAY')
+        self.logService.start('DISPLAY')
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.dataInterface.configGet('symbols')
@@ -15,7 +15,7 @@ class DisplayService:
             self.displayStockData(symbol, interval)
             print()
 
-        self.logService.untrack('DISPLAY')
+        self.logService.stop('DISPLAY')
 
 
     def displayStockData(self, symbol, interval):

@@ -14,7 +14,7 @@ class ValidateService:
 
 
     def go(self):
-        self.logService.track('VALIDATE')
+        self.logService.start('VALIDATE')
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.dataInterface.configGet('symbols')
@@ -23,7 +23,7 @@ class ValidateService:
         for symbol in symbols:
             self.validateStockData(symbol, interval, minimumYear)
 
-        self.logService.untrack('VALIDATE')
+        self.logService.stop('VALIDATE')
 
 
     def validateStockData(self, symbol, interval, minimumYear):
@@ -60,7 +60,7 @@ class ValidateService:
                 if holidayCount and holidayCount > 0:
                     monthHolidayCountDirectory.update({nextExpectedDateTime.month: holidayCount - 1})
                 else:
-                    self.logService.log('Missing data for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARNING')
+                    self.logService.log('Missing data for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARN')
 
             activeDateTime = nextDateTime
 

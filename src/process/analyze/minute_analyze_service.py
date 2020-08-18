@@ -10,6 +10,6 @@ class MinuteAnalyzeService:
 
 
     def go(self, symbols, start, end):
-        self.logService.track('MINUTE ANALYZE')
+        self.logService.start('MINUTE ANALYZE')
 
-        self.logService.untrack('MINUTE ANALYZE')
+        self.logService.stop('MINUTE ANALYZE')

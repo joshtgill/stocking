@@ -12,16 +12,16 @@ class LogService:
         self.fileInterface.wipe(self.dataInterface.settingsGet('stockingLogPath'))
 
 
-    def track(self, taskName):
+    def start(self, taskName):
         self.taskDir.update({taskName: datetime.now()})
-        self.log('Started', 'INFO')
+        self.log('Started {}'.format(taskName), 'INFO')
 
 
-    def untrack(self, taskName):
-        self.log('Completed in {}'.format(datetime.now() - list(self.taskDir.values())[-1]), 'STAT')
+    def stop(self, taskName):
+        self.log('Completed {} in {}'.format(taskName, datetime.now() - list(self.taskDir.values())[-1]), 'INFO')
         self.taskDir.pop(taskName, None)
 
 
     def log(self, message, logType='INFO'):
         self.fileInterface.write(self.dataInterface.settingsGet('stockingLogPath'),
-                                 '[{}] ({}::{}): {}\n'.format(datetime.now(), logType, list(self.taskDir.keys())[-1], message))
+                                 '{} {}: {}\n'.format(datetime.now(), logType, message))

@@ -14,7 +14,7 @@ class QueryService:
     def go(self):
         interval = self.dataInterface.configGet('interval')
 
-        self.logService.track('QUERY {}'.format(interval))
+        self.logService.start('QUERY {}'.format(interval))
 
         queryInterface = QueryInterface(self.dataInterface, self.logService)
 
@@ -22,7 +22,7 @@ class QueryService:
             stock = queryInterface.performQuery(query)
             self.stockDataInterface.save(stock)
 
-        self.logService.untrack('QUERY {}'.format(interval))
+        self.logService.stop('QUERY {}'.format(interval))
 
 
     def buildQueries(self, interval):
