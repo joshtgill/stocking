@@ -5,6 +5,7 @@ class StockDataInterface:
 
     def __init__(self, databasePathDir):
         self.databaseDir = self.initDatabases(databasePathDir)
+        self.data = []
         self.reset(True)
 
 
@@ -39,17 +40,34 @@ class StockDataInterface:
         return len(self.data)
 
 
+    def all(self, count=1, index=-1):
+        data = []
+        while self.next(count):
+            if index == -1:
+                data.append(self.peek())
+            else:
+                data.append(self.peek()[index])
+
+        return data
+
+
+    def next(self, count=1):
+        self.dataIndex += 1 if self.dataIndex == -1 else count
+
+        return self.peek()
+
+
+    def end(self):
+        self.dataIndex = len(self.data) - 1
+
+        return self.peek()
+
+
     def peek(self):
         try:
             return self.data[self.dataIndex]
         except IndexError:
             return None
-
-
-    def next(self):
-        self.dataIndex += 1
-
-        return self.peek()
 
 
     def reset(self, hard=False):
