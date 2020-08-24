@@ -1,3 +1,7 @@
+import json
+import yfinance
+
+
 class DisplayService:
 
     def __init__(self, dataInterface, logService, stockDataInterface):
@@ -9,11 +13,16 @@ class DisplayService:
     def go(self):
         self.logService.start('DISPLAY')
 
-        interval = self.dataInterface.configGet('interval')
-        symbols = self.dataInterface.configGet('symbols')
+        number = self.dataInterface.configGet('number')
+
+        symbols = []
+        with open('exe/symbols/good_symbols_{}.json'.format(number)) as filee:
+            symbols = json.load(filee)
+
         for symbol in symbols:
-            self.displayStockData(symbol, interval)
-            print()
+            self.displayStockInfo(symbol)
+            # self.displayStockData(symbol, interval)
+            # print()
 
         self.logService.stop('DISPLAY')
 
@@ -23,3 +32,11 @@ class DisplayService:
 
         while self.stockDataInterface.next():
             print(self.stockDataInterface.peek())
+
+
+    def displayStockInfo(self, symbol):
+        try:
+            volume = yfinance.Ticker(symbol).info.get('volume')
+            print(symbol)
+        except:
+            print('failed')

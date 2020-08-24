@@ -2,23 +2,9 @@
     {
         "service": "process",
 
-        "interval": "1d",
+        "interval": "1m",
         "symbols": "GOOD_SYMBOLS",
-        "start": "NOW - 132",
-        "end": "NOW",
-        "minimumIncreasePercent": 50,
-        "minimumAverageGrowthPercent": 0.5
-    },
-    {
-        "service": "trade",
-
-        "module": "update",
-        "date": "NOW - 27"
-    },
-    {
-        "service": "trade",
-
-        "module": "sell",
-        "date": "NOW - 3"
+        "start": "2020-08-19",
+        "end": "2020-08-22"
     }
 ]
