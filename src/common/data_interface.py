@@ -52,6 +52,8 @@ class DataInterface:
             return json.loads(self.fileInterface.read('exe/symbols/all_symbols.json'))
         elif variable == 'GOOD_SYMBOLS':
             return json.loads(self.fileInterface.read('exe/symbols/good_symbols.json'))
+        elif variable == 'TRADE_SYMBOLS':
+            return json.loads(self.fileInterface.read('exe/symbols/trade_symbols.json'))
         elif variable == 'NOW':
             return datetime.now().strftime(self.settingsGet('{}/dateTimeFormat'.format('1d'))) # TODO: Standarize datetimes across project
         elif 'NOW' in variable:
