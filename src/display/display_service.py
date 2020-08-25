@@ -13,6 +13,9 @@ class DisplayService:
     def go(self):
         self.logService.start('DISPLAY')
 
+        symbols = self.dataInterface.configGet('symbols')
+        interval = self.dataInterface.configGet('interval')
+
         for symbol in symbols:
             self.displayStockData(symbol, interval)
             print()
