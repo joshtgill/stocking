@@ -1,14 +1,17 @@
 # VS Code directory
 .vscode/
 
-# Python pycache
+# Python files
 __pycache__/
 
-# All data files
+# Data files
 data/
 
-# Logs, output, email file
+# Log, output, and email files
 out/
 
-# Local data
+# Local files
 local/
+
+# Test configs
+exe/config/test
