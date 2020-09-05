@@ -12,7 +12,6 @@ class ProcessService():
         self.stockDataInterface = stockDataInterface
         self.dayAnalyzeService = dayAnalyzeService
         self.minuteAnalyzeService = minuteAnalyzeService
-        self.passedSymbols = []
 
 
     def go(self):
@@ -25,7 +24,7 @@ class ProcessService():
         start = self.dataInterface.configGet('start')
         end = self.dataInterface.configGet('end')
 
-        self.passedSymbols = serviceDirectory.get(interval)(symbols, start, end)
+        serviceDirectory.get(interval)(symbols, start, end)
 
         self.logService.stop('PROCESS')
 

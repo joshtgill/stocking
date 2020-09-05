@@ -1,4 +1,6 @@
-import statistics
+from statistics import mean, stdev
+import yfinance as yf
+import threading
 
 
 class MinuteAnalyzeService:
