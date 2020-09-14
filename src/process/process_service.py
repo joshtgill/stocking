@@ -17,14 +17,14 @@ class ProcessService():
     def go(self):
         self.logService.start('PROCESS')
 
-        serviceDirectory = {'1d': self.dayAnalyze, '1m': self.minuteAnalyze}
+        moduleDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze}
 
-        interval = self.dataInterface.configGet('interval')
+        module = self.dataInterface.configGet('module')
         symbols = self.dataInterface.configGet('symbols')
         start = self.dataInterface.configGet('start')
         end = self.dataInterface.configGet('end')
 
-        serviceDirectory.get(interval)(symbols, start, end)
+        moduleDirectory.get(module)(symbols, start, end)
 
         self.logService.stop('PROCESS')
 
