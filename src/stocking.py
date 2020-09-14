@@ -25,7 +25,7 @@ class Stocking:
         self.queryService = QueryService(self.dataInterface, self.logService, self.stockDataInterface)
         self.validateService = ValidateService(self.dataInterface, self.logService, self.stockDataInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
-        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
+        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, self.dayAnalyzeService)
         self.processService = ProcessService(self.dataInterface, self.logService, self.stockDataInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
         self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface, self.stockDataInterface, self.processService)
         self.displayService = DisplayService(self.dataInterface, self.logService, self.stockDataInterface)
