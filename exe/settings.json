@@ -8,7 +8,5 @@
         "stockDataPath": "data/stocks_1d.db"
     },
     "stockingLogPath": "out/stocking.log",
-    "stockingEmailPath": "out/email.txt",
-    "porfolioPath": "data/porfolio.json",
-    "tradeReportPath": "data/trade_report.json"
+    "stockingEmailPath": "out/email.txt"
 }

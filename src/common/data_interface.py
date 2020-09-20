@@ -9,7 +9,6 @@ class DataInterface:
         self.fileInterface = fileInterface
         self.config = json.loads(self.fileInterface.read(configPath))
         self.settings = json.loads(self.fileInterface.read(settingsPath))
-        self.porfolio = json.loads(self.fileInterface.read(self.settings.get('porfolioPath'), '{}'))
         self.loadConfigVariables(self.config)
         self.rootConfig = self.config
         self.activePathList = []
@@ -91,10 +90,6 @@ class DataInterface:
         return self.get(self.settings, path, defaultData)
 
 
-    def porfolioGet(self, path='', defaultData=None):
-        return self.get(self.porfolio, path, defaultData)
-
-
     def get(self, source, path, defaultData):
         pathList = self.pathToList(path)
 
@@ -114,10 +109,6 @@ class DataInterface:
             return defaultData
 
         return sourceRunner if sourceRunner != None else defaultData
-
-
-    def porfolioSet(self, path, value):
-        return self.sett(self.porfolio, path, value, self.settingsGet('porfolioPath'))
 
 
     def sett(self, source, path, value, filePath):
