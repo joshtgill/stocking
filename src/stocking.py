@@ -1,6 +1,7 @@
 from common.file_interface import FileInterface
 from common.data_interface import DataInterface
 from common.log_service import LogService
+from common.stock_symbols_interface import StockSymbolsInterface
 from common.stock_data_interface import StockDataInterface
 from query.query_service import QueryService
 from process.validate.validate_service import ValidateService
@@ -20,9 +21,10 @@ class Stocking:
         self.fileInterface = FileInterface()
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
         self.logService = LogService(self.fileInterface, self.dataInterface)
+        self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logService)
         self.stockDataInterface = StockDataInterface({'1m': self.dataInterface.settingsGet('1m/stockDataPath'),
                                                       '1d': self.dataInterface.settingsGet('1d/stockDataPath')})
-        self.queryService = QueryService(self.dataInterface, self.logService, self.stockDataInterface)
+        self.queryService = QueryService(self.dataInterface, self.logService, self.stockDataInterface, self.stockSymbolsInterface)
         self.validateService = ValidateService(self.dataInterface, self.logService, self.stockDataInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface)
         self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockDataInterface, self.dayAnalyzeService)

@@ -1,3 +1,4 @@
+import urllib
 from common.stock import Stock
 from datetime import timedelta
 import yfinance
@@ -12,7 +13,33 @@ class QueryInterface:
         self.logService = logService
 
 
-    def performQuery(self, query):
+    def performSymbolsQuery(self):
+        capitalSymbols = []
+        globalSymbols = []
+        globalSelectSymbols = []
+
+        with urllib.request.urlopen(self.dataInterface.settingsGet('nasdaqSymbolsUrlPath')) as page:
+            for line in page.readlines():
+                line = line.decode('utf-8').strip()
+                if 'Common Stock' in line:
+                    # Extract symbol and market category
+                    symbol = line[ : line.find('|')]
+                    if symbol in self.dataInterface.settingsGet('blacklistedSymbols'):
+                        continue
+                    marketCategory = line[line.find('Common Stock') + len('Common Stock') : ].split('|')[1]
+
+                    # Add to corresponding list
+                    if marketCategory == 'S':
+                        capitalSymbols.append(symbol)
+                    elif marketCategory == 'G':
+                        globalSymbols.append(symbol)
+                    elif marketCategory == 'Q':
+                        globalSelectSymbols.append(symbol)
+
+        return capitalSymbols, globalSymbols, globalSelectSymbols
+
+
+    def performStockQuery(self, query):
         stock = Stock(query.symbol, query.interval)
 
         dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == '1d'

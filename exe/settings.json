@@ -1,4 +1,7 @@
 {
+    "nasdaqSymbolsUrlPath": "http://ftp.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+    "blacklistedSymbols": ["ZXYZ.A"],
+    "stockSymbolsPath": "data/symbols.db",
     "1m": {
         "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
         "stockDataPath": "data/stocks_1m.db"

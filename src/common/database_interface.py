@@ -23,6 +23,21 @@ class DatabaseInterface:
                                (timestamp, open, high, low, close, UNIQUE(timestamp))'''.format(name))
 
 
+    def insertSymbols(self, tableName, symbols):
+        self.createTableSymbol(tableName)
+
+        self.cursor.executemany('''INSERT OR REPLACE INTO '{}'
+                                   (symbol)
+                                   VALUES (?)'''.format(tableName), symbols)
+
+        self.database.commit()
+
+
+    def createTableSymbol(self, name):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS '{}'
+                               (symbol, UNIQUE(symbol))'''.format(name))
+
+
     def tableExists(self, name):
         self.cursor.execute('''SELECT count(name) FROM sqlite_master
                                WHERE type='table' AND name='{}' '''.format(name))
