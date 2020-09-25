@@ -18,7 +18,12 @@ class StockDataInterface:
 
 
     def save(self, stock):
-        self.databaseDir.get(stock.interval).insert(stock.symbol, stock.history)
+        databaseInterface = self.databaseDir.get(stock.interval)
+
+        if not databaseInterface.tableExists(stock.symbol):
+            databaseInterface.createTable(stock.symbol, '(timestamp, open, high, low, close, UNIQUE(timestamp))')
+
+        databaseInterface.insert(stock.symbol, '(timestamp, open, high, low, close)', stock.history)
 
 
     def load(self, interval, symbol, start='', end='', numLastRows=0):

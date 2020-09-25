@@ -8,41 +8,26 @@ class DatabaseInterface:
         self.cursor =  self.database.cursor()
 
 
-    def insert(self, tableName, data):
-        self.createTable(tableName)
-
-        self.cursor.executemany('''INSERT OR REPLACE INTO '{}'
-                                   (timestamp, open, high, low, close)
-                                   VALUES (?, ?, ?, ?, ?)'''.format(tableName), data)
-
-        self.database.commit()
-
-
-    def createTable(self, name):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS '{}'
-                               (timestamp, open, high, low, close, UNIQUE(timestamp))'''.format(name))
-
-
-    def insertSymbols(self, tableName, symbols):
-        self.createTableSymbol(tableName)
-
-        self.cursor.executemany('''INSERT OR REPLACE INTO '{}'
-                                   (symbol)
-                                   VALUES (?)'''.format(tableName), symbols)
-
-        self.database.commit()
-
-
-    def createTableSymbol(self, name):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS '{}'
-                               (symbol, UNIQUE(symbol))'''.format(name))
-
-
     def tableExists(self, name):
-        self.cursor.execute('''SELECT count(name) FROM sqlite_master
-                               WHERE type='table' AND name='{}' '''.format(name))
+        self.cursor.execute(''' SELECT count(name) FROM sqlite_master
+                                WHERE type='table' AND name='{}' '''.format(name))
 
         return self.cursor.fetchone()[0] != 0
+
+
+    def createTable(self, tableName, columnHeader):
+        self.cursor.execute(''' CREATE TABLE IF NOT EXISTS '{}'
+                                {} '''.format(tableName, columnHeader))
+        self.database.commit()
+
+
+    def insert(self, tableName, columnHeader, data):
+        generalColumnHeader = '({})'.format(','.join(['?' for i in range(len(columnHeader.split(',')))]))
+
+        self.cursor.executemany(''' INSERT OR REPLACE INTO '{}'
+                                    {}
+                                    VALUES {} '''.format(tableName, columnHeader, generalColumnHeader), data)
+        self.database.commit()
 
 
     def select(self, tableName, executeStr):
@@ -55,22 +40,22 @@ class DatabaseInterface:
 
 
     def selectAll(self, tableName):
-        executeStr = '''SELECT * FROM '{}' '''.format(tableName)
+        executeStr = ''' SELECT * FROM '{}' '''.format(tableName)
 
         return self.select(tableName, executeStr)
 
 
     def selectPeriod(self, tableName, start, end):
-        executeStr = '''SELECT * FROM '{}'
-                        WHERE timestamp BETWEEN '{}' AND '{}' '''.format(tableName, start, end)
+        executeStr = ''' SELECT * FROM '{}'
+                         WHERE timestamp BETWEEN '{}' AND '{}' '''.format(tableName, start, end)
 
         return self.select(tableName, executeStr)
 
 
     def selectLastRows(self, tableName, numLastRows):
-        executeStr = '''SELECT * FROM
-                        (SELECT * FROM '{}'
-                        ORDER BY timestamp DESC LIMIT {})
-                        ORDER BY timestamp ASC'''.format(tableName, numLastRows)
+        executeStr = ''' SELECT * FROM
+                         (SELECT * FROM '{}'
+                         ORDER BY timestamp DESC LIMIT {})
+                         ORDER BY timestamp ASC '''.format(tableName, numLastRows)
 
         return self.select(tableName, executeStr)

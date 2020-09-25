@@ -1,6 +1,4 @@
-import urllib.request
 from common.database_interface import DatabaseInterface
-import sqlite3
 
 
 class StockSymbolsInterface:
@@ -18,6 +16,9 @@ class StockSymbolsInterface:
 
 
     def save(self, marketType, symbols):
+        if not self.databaseInterface.tableExists(marketType):
+            self.databaseInterface.createTable(marketType, '(symbol, UNIQUE(symbol))')
+
         currentSymbols = self.load(marketType)
         for symbol in symbols:
             if symbol not in currentSymbols:
@@ -30,7 +31,7 @@ class StockSymbolsInterface:
         for symbol in symbols:
             sqlFormatSymbols.append((symbol,))
 
-        self.databaseInterface.insertSymbols(marketType, sqlFormatSymbols)
+        self.databaseInterface.insert(marketType, '(symbol)', sqlFormatSymbols)
 
 
     def load(self, marketType):
