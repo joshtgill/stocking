@@ -4,10 +4,10 @@ import yfinance
 
 class DisplayService:
 
-    def __init__(self, dataInterface, logService, stockDataInterface):
+    def __init__(self, dataInterface, logService, stockHistoryInterface):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.stockDataInterface = stockDataInterface
+        self.stockHistoryInterface = stockHistoryInterface
 
 
     def go(self):
@@ -17,14 +17,14 @@ class DisplayService:
         interval = self.dataInterface.configGet('interval')
 
         for symbol in symbols:
-            self.displayStockData(symbol, interval)
+            self.displayStockHistory(symbol, interval)
             print()
 
         self.logService.stop('DISPLAY')
 
 
-    def displayStockData(self, symbol, interval):
-        self.stockDataInterface.load(interval, symbol)
+    def displayStockHistory(self, symbol, interval):
+        self.stockHistoryInterface.load(interval, symbol)
 
-        while self.stockDataInterface.next():
-            print(self.stockDataInterface.peek())
+        while self.stockHistoryInterface.next():
+            print(self.stockHistoryInterface.peek())

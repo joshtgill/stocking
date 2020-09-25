@@ -6,7 +6,7 @@ class StockSymbolsInterface:
     def __init__(self, dataInterface, logService):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsPath'))
+        self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsDataPath'))
 
 
     def saveAll(self, capitalSymbols, globalSymbols, globalSelectSymbols):

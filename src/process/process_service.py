@@ -6,10 +6,10 @@ import re
 
 class ProcessService():
 
-    def __init__(self, dataInterface, logService, stockDataInterface, dayAnalyzeService, minuteAnalyzeService):
+    def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService, minuteAnalyzeService):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.stockDataInterface = stockDataInterface
+        self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
         self.minuteAnalyzeService = minuteAnalyzeService
 

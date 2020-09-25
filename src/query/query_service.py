@@ -5,10 +5,10 @@ from query.query_interface import QueryInterface
 
 class QueryService:
 
-    def __init__(self, dataInterface, logService, stockDataInterface, stockSymbolsInterface):
+    def __init__(self, dataInterface, logService, stockHistoryInterface, stockSymbolsInterface):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.stockDataInterface = stockDataInterface
+        self.stockHistoryInterface = stockHistoryInterface
         self.stockSymbolsInterface = stockSymbolsInterface
 
 
@@ -25,7 +25,7 @@ class QueryService:
 
         for query in self.buildQueries(interval, marketType):
             stock = queryInterface.performStockQuery(query)
-            self.stockDataInterface.save(stock)
+            self.stockHistoryInterface.save(stock)
 
         self.logService.stop('QUERY {}'.format(interval))
 
@@ -50,9 +50,9 @@ class QueryService:
             start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
-        self.stockDataInterface.load(interval, symbol, numLastRows=1)
-        if self.stockDataInterface.next():
-            lastHistoryRow = self.stockDataInterface.peek()[0]
+        self.stockHistoryInterface.load(interval, symbol, numLastRows=1)
+        if self.stockHistoryInterface.next():
+            lastHistoryRow = self.stockHistoryInterface.peek()[0]
             start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
                                                       else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 

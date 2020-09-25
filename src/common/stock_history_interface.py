@@ -1,24 +1,24 @@
 from common.database_interface import DatabaseInterface
 
 
-class StockDataInterface:
+class StockHistoryInterface:
 
     def __init__(self, databasePathDir):
-        self.databaseDir = self.initDatabases(databasePathDir)
-        self.data = []
+        self.databaseInterfaceDir = self.initDatabases(databasePathDir)
+        self.history = []
         self.reset(True)
 
 
     def initDatabases(self, databasePathDir):
-        databaseDir = {}
+        databaseInterfaceDir = {}
         for key, value in databasePathDir.items():
-            databaseDir.update({key: DatabaseInterface(value)})
+            databaseInterfaceDir.update({key: DatabaseInterface(value)})
 
-        return databaseDir
+        return databaseInterfaceDir
 
 
     def save(self, stock):
-        databaseInterface = self.databaseDir.get(stock.interval)
+        databaseInterface = self.databaseInterfaceDir.get(stock.interval)
 
         if not databaseInterface.tableExists(stock.symbol):
             databaseInterface.createTable(stock.symbol, '(timestamp, open, high, low, close, UNIQUE(timestamp))')
@@ -29,54 +29,54 @@ class StockDataInterface:
     def load(self, interval, symbol, start='', end='', numLastRows=0):
         self.reset(True)
 
-        database = self.databaseDir.get(interval)
+        databaseInterface = self.databaseInterfaceDir.get(interval)
 
         if start and not end and not numLastRows:
-            self.data = database.selectPeriod(symbol, start, start)
+            self.history = databaseInterface.selectPeriod(symbol, start, start)
         elif start and end and not numLastRows:
-            self.data = database.selectPeriod(symbol, start, end)
+            self.history = databaseInterface.selectPeriod(symbol, start, end)
         elif not start and not end and numLastRows:
-            self.data = database.selectLastRows(symbol, numLastRows)
+            self.history = databaseInterface.selectLastRows(symbol, numLastRows)
         elif not start and not end and not numLastRows:
-            self.data = database.selectAll(symbol)
+            self.history = databaseInterface.selectAll(symbol)
 
 
     def size(self):
-        return len(self.data)
+        return len(self.history)
 
 
     def all(self, count=1, index=-1):
-        data = []
+        history = []
         while self.next(count):
             if index == -1:
-                data.append(self.peek())
+                history.append(self.peek())
             else:
-                data.append(self.peek()[index])
+                history.append(self.peek()[index])
 
-        return data
+        return history
 
 
     def next(self, count=1):
-        self.dataIndex += 1 if self.dataIndex == -1 else count
+        self.historyIndex += 1 if self.historyIndex == -1 else count
 
         return self.peek()
 
 
     def end(self):
-        self.dataIndex = len(self.data) - 1
+        self.historyIndex = len(self.history) - 1
 
         return self.peek()
 
 
     def peek(self):
         try:
-            return self.data[self.dataIndex]
+            return self.history[self.historyIndex]
         except IndexError:
             return None
 
 
     def reset(self, hard=False):
-        self.dataIndex = -1
+        self.historyIndex = -1
 
         if hard:
-            self.data = []
+            self.history = []

@@ -5,10 +5,10 @@ import threading
 
 class MinuteAnalyzeService:
 
-    def __init__(self, dataInterface, logService, stockDataInterface, dayAnalyzeService):
+    def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService):
         self.dataInterface = dataInterface
         self.logService = logService
-        self.stockDataInterface = stockDataInterface
+        self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
 
 

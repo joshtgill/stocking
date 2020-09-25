@@ -1,14 +1,14 @@
 {
     "nasdaqSymbolsUrlPath": "http://ftp.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
     "blacklistedSymbols": ["ZXYZ.A"],
-    "stockSymbolsPath": "data/symbols.db",
+    "stockSymbolsDataPath": "data/symbols.db",
     "1m": {
         "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
-        "stockDataPath": "data/stocks_1m.db"
+        "stockHistoryDataPath": "data/stocks_1m.db"
     },
     "1d": {
         "dateTimeFormat": "%Y-%m-%d",
-        "stockDataPath": "data/stocks_1d.db"
+        "stockHistoryDataPath": "data/stocks_1d.db"
     },
     "stockingLogPath": "out/stocking.log",
     "stockingEmailPath": "out/email.txt"
