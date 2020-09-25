@@ -14,4 +14,4 @@ out/
 local/
 
 # Test configs
-exe/config/test
+exe/test
