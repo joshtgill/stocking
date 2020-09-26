@@ -7,6 +7,7 @@ class StockSymbolsInterface:
         self.dataInterface = dataInterface
         self.logInterface = logInterface
         self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsDataPath'))
+        self.upToDate = False
 
 
     def saveAll(self, capitalSymbols, globalSymbols, globalSelectSymbols):

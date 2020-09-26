@@ -13,8 +13,10 @@ class QueryService(BaseService):
     def go(self):
         queryInterface = QueryInterface(self.dataInterface, self.logInterface)
 
-        capital_symbols, global_symbols, global_select_symbols = queryInterface.performSymbolsQuery()
-        self.stockSymbolsInterface.saveAll(capital_symbols, global_symbols, global_select_symbols)
+        if not self.stockSymbolsInterface.upToDate:
+            capital_symbols, global_symbols, global_select_symbols = queryInterface.performSymbolsQuery()
+            self.stockSymbolsInterface.saveAll(capital_symbols, global_symbols, global_select_symbols)
+            self.stockSymbolsInterface.upToDate = True
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
