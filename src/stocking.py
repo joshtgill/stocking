@@ -30,7 +30,7 @@ class Stocking:
         self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockHistoryInterface, self.dayAnalyzeService)
         self.processService = ProcessService(self.dataInterface, self.logService, self.stockHistoryInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
         self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface, self.stockHistoryInterface, self.processService)
-        self.displayService = DisplayService(self.dataInterface, self.logService, self.stockHistoryInterface)
+        self.displayService = DisplayService(self.dataInterface, self.logService, self.stockSymbolsInterface, self.stockHistoryInterface)
 
 
     def go(self):
