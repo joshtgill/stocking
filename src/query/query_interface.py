@@ -42,17 +42,17 @@ class QueryInterface:
     def performStockQuery(self, query):
         stock = Stock(query.symbol, query.interval)
 
-        dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == '1d'
+        dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == 'day'
                           else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)))
 
         # Track number of consecutive yFinance errors
         numYErrors = 0
 
-        # yFinance only allows a period of up to 7 days for 1m intervals
+        # yFinance only allows a period of up to 7 days for minute intervals
         # so break up queries into 7 day contiguous periods
         localQueryStart = query.start
         localQueryEnd = query.end
-        if query.interval == '1m' and (localQueryEnd - localQueryStart).days > 7:
+        if query.interval == 'minute' and (localQueryEnd - localQueryStart).days > 7:
             localQueryEnd = localQueryStart + timedelta(days=7)
 
         while (query.end - localQueryStart).days > 0:

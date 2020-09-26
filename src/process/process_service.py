@@ -1,6 +1,6 @@
 from common.base_service import BaseService
-from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from process.analyze.day_analyze_service import DayAnalyzeService
+from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from datetime import datetime, timedelta
 import re
 

@@ -44,14 +44,14 @@ class QueryService(BaseService):
         # Default query start and end
         start = datetime(1970, 1, 1)
         end = now + timedelta(days=1)
-        if interval == '1m':
+        if interval == 'minute':
             start = now - timedelta(days=29)
 
         # If stock history already exists, determine query start
         self.stockHistoryInterface.load(interval, symbol, numLastRows=1)
         if self.stockHistoryInterface.next():
             lastHistoryRow = self.stockHistoryInterface.peek()[0]
-            start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d'
+            start = datetime.strptime(lastHistoryRow, self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == 'day'
                                                       else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         return start.date(), end.date()

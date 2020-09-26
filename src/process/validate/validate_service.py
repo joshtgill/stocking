@@ -25,7 +25,7 @@ class ValidateService(BaseService):
         self.stockHistoryInterface.load(interval, symbol)
 
         activeDateTime = datetime.strptime(self.stockHistoryInterface.next()[0],
-                                           self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d' else
+                                           self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == 'day' else
                                            self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         monthHolidayCountDirectory = dict(self.monthHolidayCountDirectory)
@@ -41,7 +41,7 @@ class ValidateService(BaseService):
 
             # Observed next date/time
             nextDateTime = datetime.strptime(self.stockHistoryInterface.peek()[0],
-                                             self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == '1d' else
+                                             self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == 'day' else
                                              self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
             # If there is a discrepancy that is after minimumYear, attribute it to a holiday.
@@ -63,7 +63,7 @@ class ValidateService(BaseService):
     def getNextExpectedDateTime(self, interval, activeDateTime):
         nextDateTime = None
 
-        if interval == '1d':
+        if interval == 'day':
             nextDateTime = activeDateTime + timedelta(days=1)
 
             # Correct weekend

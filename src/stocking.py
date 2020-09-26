@@ -22,8 +22,8 @@ class Stocking:
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
         self.logInterface = LogInterface(self.fileInterface, self.dataInterface)
         self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logInterface)
-        self.stockHistoryInterface = StockHistoryInterface({'1m': self.dataInterface.settingsGet('1m/stockHistoryDataPath'),
-                                                            '1d': self.dataInterface.settingsGet('1d/stockHistoryDataPath')})
+        self.stockHistoryInterface = StockHistoryInterface({'day': self.dataInterface.settingsGet('day/stockHistoryDataPath'),
+                                                            'minute': self.dataInterface.settingsGet('minute/stockHistoryDataPath')})
         self.queryService = QueryService(self.dataInterface, self.logInterface,
                                          self.stockSymbolsInterface, self.stockHistoryInterface)
         self.validateService = ValidateService(self.dataInterface, self.logInterface,
