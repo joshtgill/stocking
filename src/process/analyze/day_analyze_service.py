@@ -1,12 +1,12 @@
-class DayAnalyzeService:
+from common.base_service import BaseService
 
-    def __init__(self, dataInterface, logService, stockDataInterface):
-        self.dataInterface = dataInterface
-        self.logService = logService
-        self.stockDataInterface = stockDataInterface
+
+class DayAnalyzeService(BaseService):
+
+    def __init__(self, dataInterface, logService, stockHistoryInterface):
+        super().__init__('DAY ANALYZE', dataInterface, logService)
+        self.stockHistoryInterface = stockHistoryInterface
 
 
     def go(self, symbols, start, end):
-        self.logService.start('DAY ANALYZE')
-
-        self.logService.stop('DAY ANALYZE')
+        pass

@@ -1,18 +1,16 @@
+from common.base_service import BaseService
 from statistics import mean, stdev
 import yfinance as yf
 import threading
 
 
-class MinuteAnalyzeService:
+class MinuteAnalyzeService(BaseService):
 
     def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('MINUTE ANALYZE', dataInterface, logService)
         self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
 
 
     def go(self, symbols, start, end):
-        self.logService.start('MINUTE ANALYZE')
-
-        self.logService.stop('MINUTE ANALYZE')
+        pass

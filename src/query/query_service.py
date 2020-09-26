@@ -1,13 +1,13 @@
+from common.base_service import BaseService
 from query.query import Query
 from datetime import datetime, timedelta
 from query.query_interface import QueryInterface
 
 
-class QueryService:
+class QueryService(BaseService):
 
     def __init__(self, dataInterface, logService, stockHistoryInterface, stockSymbolsInterface):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('QUERY', dataInterface, logService)
         self.stockHistoryInterface = stockHistoryInterface
         self.stockSymbolsInterface = stockSymbolsInterface
 
@@ -16,7 +16,7 @@ class QueryService:
         interval = self.dataInterface.configGet('interval')
         marketType = self.dataInterface.configGet('marketType')
 
-        self.logService.start('QUERY {} on {} symbols'.format(interval, marketType))
+        self.logService.log('{} symbols for {}'.format(marketType, interval))
 
         queryInterface = QueryInterface(self.dataInterface, self.logService)
 
@@ -26,8 +26,6 @@ class QueryService:
         for query in self.buildQueries(interval, marketType):
             stock = queryInterface.performStockQuery(query)
             self.stockHistoryInterface.save(stock)
-
-        self.logService.stop('QUERY {}'.format(interval))
 
 
     def buildQueries(self, interval, marketType):

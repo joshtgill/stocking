@@ -1,32 +1,28 @@
+from common.base_service import BaseService
 from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from process.analyze.day_analyze_service import DayAnalyzeService
 from datetime import datetime, timedelta
 import re
 
 
-class ProcessService():
+class ProcessService(BaseService):
 
     def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService, minuteAnalyzeService):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('PROCESS', dataInterface, logService)
         self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
         self.minuteAnalyzeService = minuteAnalyzeService
 
 
     def go(self):
-        self.logService.start('PROCESS')
-
         moduleDirectory = {'dayAnalyze': self.dayAnalyze, 'minuteAnalyze': self.minuteAnalyze}
 
         module = self.dataInterface.configGet('module')
         symbols = self.dataInterface.configGet('symbols')
-        start = self.dataInterface.configGet('start')
-        end = self.dataInterface.configGet('end')
+        start = self.translateConfigVariable(self.dataInterface.configGet('start'))
+        end = self.translateConfigVariable(self.dataInterface.configGet('end'))
 
         moduleDirectory.get(module)(symbols, start, end)
-
-        self.logService.stop('PROCESS')
 
 
     def dayAnalyze(self, symbols, start, end):

@@ -1,11 +1,11 @@
+from common.base_service import BaseService
 from datetime import datetime, timedelta
 
 
-class ValidateService:
+class ValidateService(BaseService):
 
     def __init__(self, dataInterface, logService, stockHistoryInterface):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('VALIDATE', dataInterface, logService)
         self.stockHistoryInterface = stockHistoryInterface
         self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29), datetime(2004, 6, 11), datetime(2001, 9, 11)]
         # Directory where the key represents a month, and the value represents the number of
@@ -14,16 +14,12 @@ class ValidateService:
 
 
     def go(self):
-        self.logService.start('VALIDATE')
-
         interval = self.dataInterface.configGet('interval')
         symbols = self.dataInterface.configGet('symbols')
         minimumYear = self.dataInterface.configGet('minimumYear')
 
         for symbol in symbols:
             self.validateStockHistory(symbol, interval, minimumYear)
-
-        self.logService.stop('VALIDATE')
 
 
     def validateStockHistory(self, symbol, interval, minimumYear):

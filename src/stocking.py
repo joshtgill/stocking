@@ -11,8 +11,8 @@ from process.analyze.minute_analyze_service import MinuteAnalyzeService
 from trade.trade_service import TradeService
 from display.display_service import DisplayService
 import traceback
-from utility.email_interface import EmailInterface
 from datetime import datetime
+from utility.email_interface import EmailInterface
 
 
 class Stocking:
@@ -23,7 +23,7 @@ class Stocking:
         self.logService = LogService(self.fileInterface, self.dataInterface)
         self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logService)
         self.stockHistoryInterface = StockHistoryInterface({'1m': self.dataInterface.settingsGet('1m/stockHistoryDataPath'),
-                                                      '1d': self.dataInterface.settingsGet('1d/stockHistoryDataPath')})
+                                                            '1d': self.dataInterface.settingsGet('1d/stockHistoryDataPath')})
         self.queryService = QueryService(self.dataInterface, self.logService, self.stockHistoryInterface, self.stockSymbolsInterface)
         self.validateService = ValidateService(self.dataInterface, self.logService, self.stockHistoryInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logService, self.stockHistoryInterface)
@@ -36,7 +36,8 @@ class Stocking:
     def go(self):
         self.logService.start('STOCKING')
 
-        serviceDirectory = {'query': self.query, 'validate': self.validate, 'process': self.process, 'trade': self.trade, 'display': self.display}
+        serviceDirectory = {'query': self.queryService, 'validate': self.validateService, 'process': self.processService,
+                            'trade': self.tradeService, 'display': self.displayService}
 
         try:
             for i in range(len(self.dataInterface.configGet())):
@@ -46,7 +47,7 @@ class Stocking:
                 self.dataInterface.incrementConfig('[{}]'.format(i))
 
                 # Start corresponding service
-                serviceDirectory.get(service)()
+                serviceDirectory.get(service).start()
 
                 # Revert config to root config
                 self.dataInterface.decrementConfig()
@@ -56,26 +57,6 @@ class Stocking:
         self.logService.stop('STOCKING')
 
         self.email()
-
-
-    def query(self):
-        self.queryService.go()
-
-
-    def validate(self):
-        self.validateService.go()
-
-
-    def process(self):
-        self.processService.go()
-
-
-    def trade(self):
-        self.tradeService.go()
-
-
-    def display(self):
-        self.displayService.go()
 
 
     def email(self):

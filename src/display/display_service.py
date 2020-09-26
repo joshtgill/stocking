@@ -1,26 +1,17 @@
+from common.base_service import BaseService
 import json
 import yfinance
 
 
-class DisplayService:
+class DisplayService(BaseService):
 
     def __init__(self, dataInterface, logService, stockHistoryInterface):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('DISPLAY', dataInterface, logService)
         self.stockHistoryInterface = stockHistoryInterface
 
 
     def go(self):
-        self.logService.start('DISPLAY')
-
-        symbols = self.dataInterface.configGet('symbols')
-        interval = self.dataInterface.configGet('interval')
-
-        for symbol in symbols:
-            self.displayStockHistory(symbol, interval)
-            print()
-
-        self.logService.stop('DISPLAY')
+        pass
 
 
     def displayStockHistory(self, symbol, interval):

@@ -1,14 +1,14 @@
-class TradeService:
+from common.base_service import BaseService
+
+
+class TradeService(BaseService):
 
     def __init__(self, dataInterface, logService, fileInterface, stockHistoryInterface, processService):
-        self.dataInterface = dataInterface
-        self.logService = logService
+        super().__init__('TRADE', dataInterface, logService)
         self.fileInterface = fileInterface
         self.stockHistoryInterface = stockHistoryInterface
         self.processService = processService
 
 
     def go(self):
-        self.logService.start('TRADE')
-
-        self.logService.stop('TRADE')
+        pass
