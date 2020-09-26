@@ -4,9 +4,8 @@ from datetime import datetime, timedelta
 
 class ValidateService(BaseService):
 
-    def __init__(self, dataInterface, logInterface, stockHistoryInterface):
-        super().__init__('VALIDATE', dataInterface, logInterface)
-        self.stockHistoryInterface = stockHistoryInterface
+    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
+        super().__init__('VALIDATE', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
         self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29), datetime(2004, 6, 11), datetime(2001, 9, 11)]
         # Directory where the key represents a month, and the value represents the number of
         # holidays, or days without stock history, during that month

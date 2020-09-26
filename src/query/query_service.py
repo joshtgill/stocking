@@ -6,10 +6,8 @@ from query.query_interface import QueryInterface
 
 class QueryService(BaseService):
 
-    def __init__(self, dataInterface, logInterface, stockHistoryInterface, stockSymbolsInterface):
-        super().__init__('QUERY', dataInterface, logInterface)
-        self.stockHistoryInterface = stockHistoryInterface
-        self.stockSymbolsInterface = stockSymbolsInterface
+    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
+        super().__init__('QUERY', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
 
 
     def go(self):

@@ -24,13 +24,23 @@ class Stocking:
         self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logInterface)
         self.stockHistoryInterface = StockHistoryInterface({'1m': self.dataInterface.settingsGet('1m/stockHistoryDataPath'),
                                                             '1d': self.dataInterface.settingsGet('1d/stockHistoryDataPath')})
-        self.queryService = QueryService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.stockSymbolsInterface)
-        self.validateService = ValidateService(self.dataInterface, self.logInterface, self.stockHistoryInterface)
-        self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logInterface, self.stockHistoryInterface)
-        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.dayAnalyzeService)
-        self.processService = ProcessService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
-        self.tradeService = TradeService(self.dataInterface, self.logInterface, self.fileInterface, self.stockHistoryInterface, self.processService)
-        self.displayService = DisplayService(self.dataInterface, self.logInterface, self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.queryService = QueryService(self.dataInterface, self.logInterface,
+                                         self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.validateService = ValidateService(self.dataInterface, self.logInterface,
+                                               self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logInterface,
+                                                   self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logInterface,
+                                                         self.stockSymbolsInterface, self.stockHistoryInterface,
+                                                         self.dayAnalyzeService)
+        self.processService = ProcessService(self.dataInterface, self.logInterface,
+                                             self.stockSymbolsInterface, self.stockHistoryInterface,
+                                             self.dayAnalyzeService, self.minuteAnalyzeService)
+        self.tradeService = TradeService(self.dataInterface, self.logInterface,
+                                         self.stockSymbolsInterface, self.stockHistoryInterface,
+                                         self.fileInterface, self.processService)
+        self.displayService = DisplayService(self.dataInterface, self.logInterface,
+                                             self.stockSymbolsInterface, self.stockHistoryInterface)
 
 
     def go(self):

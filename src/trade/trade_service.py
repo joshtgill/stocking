@@ -3,10 +3,9 @@ from common.base_service import BaseService
 
 class TradeService(BaseService):
 
-    def __init__(self, dataInterface, logInterface, fileInterface, stockHistoryInterface, processService):
-        super().__init__('TRADE', dataInterface, logInterface)
+    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface, fileInterface, processService):
+        super().__init__('TRADE', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
         self.fileInterface = fileInterface
-        self.stockHistoryInterface = stockHistoryInterface
         self.processService = processService
 
 

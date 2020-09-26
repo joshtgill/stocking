@@ -6,9 +6,7 @@ import yfinance
 class DisplayService(BaseService):
 
     def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
-        super().__init__('DISPLAY', dataInterface, logInterface)
-        self.stockSymbolsInterface = stockSymbolsInterface
-        self.stockHistoryInterface = stockHistoryInterface
+        super().__init__('DISPLAY', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
 
 
     def go(self):

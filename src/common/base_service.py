@@ -1,9 +1,11 @@
 class BaseService:
 
-    def __init__(self, name, dataInterface, logInterface):
+    def __init__(self, name, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
         self.name = name
         self.dataInterface = dataInterface
         self.logInterface = logInterface
+        self.stockSymbolsInterface = stockSymbolsInterface
+        self.stockHistoryInterface = stockHistoryInterface
 
 
     def start(self):
