@@ -1,6 +1,6 @@
 from common.file_interface import FileInterface
 from common.data_interface import DataInterface
-from common.log_service import LogService
+from common.log_interface import LogInterface
 from common.stock_symbols_interface import StockSymbolsInterface
 from common.stock_history_interface import StockHistoryInterface
 from query.query_service import QueryService
@@ -20,21 +20,21 @@ class Stocking:
     def __init__(self, configPath, settingsPath):
         self.fileInterface = FileInterface()
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
-        self.logService = LogService(self.fileInterface, self.dataInterface)
-        self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logService)
+        self.logInterface = LogInterface(self.fileInterface, self.dataInterface)
+        self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logInterface)
         self.stockHistoryInterface = StockHistoryInterface({'1m': self.dataInterface.settingsGet('1m/stockHistoryDataPath'),
                                                             '1d': self.dataInterface.settingsGet('1d/stockHistoryDataPath')})
-        self.queryService = QueryService(self.dataInterface, self.logService, self.stockHistoryInterface, self.stockSymbolsInterface)
-        self.validateService = ValidateService(self.dataInterface, self.logService, self.stockHistoryInterface)
-        self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logService, self.stockHistoryInterface)
-        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logService, self.stockHistoryInterface, self.dayAnalyzeService)
-        self.processService = ProcessService(self.dataInterface, self.logService, self.stockHistoryInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
-        self.tradeService = TradeService(self.dataInterface, self.logService, self.fileInterface, self.stockHistoryInterface, self.processService)
-        self.displayService = DisplayService(self.dataInterface, self.logService, self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.queryService = QueryService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.stockSymbolsInterface)
+        self.validateService = ValidateService(self.dataInterface, self.logInterface, self.stockHistoryInterface)
+        self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logInterface, self.stockHistoryInterface)
+        self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.dayAnalyzeService)
+        self.processService = ProcessService(self.dataInterface, self.logInterface, self.stockHistoryInterface, self.dayAnalyzeService, self.minuteAnalyzeService)
+        self.tradeService = TradeService(self.dataInterface, self.logInterface, self.fileInterface, self.stockHistoryInterface, self.processService)
+        self.displayService = DisplayService(self.dataInterface, self.logInterface, self.stockSymbolsInterface, self.stockHistoryInterface)
 
 
     def go(self):
-        self.logService.start('STOCKING')
+        self.logInterface.start('STOCKING')
 
         serviceDirectory = {'query': self.queryService, 'validate': self.validateService, 'process': self.processService,
                             'trade': self.tradeService, 'display': self.displayService}
@@ -52,9 +52,9 @@ class Stocking:
                 # Revert config to root config
                 self.dataInterface.decrementConfig()
         except Exception:
-            self.logService.log(traceback.format_exc(), 'ERROR')
+            self.logInterface.log(traceback.format_exc(), 'ERROR')
 
-        self.logService.stop('STOCKING')
+        self.logInterface.stop('STOCKING')
 
         self.email()
 

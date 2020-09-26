@@ -1,17 +1,17 @@
 class BaseService:
 
-    def __init__(self, name, dataInterface, logService):
+    def __init__(self, name, dataInterface, logInterface):
         self.name = name
         self.dataInterface = dataInterface
-        self.logService = logService
+        self.logInterface = logInterface
 
 
     def start(self):
-        self.logService.start(self.name)
+        self.logInterface.start(self.name)
 
         self.go()
 
-        self.logService.stop(self.name)
+        self.logInterface.stop(self.name)
 
 
     def translateConfigVariable(self, variable):

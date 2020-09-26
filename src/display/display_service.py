@@ -5,8 +5,8 @@ import yfinance
 
 class DisplayService(BaseService):
 
-    def __init__(self, dataInterface, logService, stockSymbolsInterface, stockHistoryInterface):
-        super().__init__('DISPLAY', dataInterface, logService)
+    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
+        super().__init__('DISPLAY', dataInterface, logInterface)
         self.stockSymbolsInterface = stockSymbolsInterface
         self.stockHistoryInterface = stockHistoryInterface
 

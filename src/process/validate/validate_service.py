@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 
 class ValidateService(BaseService):
 
-    def __init__(self, dataInterface, logService, stockHistoryInterface):
-        super().__init__('VALIDATE', dataInterface, logService)
+    def __init__(self, dataInterface, logInterface, stockHistoryInterface):
+        super().__init__('VALIDATE', dataInterface, logInterface)
         self.stockHistoryInterface = stockHistoryInterface
         self.marketCloseExceptions = [datetime(2018, 12, 5), datetime(2012, 10, 29), datetime(2004, 6, 11), datetime(2001, 9, 11)]
         # Directory where the key represents a month, and the value represents the number of
@@ -56,7 +56,7 @@ class ValidateService(BaseService):
                 if holidayCount and holidayCount > 0:
                     monthHolidayCountDirectory.update({nextExpectedDateTime.month: holidayCount - 1})
                 else:
-                    self.logService.log('Missing history for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARN')
+                    self.logInterface.log('Missing history for {} ({}) on {}'.format(symbol, interval, nextExpectedDateTime), 'WARN')
 
             activeDateTime = nextDateTime
 

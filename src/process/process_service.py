@@ -7,8 +7,8 @@ import re
 
 class ProcessService(BaseService):
 
-    def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService, minuteAnalyzeService):
-        super().__init__('PROCESS', dataInterface, logService)
+    def __init__(self, dataInterface, logInterface, stockHistoryInterface, dayAnalyzeService, minuteAnalyzeService):
+        super().__init__('PROCESS', dataInterface, logInterface)
         self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
         self.minuteAnalyzeService = minuteAnalyzeService

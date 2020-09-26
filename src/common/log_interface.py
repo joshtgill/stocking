@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 
 
-class LogService:
+class LogInterface:
 
     def __init__(self, fileInterface, dataInterface):
         self.fileInterface = fileInterface

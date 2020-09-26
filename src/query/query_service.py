@@ -6,8 +6,8 @@ from query.query_interface import QueryInterface
 
 class QueryService(BaseService):
 
-    def __init__(self, dataInterface, logService, stockHistoryInterface, stockSymbolsInterface):
-        super().__init__('QUERY', dataInterface, logService)
+    def __init__(self, dataInterface, logInterface, stockHistoryInterface, stockSymbolsInterface):
+        super().__init__('QUERY', dataInterface, logInterface)
         self.stockHistoryInterface = stockHistoryInterface
         self.stockSymbolsInterface = stockSymbolsInterface
 
@@ -16,9 +16,9 @@ class QueryService(BaseService):
         interval = self.dataInterface.configGet('interval')
         marketType = self.dataInterface.configGet('marketType')
 
-        self.logService.log('{} symbols for {}'.format(marketType, interval))
+        self.logInterface.log('{} symbols for {}'.format(marketType, interval))
 
-        queryInterface = QueryInterface(self.dataInterface, self.logService)
+        queryInterface = QueryInterface(self.dataInterface, self.logInterface)
 
         capital_symbols, global_symbols, global_select_symbols = queryInterface.performSymbolsQuery()
         self.stockSymbolsInterface.saveAll(capital_symbols, global_symbols, global_select_symbols)

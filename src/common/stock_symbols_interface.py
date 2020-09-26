@@ -3,9 +3,9 @@ from common.database_interface import DatabaseInterface
 
 class StockSymbolsInterface:
 
-    def __init__(self, dataInterface, logService):
+    def __init__(self, dataInterface, logInterface):
         self.dataInterface = dataInterface
-        self.logService = logService
+        self.logInterface = logInterface
         self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsDataPath'))
 
 
@@ -22,10 +22,10 @@ class StockSymbolsInterface:
         currentSymbols = self.load(marketType)
         for symbol in symbols:
             if symbol not in currentSymbols:
-                self.logService.log('Adding symbol {} to {}'.format(symbol, marketType))
+                self.logInterface.log('Adding symbol {} to {}'.format(symbol, marketType))
         for symbol in currentSymbols:
             if symbol not in symbols:
-                self.logService.log('Removing symbol {} from {}'.format(marketType))
+                self.logInterface.log('Removing symbol {} from {}'.format(marketType))
 
         sqlFormatSymbols = []
         for symbol in symbols:

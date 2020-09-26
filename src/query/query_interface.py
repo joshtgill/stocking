@@ -8,9 +8,9 @@ import numpy
 
 class QueryInterface:
 
-    def __init__(self, dataInterface, logService):
+    def __init__(self, dataInterface, logInterface):
         self.dataInterface = dataInterface
-        self.logService = logService
+        self.logInterface = logInterface
 
 
     def performSymbolsQuery(self):
@@ -85,7 +85,7 @@ class QueryInterface:
 
         # Report yFinance errors
         if numYErrors:
-            self.logService.log('yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
+            self.logInterface.log('yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
                                 'ERROR')
 
         return stock

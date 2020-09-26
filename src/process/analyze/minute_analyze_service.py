@@ -6,8 +6,8 @@ import threading
 
 class MinuteAnalyzeService(BaseService):
 
-    def __init__(self, dataInterface, logService, stockHistoryInterface, dayAnalyzeService):
-        super().__init__('MINUTE ANALYZE', dataInterface, logService)
+    def __init__(self, dataInterface, logInterface, stockHistoryInterface, dayAnalyzeService):
+        super().__init__('MINUTE ANALYZE', dataInterface, logInterface)
         self.stockHistoryInterface = stockHistoryInterface
         self.dayAnalyzeService = dayAnalyzeService
 
