@@ -17,6 +17,14 @@ class BaseService:
 
 
     def translateConfigVariable(self, variable):
+        if variable == 'CAPITAL':
+            return self.stockSymbolsInterface.load('CAPITAL')
+        elif variable == 'GLOBAL':
+            return self.stockSymbolsInterface.load('GLOBAL')
+        elif variable == 'GLOBAL_SELECT':
+            return self.stockSymbolsInterface.load('GLOBAL_SELECT')
+        elif variable == 'ALL':
+            return self.stockSymbolsInterface.loadAll()
         if variable == 'NOW':
             return datetime.now().strftime(self.settingsGet('{}/dateTimeFormat'.format('1d')))
         elif 'NOW' in variable:

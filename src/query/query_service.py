@@ -11,24 +11,26 @@ class QueryService(BaseService):
 
 
     def go(self):
-        interval = self.dataInterface.configGet('interval')
-        marketType = self.dataInterface.configGet('marketType')
-
-        self.logInterface.log('{} symbols for {}'.format(marketType, interval))
-
         queryInterface = QueryInterface(self.dataInterface, self.logInterface)
 
         capital_symbols, global_symbols, global_select_symbols = queryInterface.performSymbolsQuery()
         self.stockSymbolsInterface.saveAll(capital_symbols, global_symbols, global_select_symbols)
 
-        for query in self.buildQueries(interval, marketType):
+        interval = self.dataInterface.configGet('interval')
+        symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
+
+        symbolsText = (', '.join(symbols) if isinstance(self.dataInterface.configGet('symbols'), list)
+                                          else self.dataInterface.configGet('symbols'))
+        self.logInterface.log('Querying {} symbols for {}'.format(symbolsText, interval))
+
+        for query in self.buildQueries(interval, symbols):
             stock = queryInterface.performStockQuery(query)
             self.stockHistoryInterface.save(stock)
 
 
-    def buildQueries(self, interval, marketType):
+    def buildQueries(self, interval, symbols):
         queries = []
-        for symbol in self.stockSymbolsInterface.load(marketType):
+        for symbol in symbols:
             start, end = self.determineQueryPeriod(symbol, interval)
             queries.append(Query(symbol, interval, start, end))
 

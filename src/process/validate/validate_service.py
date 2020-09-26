@@ -14,7 +14,7 @@ class ValidateService(BaseService):
 
     def go(self):
         interval = self.dataInterface.configGet('interval')
-        symbols = self.dataInterface.configGet('symbols')
+        symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
         minimumYear = self.dataInterface.configGet('minimumYear')
 
         for symbol in symbols:

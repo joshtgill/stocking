@@ -3,36 +3,36 @@
         "service": "query",
 
         "interval": "1d",
-        "marketType": "CAPITAL"
+        "symbols": "CAPITAL"
     },
     {
         "service": "query",
 
         "interval": "1m",
-        "marketType": "CAPITAL"
+        "symbols": "CAPITAL"
     },
     {
         "service": "query",
 
         "interval": "1d",
-        "marketType": "GLOBAL"
+        "symbols": "GLOBAL"
     },
     {
         "service": "query",
 
         "interval": "1m",
-        "marketType": "GLOBAL"
+        "symbols": "GLOBAL"
     },
     {
         "service": "query",
 
         "interval": "1d",
-        "marketType": "GLOBAL_SELECT"
+        "symbols": "GLOBAL_SELECT"
     },
     {
         "service": "query",
 
         "interval": "1m",
-        "marketType": "GLOBAL_SELECT"
+        "symbols": "GLOBAL_SELECT"
     }
 ]

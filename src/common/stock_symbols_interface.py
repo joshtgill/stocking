@@ -34,6 +34,10 @@ class StockSymbolsInterface:
         self.databaseInterface.insert(marketType, '(symbol)', sqlFormatSymbols)
 
 
+    def loadAll(self):
+        return self.load('CAPITAL') + self.load('GLOBAL') + self.load('GLOBAL_SELECT')
+
+
     def load(self, marketType):
         symbols = []
         for item in self.databaseInterface.selectAll(marketType):

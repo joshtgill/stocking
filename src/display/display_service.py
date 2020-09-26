@@ -11,11 +11,10 @@ class DisplayService(BaseService):
 
     def go(self):
         interval = self.dataInterface.configGet('interval')
-        symbols = self.dataInterface.configGet('symbols')
+        symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
 
-        for symbol in self.stockSymbolsInterface.load(self.dataInterface.configGet('marketType')):
-            if (symbols and symbol in symbols) or not symbols:
-                self.displayStockHistory(interval, symbol)
+        for symbol in symbols:
+            self.displayStockHistory(interval, symbol)
 
 
     def displayStockHistory(self, interval, symbol):
