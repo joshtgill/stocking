@@ -1,5 +1,5 @@
 import urllib
-from common.stock import Stock
+from query.stock import Stock
 from datetime import timedelta
 import yfinance
 import pandas
