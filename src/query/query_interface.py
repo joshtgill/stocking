@@ -58,7 +58,7 @@ class QueryInterface:
         while (query.end - localQueryStart).days > 0:
             # Get stock history
             try:
-                yStockHistory = yfinance.Ticker(query.symbol).history(interval=query.interval,
+                yStockHistory = yfinance.Ticker(query.symbol).history(interval='1d' if query.interval == 'day' else '1m',
                                                                       start=localQueryStart,
                                                                       end=localQueryEnd)
             except Exception:  # Any error with yfinance, try again (up to 5 times)
@@ -86,6 +86,6 @@ class QueryInterface:
         # Report yFinance errors
         if numYErrors:
             self.logInterface.log('yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
-                                'ERROR')
+                                  'ERROR')
 
         return stock
