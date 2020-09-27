@@ -14,7 +14,9 @@ class DisplayService(BaseService):
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
 
         for symbol in symbols:
+            print('----- {} {} -----'.format(symbol, interval))
             self.displayStockHistory(interval, symbol)
+            print()
 
 
     def displayStockHistory(self, interval, symbol):
