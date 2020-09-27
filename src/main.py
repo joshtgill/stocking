@@ -8,10 +8,14 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     os.chdir('..')
 
-    # Direct all output to file
+    # Create project directories
     if not os.path.exists('out/'):
         os.mkdir('out/')
+    if not os.path.exists('data/'):
+        os.mkdir('data/')
+
+    # Direct all output to file
     sys.stdout = open('out/output.txt', 'w+')
 
-    # Start Stocking with config
+    # Start Stocking with provided config
     Stocking(sys.argv[1], 'exe/settings.json').go()
