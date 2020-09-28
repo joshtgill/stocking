@@ -11,12 +11,12 @@ class ProcessService(BaseService):
         super().__init__('PROCESS', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
         self.dayAnalyzeService = dayAnalyzeService
         self.minuteAnalyzeService = minuteAnalyzeService
+        self.moduleDirectory = {'dayAnalyze': self.dayAnalyzeService, 'minuteAnalyze': self.minuteAnalyzeService}
 
 
     def go(self):
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
-        start = self.translateConfigVariable(self.dataInterface.configGet('start'))
-        end = self.translateConfigVariable(self.dataInterface.configGet('end'))
+        modulesData = self.translateConfigVariable(self.dataInterface.configGet('modules'))
 
-        self.dayAnalyzeService.go(symbols, start, end)
-        self.minuteAnalyzeService.go(symbols, start, end)
+        for moduleData in modulesData:
+            self.moduleDirectory.get(moduleData.get('name')).start()

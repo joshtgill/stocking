@@ -7,5 +7,5 @@ class DayAnalyzeService(BaseService):
         super().__init__('DAY ANALYZE', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
 
 
-    def go(self, symbols, start, end):
+    def go(self):
         pass

@@ -51,13 +51,13 @@ class Stocking:
 
         try:
             for i in range(len(self.dataInterface.configGet())):
-                service = self.dataInterface.configGet('[{}]/service'.format(i))
+                name = self.dataInterface.configGet('[{}]/name'.format(i))
 
                 # Set to service's config
                 self.dataInterface.incrementConfig('[{}]'.format(i))
 
                 # Start corresponding service
-                serviceDirectory.get(service).start()
+                serviceDirectory.get(name).start()
 
                 # Revert config to root config
                 self.dataInterface.decrementConfig()

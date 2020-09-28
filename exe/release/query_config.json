@@ -1,36 +1,36 @@
 [
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "day",
         "symbols": "CAPITAL"
     },
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "minute",
         "symbols": "CAPITAL"
     },
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "day",
         "symbols": "GLOBAL"
     },
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "minute",
         "symbols": "GLOBAL"
     },
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "day",
         "symbols": "GLOBAL_SELECT"
     },
     {
-        "service": "query",
+        "name": "query",
 
         "interval": "minute",
         "symbols": "GLOBAL_SELECT"

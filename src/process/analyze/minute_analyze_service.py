@@ -11,5 +11,5 @@ class MinuteAnalyzeService(BaseService):
         self.dayAnalyzeService = dayAnalyzeService
 
 
-    def go(self, symbols, start, end):
+    def go(self):
         pass
