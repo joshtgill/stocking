@@ -8,10 +8,10 @@ class BaseService:
         self.stockHistoryInterface = stockHistoryInterface
 
 
-    def start(self):
+    def start(self, *args):
         self.logInterface.start(self.name)
 
-        self.go()
+        self.go(*args)
 
         self.logInterface.stop(self.name)
 

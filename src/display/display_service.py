@@ -9,7 +9,7 @@ class DisplayService(BaseService):
         super().__init__('DISPLAY', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
 
 
-    def go(self):
+    def go(self, *args):
         interval = self.dataInterface.configGet('interval')
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
 

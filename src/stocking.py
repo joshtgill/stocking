@@ -43,7 +43,7 @@ class Stocking:
                                              self.stockSymbolsInterface, self.stockHistoryInterface)
 
 
-    def go(self):
+    def go(self, *args):
         self.logInterface.start('STOCKING')
 
         serviceDirectory = {'query': self.queryService, 'validate': self.validateService, 'process': self.processService,

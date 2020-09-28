@@ -9,5 +9,5 @@ class TradeService(BaseService):
         self.processService = processService
 
 
-    def go(self):
+    def go(self, *args):
         pass

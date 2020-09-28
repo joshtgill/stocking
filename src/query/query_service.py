@@ -10,7 +10,7 @@ class QueryService(BaseService):
         super().__init__('QUERY', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
 
 
-    def go(self):
+    def go(self, *args):
         queryInterface = QueryInterface(self.dataInterface, self.logInterface)
 
         if not self.stockSymbolsInterface.upToDate:

@@ -12,7 +12,7 @@ class ValidateService(BaseService):
         self.monthHolidayCountDirectory = {1: 2, 2: 1, 3: 0.5, 4: 0.5, 5: 1, 7: 1, 9: 1, 11: 1, 12: 1}
 
 
-    def go(self):
+    def go(self, *args):
         interval = self.dataInterface.configGet('interval')
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
         minimumYear = self.dataInterface.configGet('minimumYear')

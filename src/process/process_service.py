@@ -14,9 +14,9 @@ class ProcessService(BaseService):
         self.moduleDirectory = {'dayAnalyze': self.dayAnalyzeService, 'minuteAnalyze': self.minuteAnalyzeService}
 
 
-    def go(self):
+    def go(self, *args):
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
         modulesData = self.translateConfigVariable(self.dataInterface.configGet('modules'))
 
         for moduleData in modulesData:
-            self.moduleDirectory.get(moduleData.get('name')).start()
+            self.moduleDirectory.get(moduleData.get('name')).start(symbols)
