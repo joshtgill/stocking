@@ -26,7 +26,7 @@ class StockSymbolsInterface:
                 self.logInterface.log('Adding symbol {} to {}'.format(symbol, marketType))
         for symbol in currentSymbols:
             if symbol not in symbols:
-                self.logInterface.log('Removing symbol {} from {}'.format(marketType))
+                self.logInterface.log('Removing symbol {} from {}'.format(symbol, marketType))
 
         sqlFormatSymbols = []
         for symbol in symbols:
