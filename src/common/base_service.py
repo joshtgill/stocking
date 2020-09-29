@@ -1,3 +1,7 @@
+from datetime import datetime
+import re
+
+
 class BaseService:
 
     def __init__(self, name, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
@@ -26,10 +30,10 @@ class BaseService:
         elif variable == 'ALL':
             return self.stockSymbolsInterface.loadAll()
         if variable == 'NOW':
-            return datetime.now().strftime(self.settingsGet('{}/dateTimeFormat'.format('day')))
+            return datetime.now().strftime(self.dataInterface.settingsGet('{}/dateTimeFormat'.format('day')))
         elif 'NOW' in variable:
             openMarketDaysBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')).replace('d', ''))
-            return self.determineDate(openMarketDaysBack).strftime(self.settingsGet('{}/dateTimeFormat'.format('day')))
+            return self.determineDate(openMarketDaysBack).strftime(self.dataInterface.settingsGet('{}/dateTimeFormat'.format('day')))
 
         return variable
 
