@@ -56,23 +56,23 @@ class StockHistoryInterface:
         return history
 
 
+    def hasNext(self):
+        return self.historyIndex < len(self.history) - 1
+
+
     def next(self, count=1):
         self.historyIndex += 1 if self.historyIndex == -1 else count
 
-        return self.peek()
+        try:
+            return self.history[self.historyIndex]
+        except IndexError:
+            return None
 
 
     def end(self):
         self.historyIndex = len(self.history) - 1
 
         return self.peek()
-
-
-    def peek(self):
-        try:
-            return self.history[self.historyIndex]
-        except IndexError:
-            return None
 
 
     def reset(self, hard=False):
