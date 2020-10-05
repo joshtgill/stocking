@@ -1,6 +1,6 @@
 {
     "nasdaqSymbolsUrlPath": "http://ftp.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-    "blacklistedSymbols": ["ZXYZ.A"],
+    "blacklistedSymbols": ["CCCC", "OFED", "PDLIV", "PRNB", "ZAZZT", "ZBZZT", "ZXYZ.A"],
     "stockSymbolsDataPath": "data/symbols.db",
     "minute": {
         "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
