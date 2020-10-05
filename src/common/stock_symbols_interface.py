@@ -15,6 +15,8 @@ class StockSymbolsInterface:
         self.save('GLOBAL', globalSymbols)
         self.save('GLOBAL_SELECT', globalSelectSymbols)
 
+        self.upToDate = True
+
 
     def save(self, marketType, symbols):
         if not self.databaseInterface.tableExists(marketType):

@@ -14,17 +14,16 @@ class QueryService(BaseService):
         queryInterface = QueryInterface(self.dataInterface, self.logInterface)
 
         if not self.stockSymbolsInterface.upToDate:
+            self.logInterface.log('Querying capital, global, and global select NASDAQ symbols')
             capital_symbols, global_symbols, global_select_symbols = queryInterface.performSymbolsQuery()
             self.stockSymbolsInterface.saveAll(capital_symbols, global_symbols, global_select_symbols)
-            self.stockSymbolsInterface.upToDate = True
 
         interval = self.dataInterface.configGet('interval')
         symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
 
         symbolsText = (', '.join(symbols) if isinstance(self.dataInterface.configGet('symbols'), list)
                                           else self.dataInterface.configGet('symbols'))
-        self.logInterface.log('Querying {} symbols for {}'.format(symbolsText, interval))
-
+        self.logInterface.log('Querying {} history for {} symbol(s)'.format(interval, symbolsText))
         for query in self.buildQueries(interval, symbols):
             stock = queryInterface.performStockQuery(query)
             self.stockHistoryInterface.save(stock)
