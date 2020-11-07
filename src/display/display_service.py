@@ -22,5 +22,5 @@ class DisplayService(BaseService):
     def displayStockHistory(self, interval, symbol):
         self.stockHistoryInterface.load(interval, symbol)
 
-        while self.stockHistoryInterface.next():
-            print(self.stockHistoryInterface.peek())
+        while self.stockHistoryInterface.hasNext():
+            print(self.stockHistoryInterface.next())

@@ -6,6 +6,7 @@ class StockHistoryInterface:
     def __init__(self, databasePathDir):
         self.databaseInterfaceDir = self.initDatabases(databasePathDir)
         self.history = []
+        self.historyIndex = -1
         self.reset(True)
 
 
