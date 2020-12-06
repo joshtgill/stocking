@@ -66,7 +66,7 @@ class Stocking:
 
         self.logInterface.stop('STOCKING')
 
-        self.email()
+        # self.email()
 
 
     def email(self):
