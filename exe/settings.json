@@ -1,15 +1,15 @@
 {
     "nasdaqSymbolsUrlPath": "http://ftp.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
     "blacklistedSymbols": ["CCCC", "OFED", "PDLIV", "PRNB", "ZAZZT", "ZBZZT", "ZXYZ.A"],
-    "stockSymbolsDataPath": "data/symbols.db",
+    "stockSymbolsPath": "data/symbols.db",
     "minute": {
         "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
-        "stockHistoryDataPath": "data/stocks_minute.db"
+        "stockHistoryPath": "data/stocks_minute.db"
     },
     "day": {
         "dateTimeFormat": "%Y-%m-%d",
-        "stockHistoryDataPath": "data/stocks_day.db"
+        "stockHistoryPath": "data/stocks_day.db"
     },
-    "stockingLogPath": "out/stocking.log",
-    "stockingEmailPath": "out/email.txt"
+    "logPath": "out/stocking.log",
+    "emailContentPath": "out/email.txt"
 }

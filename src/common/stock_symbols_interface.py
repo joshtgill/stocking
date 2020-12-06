@@ -6,7 +6,7 @@ class StockSymbolsInterface:
     def __init__(self, dataInterface, logInterface):
         self.dataInterface = dataInterface
         self.logInterface = logInterface
-        self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsDataPath'))
+        self.databaseInterface = DatabaseInterface(self.dataInterface.settingsGet('stockSymbolsPath'))
         self.upToDate = False
 
 

@@ -9,7 +9,7 @@ class LogInterface:
         self.dataInterface = dataInterface
         self.taskDir = OrderedDict()  # {name: start time}
 
-        self.fileInterface.wipe(self.dataInterface.settingsGet('stockingLogPath'))
+        self.fileInterface.wipe(self.dataInterface.settingsGet('logPath'))
 
 
     def start(self, taskName):
@@ -23,5 +23,5 @@ class LogInterface:
 
 
     def log(self, message, logType='INFO'):
-        self.fileInterface.write(self.dataInterface.settingsGet('stockingLogPath'),
+        self.fileInterface.write(self.dataInterface.settingsGet('logPath'),
                                  '{} {}: {}\n'.format(datetime.now(), logType, message))

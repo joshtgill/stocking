@@ -22,8 +22,8 @@ class Stocking:
         self.dataInterface = DataInterface(self.fileInterface, configPath, settingsPath)
         self.logInterface = LogInterface(self.fileInterface, self.dataInterface)
         self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logInterface)
-        self.stockHistoryInterface = StockHistoryInterface({'day': self.dataInterface.settingsGet('day/stockHistoryDataPath'),
-                                                            'minute': self.dataInterface.settingsGet('minute/stockHistoryDataPath')})
+        self.stockHistoryInterface = StockHistoryInterface({'day': self.dataInterface.settingsGet('day/stockHistoryPath'),
+                                                            'minute': self.dataInterface.settingsGet('minute/stockHistoryPath')})
         self.queryService = QueryService(self.dataInterface, self.logInterface,
                                          self.stockSymbolsInterface, self.stockHistoryInterface)
         self.validateService = ValidateService(self.dataInterface, self.logInterface,
@@ -70,7 +70,7 @@ class Stocking:
 
 
     def email(self):
-        logText = self.fileInterface.read(self.dataInterface.settingsGet('stockingLogPath'))
+        logText = self.fileInterface.read(self.dataInterface.settingsGet('logPath'))
 
         # Subject contains completion station and total run time
         totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
