@@ -10,6 +10,5 @@
         "dateTimeFormat": "%Y-%m-%d",
         "stockHistoryPath": "data/stocks_day.db"
     },
-    "logPath": "out/stocking.log",
-    "emailContentPath": "out/email.txt"
+    "logPath": "out/stocking.log"
 }

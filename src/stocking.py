@@ -12,7 +12,6 @@ from trade.trade_service import TradeService
 from display.display_service import DisplayService
 import traceback
 from datetime import datetime
-from utility.email_interface import EmailInterface
 
 
 class Stocking:
@@ -65,29 +64,3 @@ class Stocking:
             self.logInterface.log(traceback.format_exc(), 'ERROR')
 
         self.logInterface.stop('STOCKING')
-
-        # self.email()
-
-
-    def email(self):
-        logText = self.fileInterface.read(self.dataInterface.settingsGet('logPath'))
-
-        # Subject contains completion station and total run time
-        totalRunTime = datetime.strptime(logText.split()[-1], '%H:%M:%S.%f')
-        emailSubject = 'Stocking COMPLETE in' if 'ERROR' not in logText else 'Stocking FAILED in'
-        if totalRunTime.hour:
-            emailSubject += ' {} hours'.format(totalRunTime.hour)
-        emailSubject += ' {} minutes'.format(totalRunTime.minute)
-
-        # Body containts services initiated
-        initiatedServices = []
-        for interval in self.dataInterface.configGet('query/queries', []):
-            initiatedServices.append('Query {}'.format(interval))
-        if self.dataInterface.configGet('analyze'):
-            initiatedServices.append('Analyze')
-        emailBody = 'Services ran: ' + ', '.join(initiatedServices) +' \n\n'
-
-        # Body contains log text
-        emailBody += 'Log:\n' + logText
-
-        EmailInterface(self.dataInterface, self.fileInterface).buildEmail(emailSubject, emailBody)

@@ -7,7 +7,7 @@ __pycache__/
 # Data files
 data/
 
-# Log, output, and email files
+# Log and output files
 out/
 
 # Local files
