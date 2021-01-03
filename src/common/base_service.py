@@ -39,10 +39,10 @@ class BaseService:
 
 
     def determineDate(self, openMarketDaysBack):
-        # 2020 stock market holiday closures
-        marketClosedDates = [datetime(2020, 1, 1).date(), datetime(2020, 1, 20).date(), datetime(2020, 2, 17).date(),
-                             datetime(2020, 4, 10).date(), datetime(2020, 5, 25).date(), datetime(2020, 7, 3).date(),
-                             datetime(2020, 9, 7).date(), datetime(2020, 11, 26).date(), datetime(2020, 12, 25).date()]
+        # 2021 market holiday closures
+        marketClosedDates = [datetime(2021, 1, 1).date(), datetime(2021, 1, 18).date(), datetime(2021, 2, 15).date(),
+                             datetime(2021, 4, 2).date(), datetime(2021, 5, 31).date(), datetime(2021, 7, 5).date(),
+                             datetime(2021, 9, 6).date(), datetime(2021, 11, 25).date(), datetime(2021, 12, 24).date()]
 
         # Find the date associated with the number of market days back
         date = datetime.now().date()
