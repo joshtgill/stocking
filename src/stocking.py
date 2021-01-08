@@ -3,6 +3,7 @@ from common.data_interface import DataInterface
 from common.log_interface import LogInterface
 from common.stock_symbols_interface import StockSymbolsInterface
 from common.stock_history_interface import StockHistoryInterface
+from common.stock_splits_interface import StockSplitsInterface
 from query.query_service import QueryService
 from process.validate.validate_service import ValidateService
 from process.process_service import ProcessService
@@ -23,8 +24,9 @@ class Stocking:
         self.stockSymbolsInterface = StockSymbolsInterface(self.dataInterface, self.logInterface)
         self.stockHistoryInterface = StockHistoryInterface({'day': self.dataInterface.settingsGet('day/stockHistoryPath'),
                                                             'minute': self.dataInterface.settingsGet('minute/stockHistoryPath')})
-        self.queryService = QueryService(self.dataInterface, self.logInterface,
-                                         self.stockSymbolsInterface, self.stockHistoryInterface)
+        self.stockSplitsInterface = StockSplitsInterface(self.dataInterface.settingsGet('stockSplitsPath'))
+        self.queryService = QueryService(self.dataInterface, self.logInterface, self.stockSymbolsInterface,
+                                         self.stockHistoryInterface, self.stockSplitsInterface)
         self.validateService = ValidateService(self.dataInterface, self.logInterface,
                                                self.stockSymbolsInterface, self.stockHistoryInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logInterface,

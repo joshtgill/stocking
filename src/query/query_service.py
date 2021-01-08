@@ -6,8 +6,9 @@ from query.query_interface import QueryInterface
 
 class QueryService(BaseService):
 
-    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface):
+    def __init__(self, dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface, stockSplitsInterface):
         super().__init__('QUERY', dataInterface, logInterface, stockSymbolsInterface, stockHistoryInterface)
+        self.stockSplitsInterface = stockSplitsInterface
 
 
     def go(self, *args):
@@ -26,7 +27,8 @@ class QueryService(BaseService):
         self.logInterface.log('Querying {} history for {} symbol(s)'.format(interval, symbolsText))
         for query in self.buildQueries(interval, symbols):
             stock = queryInterface.performStockQuery(query)
-            self.stockHistoryInterface.save(stock)
+            self.stockHistoryInterface.save(stock.interval, stock.symbol, stock.history)
+            self.stockSplitsInterface.save(stock.symbol, stock.splits)
 
 
     def buildQueries(self, interval, symbols):

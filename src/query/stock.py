@@ -4,3 +4,4 @@ class Stock:
         self.symbol = symbol
         self.interval = interval
         self.history = []  # ([timestamp], [open], [high], [low], [close])
+        self.splits = []  # {date: factor}

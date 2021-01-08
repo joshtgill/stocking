@@ -1,5 +1,6 @@
 import urllib
 from query.stock import Stock
+import datetime
 from datetime import timedelta
 import yfinance
 import pandas
@@ -41,6 +42,12 @@ class QueryInterface:
 
     def performStockQuery(self, query):
         stock = Stock(query.symbol, query.interval)
+        stockTicker = yfinance.Ticker(stock.symbol)
+
+        # Get past splits
+        yStockSplits = stockTicker.splits
+        stock.splits = [(datetime.datetime.utcfromtimestamp(yStockSplits.index.values[i].tolist() / 1e9).date(), yStockSplits[i])
+                        for i in range(len(yStockSplits))]
 
         dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == 'day'
                           else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)))
@@ -58,9 +65,9 @@ class QueryInterface:
         while (query.end - localQueryStart).days > 0:
             # Get stock history
             try:
-                yStockHistory = yfinance.Ticker(query.symbol).history(interval='1d' if query.interval == 'day' else '1m',
-                                                                      start=localQueryStart,
-                                                                      end=localQueryEnd)
+                yStockHistory = stockTicker.history(interval='1d' if query.interval == 'day' else '1m',
+                                                    start=localQueryStart,
+                                                    end=localQueryEnd)
             except Exception:  # Any error with yfinance, try again (up to 5 times)
                 numYErrors += 1
                 if numYErrors == 6:

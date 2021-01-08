@@ -4,11 +4,12 @@
     "stockSymbolsPath": "data/symbols.db",
     "minute": {
         "dateTimeFormat": "%Y-%m-%d %H:%M:%S",
-        "stockHistoryPath": "data/stocks_minute.db"
+        "stockHistoryPath": "data/minute_history.db"
     },
     "day": {
         "dateTimeFormat": "%Y-%m-%d",
-        "stockHistoryPath": "data/stocks_day.db"
+        "stockHistoryPath": "data/day_history.db"
     },
+    "stockSplitsPath": "data/splits.db",
     "logPath": "out/stocking.log"
 }
