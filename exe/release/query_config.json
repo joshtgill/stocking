@@ -3,36 +3,6 @@
         "name": "query",
 
         "interval": "day",
-        "symbols": "CAPITAL"
-    },
-    {
-        "name": "query",
-
-        "interval": "minute",
-        "symbols": "CAPITAL"
-    },
-    {
-        "name": "query",
-
-        "interval": "day",
-        "symbols": "GLOBAL"
-    },
-    {
-        "name": "query",
-
-        "interval": "minute",
-        "symbols": "GLOBAL"
-    },
-    {
-        "name": "query",
-
-        "interval": "day",
-        "symbols": "GLOBAL_SELECT"
-    },
-    {
-        "name": "query",
-
-        "interval": "minute",
-        "symbols": "GLOBAL_SELECT"
+        "symbols": ["TSLA"]
     }
 ]

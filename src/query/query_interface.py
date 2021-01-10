@@ -40,8 +40,8 @@ class QueryInterface:
         return capitalSymbols, globalSymbols, globalSelectSymbols
 
 
-    def performStockQuery(self, query):
-        stock = Stock(query.symbol, query.interval)
+    def performStockQuery(self, interval, symbol, start, end):
+        stock = Stock(symbol, interval)
         stockTicker = yfinance.Ticker(stock.symbol)
 
         # Get past splits
@@ -49,23 +49,23 @@ class QueryInterface:
         stock.splits = [(datetime.datetime.utcfromtimestamp(yStockSplits.index.values[i].tolist() / 1e9).date(), yStockSplits[i])
                         for i in range(len(yStockSplits))]
 
-        dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)) if query.interval == 'day'
-                          else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(query.interval)))
+        dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == 'day'
+                          else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
 
         # Track number of consecutive yFinance errors
         numYErrors = 0
 
         # yFinance only allows a period of up to 7 days for minute intervals
         # so break up queries into 7 day contiguous periods
-        localQueryStart = query.start
-        localQueryEnd = query.end
-        if query.interval == 'minute' and (localQueryEnd - localQueryStart).days > 7:
+        localQueryStart = start
+        localQueryEnd = end
+        if interval == 'minute' and (localQueryEnd - localQueryStart).days > 7:
             localQueryEnd = localQueryStart + timedelta(days=7)
 
-        while (query.end - localQueryStart).days > 0:
+        while (end - localQueryStart).days > 0:
             # Get stock history
             try:
-                yStockHistory = stockTicker.history(interval='1d' if query.interval == 'day' else '1m',
+                yStockHistory = stockTicker.history(interval='1d' if interval == 'day' else '1m',
                                                     start=localQueryStart,
                                                     end=localQueryEnd)
             except Exception:  # Any error with yfinance, try again (up to 5 times)
@@ -92,7 +92,7 @@ class QueryInterface:
 
         # Report yFinance errors
         if numYErrors:
-            self.logInterface.log('yFinance failed for {} start={} end={}'.format(query.symbol, localQueryStart, localQueryEnd),
+            self.logInterface.log('yFinance failed for {} start={} end={}'.format(symbol, localQueryStart, localQueryEnd),
                                   'ERROR')
 
         return stock

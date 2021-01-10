@@ -1,5 +1,4 @@
 from common.base_service import BaseService
-from query.query import Query
 from datetime import datetime, timedelta
 from query.query_interface import QueryInterface
 
@@ -25,8 +24,9 @@ class QueryService(BaseService):
         symbolsText = (', '.join(symbols) if isinstance(self.dataInterface.configGet('symbols'), list)
                                           else self.dataInterface.configGet('symbols'))
         self.logInterface.log('Querying {} history for {} symbol(s)'.format(interval, symbolsText))
-        for query in self.buildQueries(interval, symbols):
-            stock = queryInterface.performStockQuery(query)
+        for symbol in symbols:
+            start, end = self.determineQueryPeriod(symbol, interval)
+            stock = queryInterface.performStockQuery(interval, symbol, start, end)
             self.stockHistoryInterface.save(stock.interval, stock.symbol, stock.history)
             self.stockSplitsInterface.save(stock.symbol, stock.splits)
 
