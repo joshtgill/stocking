@@ -42,12 +42,20 @@ class QueryInterface:
 
     def performStockQuery(self, interval, symbol, start, end):
         stock = Stock(symbol, interval)
-        stockTicker = yfinance.Ticker(stock.symbol)
 
-        # Get past splits
+        stockTicker = yfinance.Ticker(stock.symbol)
+        if not stockTicker:
+            self.logInterface('yFinance data not available for {}.'.format(stock.symbol))
+            return stock
+
+        # Attempt to get past splits
         yStockSplits = stockTicker.splits
-        stock.splits = [(datetime.datetime.utcfromtimestamp(yStockSplits.index.values[i].tolist() / 1e9).date(), yStockSplits[i])
-                        for i in range(len(yStockSplits))]
+        if not yStockSplits:
+            self.logInterface('Splits data not availble for {}.'.format(stock.symbol))
+            stock.splits = []
+        else:
+            stock.splits = [(datetime.datetime.utcfromtimestamp(yStockSplits.index.values[i].tolist() / 1e9).date(), yStockSplits[i])
+                            for i in range(len(yStockSplits))]
 
         dateTimeFormat = (self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)) if interval == 'day'
                           else self.dataInterface.settingsGet('{}/dateTimeFormat'.format(interval)))
