@@ -5,4 +5,4 @@ cd ~/stocking/
 python3 src/main.py exe/release/query_config.json
 
 # Save a backup of data in a separate location
-cp data/* ~/backup/
+cp data/* ~/backup/stocking/
