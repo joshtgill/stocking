@@ -29,7 +29,7 @@ class BaseService:
             return self.stockSymbolsInterface.load('GLOBAL_SELECT')
         elif variable == 'ALL':
             return self.stockSymbolsInterface.loadAll()
-        if variable == 'NOW':
+        elif variable == 'NOW':
             return datetime.now().strftime(self.dataInterface.settingsGet('{}/dateTimeFormat'.format('day')))
         elif 'NOW' in variable:
             openMarketDaysBack = int(re.sub(r'\s+', '', variable.replace('NOW', '').replace('-', '')).replace('d', ''))

@@ -5,8 +5,6 @@ class StockHistoryInterface:
 
     def __init__(self, databasePathDir):
         self.databaseInterfaceDir = self.initDatabases(databasePathDir)
-        self.history = []
-        self.historyIndex = -1
         self.reset(True)
 
 
@@ -71,9 +69,9 @@ class StockHistoryInterface:
 
 
     def end(self):
-        self.historyIndex = len(self.history) - 1
+        self.historyIndex = len(self.history) - 2
 
-        return self.peek()
+        return self.next()
 
 
     def reset(self, hard=False):

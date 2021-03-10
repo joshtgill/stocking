@@ -15,12 +15,9 @@ class ProcessService(BaseService):
 
 
     def go(self, *args):
-        symbols = self.translateConfigVariable(self.dataInterface.configGet('symbols'))
-        modulesData = self.translateConfigVariable(self.dataInterface.configGet('modules'))
+        for moduleName, moduleData in self.dataInterface.configGet('modules').items():
+            self.dataInterface.incrementConfig('modules/{}'.format(moduleName))
 
-        for i in range(len(modulesData)):
-            self.dataInterface.incrementConfig('modules/[{}]'.format(i))
-
-            self.moduleDirectory.get(modulesData[i].get('name')).start(symbols)
+            self.moduleDirectory.get(moduleName).start()
 
             self.dataInterface.decrementConfig()
