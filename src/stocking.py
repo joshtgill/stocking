@@ -30,8 +30,7 @@ class Stocking:
         self.validateService = ValidateService(self.dataInterface, self.logInterface,
                                                self.stockSymbolsInterface, self.stockHistoryInterface)
         self.dayAnalyzeService = DayAnalyzeService(self.dataInterface, self.logInterface,
-                                                   self.stockSymbolsInterface, self.stockHistoryInterface,
-                                                   self.stockSplitsInterface)
+                                                   self.stockSymbolsInterface, self.stockHistoryInterface)
         self.minuteAnalyzeService = MinuteAnalyzeService(self.dataInterface, self.logInterface,
                                                          self.stockSymbolsInterface, self.stockHistoryInterface,
                                                          self.dayAnalyzeService)
